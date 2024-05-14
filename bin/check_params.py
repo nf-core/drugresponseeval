@@ -33,23 +33,9 @@ def check_arguments(args):
         assert all(
             [randomization in ["SVCC", "SVRC", "SVSC", "SVRD"] for randomization in args.randomization_mode]
         ), "At least one invalid randomization mode. Available randomization modes are SVCC, SVRC, SVSC, SVRD"
-    else:
-        args.randomization_mode = None
     if args.curve_curator != 'false':
         raise NotImplementedError("CurveCurator not implemented")
-    if args.response_transformation == "None":
-        response_transformation = None
-    elif (args.response_transformation == "standard"):
-        response_transformation = StandardScaler()
-    elif (args.response_transformation == "minmax"):
-        response_transformation = MinMaxScaler()
-    elif (args.response_transformation == "robust"):
-        response_transformation = RobustScaler()
-    else:
-        # TODO add log, sinh etc
-        raise ValueError(
-            f"Invalid response_transformation: {args.response_transformation}. Choose robust, minmax or standard.")
-
+    assert args.response_transformation in ["None", "standard", "minmax", "robust"], "Invalid response_transformation. Choose from None, standard, minmax, robust"
     assert args.optim_metric in AVAILABLE_METRICS, f"Invalid optim_metric for hyperparameter tuning. Choose from {list(AVAILABLE_METRICS.keys())}"
 
 def parse_args(argv=None):
