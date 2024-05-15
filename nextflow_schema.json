@@ -116,7 +116,14 @@
                 "type": "string",
                 "description": "Response transformation",
                 "help_text": "Transformation to apply to the response variable possible values: standard, minmax, robust"
+            },
+            "path_data": {
+                "type": "string",
+                "format": "directory-path",
+                "description": "Path to the data directory.",
+                "help_text": "Path to the data directory."
             }
+
             }
         },
         "institutional_config_options": {

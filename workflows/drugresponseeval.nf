@@ -27,7 +27,7 @@ WorkflowDrugresponseeval.initialise(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { PARAMS_CHECK } from '../modules/local/params_check'
-
+include { LOAD_RESPONSE } from '../modules/local/load_response'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -69,6 +69,8 @@ workflow DRUGRESPONSEEVAL {
         params.response_transformation,
         params.optim_metric
     )
+
+    LOAD_RESPONSE(params.dataset_name, params.path_out, params.path_data)
     // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
