@@ -73,7 +73,7 @@ workflow DRUGRESPONSEEVAL {
         params.optim_metric
     )
 
-    LOAD_RESPONSE(params.dataset_name, params.path_out, params.path_data)
+    LOAD_RESPONSE(params.dataset_name, params.path_data)
 
     ch_cv_splits = Channel.empty()
     CV_SPLIT (
