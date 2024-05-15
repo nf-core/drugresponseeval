@@ -1,4 +1,4 @@
-process LOAD_RESPONSE {
+process EVALUATE {
     //tag "$samplesheet"
     //label 'process_single'
 
@@ -7,16 +7,18 @@ process LOAD_RESPONSE {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    val dataset_name
-    val path_out
-    val path_data
+    val pred_data
+    val metric
 
     output:
-    path 'results/response.csv'
+    path "*.pkl"    , emit: eval_results
+
 
     script:
     """
-    load_response.py --dataset_name ${dataset_name} --path_out ${path_out} --path_data ${path_data}
+    evaluate.py \\
+        --pred_data $pred_data \\
+        --metric $metric
     """
 
 }

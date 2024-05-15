@@ -3,12 +3,15 @@
 import argparse
 from dreval.response_datasets import RESPONSE_DATASET_FACTORY
 import os
+
+
 def get_parser():
     parser = argparse.ArgumentParser(description='Load response data')
     parser.add_argument('--dataset_name', type=str, required=True, help='Name of the dataset to load')
     parser.add_argument('--path_out', type=str, default='results', help='Path to the output directory')
     parser.add_argument('--path_data', type=str, default='data', help='Data directory path')
     return parser
+
 
 if __name__ == "__main__":
     args = get_parser().parse_args()

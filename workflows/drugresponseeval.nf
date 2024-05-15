@@ -28,7 +28,9 @@ WorkflowDrugresponseeval.initialise(params, log)
 */
 include { PARAMS_CHECK } from '../modules/local/params_check'
 include { LOAD_RESPONSE } from '../modules/local/load_response'
+include { CV_SPLIT } from '../modules/local/cv_split'
 include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
+include { EVALUATE } from '../modules/local/evaluate'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -72,10 +74,15 @@ workflow DRUGRESPONSEEVAL {
     )
 
     LOAD_RESPONSE(params.dataset_name, params.path_out, params.path_data)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
-    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
-    // ! There is currently no tooling to help you write a sample sheet schema
 
+    ch_cv_splits = Channel.empty()
+    CV_SPLIT (
+        params.response,
+        params.n_cv_splits,
+        params.test_mode
+    )
+    ch_cv_splits = CV_SPLIT.out.response_cv_splits
+    ch_cv_splits.view()
 
     TRAIN_AND_PREDICT (
         params.model_name,
@@ -86,6 +93,11 @@ workflow DRUGRESPONSEEVAL {
         params.response_transformation,
         params.cl_features,
         params.drug_features
+    )
+
+    EVALUATE (
+        TRAIN_AND_PREDICT.out.pred_data,
+        params.optim_metric
     )
 
 }

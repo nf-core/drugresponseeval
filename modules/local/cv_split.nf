@@ -1,4 +1,4 @@
-process LOAD_RESPONSE {
+process CV_SPLIT {
     //tag "$samplesheet"
     //label 'process_single'
 
@@ -7,16 +7,20 @@ process LOAD_RESPONSE {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    val dataset_name
-    val path_out
-    val path_data
+    path response
+    val n_cv_splits
+    val test_mode
 
     output:
-    path 'results/response.csv'
+    path "*.pkl"    , emit: response_cv_splits
+
 
     script:
     """
-    load_response.py --dataset_name ${dataset_name} --path_out ${path_out} --path_data ${path_data}
+    cv_split.py \\
+        --response $response \\
+        --n_cv_splits $n_cv_splits \\
+        --test_mode $test_mode
     """
 
 }
