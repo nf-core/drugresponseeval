@@ -77,16 +77,16 @@ workflow DRUGRESPONSEEVAL {
     // ! There is currently no tooling to help you write a sample sheet schema
 
 
-    TRAIN_AND_PREDICT (
-        params.model_name,
-        params.hyperparameters,
-        params.train_data,
-        params.prediction_data,
-        params.early_stopping_data,
-        params.response_transformation,
-        params.cl_features,
-        params.drug_features
-    )
+    // TRAIN_AND_PREDICT (
+    //     params.model_name,
+    //     params.hyperparameters,
+    //     params.train_data,
+    //     params.prediction_data,
+    //     params.early_stopping_data,
+    //     params.response_transformation,
+    //     params.cl_features,
+    //     params.drug_features
+    // )
 
 }
 

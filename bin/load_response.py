@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-
 import argparse
 from dreval.response_datasets import RESPONSE_DATASET_FACTORY
 import os
+import pickle
+
 def get_parser():
     parser = argparse.ArgumentParser(description='Load response data')
     parser.add_argument('--dataset_name', type=str, required=True, help='Name of the dataset to load')
@@ -16,4 +17,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.path_out):
         os.makedirs(args.path_out)
     response_data = RESPONSE_DATASET_FACTORY[args.dataset_name](path_data=args.path_data)
-    response_data.save(path=f"{args.path_out}/response.csv")
+
+    # Pickle the object to a file
+    with open(f"{args.path_out}/response.pkl", 'wb') as f:
+        pickle.dump(response_data, f)

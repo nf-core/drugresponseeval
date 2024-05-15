@@ -11,7 +11,7 @@ process LOAD_RESPONSE {
     val path_out
     val path_data
     output:
-    file 'results/response.csv'
+    path '*/response.pkl'
     script:
     """
     load_response.py --dataset_name ${dataset_name} --path_out ${path_out} --path_data ${path_data}
