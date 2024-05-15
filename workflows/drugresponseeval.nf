@@ -77,7 +77,7 @@ workflow DRUGRESPONSEEVAL {
 
     ch_cv_splits = Channel.empty()
     CV_SPLIT (
-        LOAD_RESPONSE.out.response_data,
+        LOAD_RESPONSE.out.response_dataset,
         params.n_cv_splits,
         params.test_mode
     )
