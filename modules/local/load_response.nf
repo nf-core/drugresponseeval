@@ -8,7 +8,6 @@ process LOAD_RESPONSE {
     //    'biocontainers/python:3.8.3' }"
     input:
     val dataset_name
-    val path_out
     val path_data
 
     output:
