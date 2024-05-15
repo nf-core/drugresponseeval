@@ -53,3 +53,8 @@ def main():
     )
     with open('prediction_dataset.pkl', 'wb') as f:
         pickle.dump(validation_dataset, f)
+
+
+if __name__ == "__main__":
+    main()
+    sys.exit(0)
