@@ -77,13 +77,13 @@ workflow DRUGRESPONSEEVAL {
 
     ch_cv_splits = Channel.empty()
     CV_SPLIT (
-        params.response,
+        LOAD_RESPONSE.out.response_data,
         params.n_cv_splits,
         params.test_mode
     )
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
     ch_cv_splits.view()
-
+/*
     TRAIN_AND_PREDICT (
         params.model_name,
         params.hyperparameters,
@@ -99,7 +99,7 @@ workflow DRUGRESPONSEEVAL {
         TRAIN_AND_PREDICT.out.pred_data,
         params.optim_metric
     )
-
+*/
 }
 
 /*
