@@ -76,13 +76,12 @@ workflow DRUGRESPONSEEVAL {
 
     LOAD_RESPONSE(params.dataset_name, params.path_data)
 
-    ch_cv_splits = Channel.empty()
     CV_SPLIT (
         LOAD_RESPONSE.out.response_dataset,
         params.n_cv_splits,
         params.test_mode
     )
-    ch_cv_splits = CV_SPLIT.out.response_cv_splits
+    ch_cv_splits = CV_SPLIT.out.response_cv_splits.flatten()
 
     TRAIN_AND_PREDICT_CV (
         params.models,

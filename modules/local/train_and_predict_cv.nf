@@ -1,6 +1,6 @@
-
-
 process TRAIN_AND_PREDICT_CV {
+    label 'process_single'
+
     input:
     val model_name
     path hyperparameters
@@ -8,7 +8,7 @@ process TRAIN_AND_PREDICT_CV {
     val response_transformation
 
     output:
-    path "prediction_dataset.pkl"    , emit: pred_data
+    path "prediction_dataset.pkl", emit: pred_data
 
     script:
     """
@@ -18,5 +18,4 @@ process TRAIN_AND_PREDICT_CV {
         --cv_data $cv_data \\
         --response_transformation $response_transformation
     """
-
 }
