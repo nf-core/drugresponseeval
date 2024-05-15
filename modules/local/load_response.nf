@@ -12,7 +12,7 @@ process LOAD_RESPONSE {
     val path_data
 
     output:
-    path 'response_dataset.pkl'
+    path 'response_dataset.pkl', emit: response_dataset
     script:
     """
     load_response.py --dataset_name ${dataset_name} --path_data ${path_data}
