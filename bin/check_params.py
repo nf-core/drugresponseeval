@@ -38,6 +38,7 @@ def check_arguments(args):
     assert args.response_transformation in ["None", "standard", "minmax", "robust"], "Invalid response_transformation. Choose from None, standard, minmax, robust"
     assert args.optim_metric in AVAILABLE_METRICS, f"Invalid optim_metric for hyperparameter tuning. Choose from {list(AVAILABLE_METRICS.keys())}"
 
+
 def parse_args(argv=None):
     """Define and immediately parse command line arguments."""
     parser = argparse.ArgumentParser(

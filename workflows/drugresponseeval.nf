@@ -27,6 +27,7 @@ WorkflowDrugresponseeval.initialise(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 include { PARAMS_CHECK } from '../modules/local/params_check'
+include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -73,6 +74,17 @@ workflow DRUGRESPONSEEVAL {
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
+
+    TRAIN_AND_PREDICT (
+        params.model_name,
+        params.hyperparameters,
+        params.train_data,
+        params.prediction_data,
+        params.early_stopping_data,
+        params.response_transformation,
+        params.cl_features,
+        params.drug_features
+    )
 
 }
 
