@@ -3,6 +3,7 @@
 import argparse
 import sys
 import pickle
+import yaml
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
 
@@ -27,7 +28,7 @@ def main():
     split = pickle.load(open(args.cv_data, 'rb'))
     train_dataset = split["train"]
     validation_dataset = split["validation"]
-    hpams = pickle.load(open(args.hyperparameters, 'rb'))
+    hpams = yaml.load(open(args.hyperparameters, 'r'), Loader=yaml.FullLoader)
     if model_class.early_stopping:
         validation_dataset, es_dataset = split_early_stopping(validation_dataset, args.test_mode)
     else:

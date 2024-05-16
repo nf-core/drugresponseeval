@@ -29,6 +29,7 @@ WorkflowDrugresponseeval.initialise(params, log)
 include { PARAMS_CHECK } from '../modules/local/params_check'
 include { LOAD_RESPONSE } from '../modules/local/load_response'
 include { CV_SPLIT } from '../modules/local/cv_split'
+include { HPAM_SPLIT } from '../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV } from '../modules/local/train_and_predict_cv'
 include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
 include { EVALUATE } from '../modules/local/evaluate'
@@ -83,9 +84,16 @@ workflow DRUGRESPONSEEVAL {
     )
     ch_cv_splits = CV_SPLIT.out.response_cv_splits.flatten()
 
+    HPAM_SPLIT (
+        params.models
+    )
+
+    ch_hpam_combis = HPAM_SPLIT.out.hpam_combi.flatten()
+
     TRAIN_AND_PREDICT_CV (
         params.models,
-        params.hyperparameters,
+        params.test_mode,
+        ch_hpam_combis,
         ch_cv_splits,
         params.response_transformation
     )
