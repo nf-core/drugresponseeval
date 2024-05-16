@@ -8,8 +8,8 @@ import argparse
 import logging
 import sys
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
-from models import MODEL_FACTORY
-from response_datasets import RESPONSE_DATASET_FACTORY
+from dreval.models import MODEL_FACTORY
+from dreval.datasets import RESPONSE_DATASET_FACTORY
 from dreval.experiment import drug_response_experiment
 from dreval.evaluation import AVAILABLE_METRICS
 
