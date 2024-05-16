@@ -14,6 +14,7 @@ from dreval.experiment import train_and_predict, split_early_stopping
 def get_parser():
     parser = argparse.ArgumentParser(description='Train and predict using a drug response prediction model.')
     parser.add_argument('--model_name', type=str, help='model to evaluate or list of models to compare')
+    parser.add_argument('--path_data', type=str, default='data', help='Data directory path')
     parser.add_argument('--test_mode', type=str, default='LPO', help='Test mode (LPO, LCO, LDO)')
     parser.add_argument('--hyperparameters', type=str, help='hyperparameters for the model')
     parser.add_argument('--cv_data', type=str, help='path to the cv data split')
@@ -47,6 +48,7 @@ def main():
     validation_dataset = train_and_predict(
         model=model,
         hpams=hpams,
+        path_data=args.path_data,
         train_dataset=train_dataset,
         prediction_dataset=validation_dataset,
         early_stopping_dataset=es_dataset,

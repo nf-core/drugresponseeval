@@ -3,6 +3,7 @@ process TRAIN_AND_PREDICT_CV {
 
     input:
     val model_name
+    val path_data
     val test_mode
     path hyperparameters
     path cv_data
@@ -15,6 +16,7 @@ process TRAIN_AND_PREDICT_CV {
     """
     train_and_predict_cv.py \\
         --model_name $model_name \\
+        --path_data $path_data \\
         --test_mode $test_mode \\
         --hyperparameters $hyperparameters \\
         --cv_data $cv_data \\

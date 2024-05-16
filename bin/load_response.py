@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-from dreval.response_datasets import RESPONSE_DATASET_FACTORY
+from dreval.datasets import RESPONSE_DATASET_FACTORY
 import pickle
 
 

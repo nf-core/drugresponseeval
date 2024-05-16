@@ -94,6 +94,7 @@ workflow DRUGRESPONSEEVAL {
 
     TRAIN_AND_PREDICT_CV (
         ch_models,
+        params.path_data,
         params.test_mode,
         ch_hpam_combis,
         ch_cv_splits,
