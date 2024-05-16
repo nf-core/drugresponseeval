@@ -10,7 +10,7 @@ process HPAM_SPLIT {
     val model_name
 
     output:
-    path "*.yaml"    , emit: hpam_combi
+    tuple val(model_name), path("*.yaml")    , emit: hpam_combi
 
 
     script:

@@ -92,12 +92,11 @@ workflow DRUGRESPONSEEVAL {
 
     ch_hpam_combis = HPAM_SPLIT.out.hpam_combi
     ch_model_cv = ch_models.combine(ch_cv_splits.flatten())
-    ch_model_hpam = ch_models.combine(ch_hpam_combis)
-    ch_model_hpam.view()
-    //ch_test_combis = ch_model_cv.join(ch_model_hpam)
-    //ch_test_combis.view()
+    ch_hpam_combis = ch_hpam_combis.transpose()
 
-    /*TRAIN_AND_PREDICT_CV (
+    ch_test_combis = ch_model_cv.join(ch_hpam_combis)
+
+    TRAIN_AND_PREDICT_CV (
         ch_test_combis,
         params.path_data,
         params.test_mode,
@@ -107,7 +106,7 @@ workflow DRUGRESPONSEEVAL {
     EVALUATE (
         TRAIN_AND_PREDICT_CV.out.pred_data,
         params.optim_metric
-    )*/
+    )
 
 
 /*
