@@ -105,7 +105,8 @@ workflow DRUGRESPONSEEVAL {
 
     EVALUATE (
         TRAIN_AND_PREDICT_CV.out.pred_data,
-        params.optim_metric
+        params.optim_metric,
+        TRAIN_AND_PREDICT_CV.out.meta
     )
 
 

@@ -9,6 +9,7 @@ process TRAIN_AND_PREDICT_CV {
 
     output:
     path "prediction_dataset.pkl", emit: pred_data
+    tuple val(model_name), path(cv_data), emit: meta
 
     script:
     """

@@ -9,9 +9,11 @@ process EVALUATE {
     input:
     val pred_data
     val metric
+    tuple val(model_name), path(cv_data)
 
     output:
     path "*.pkl"    , emit: eval_results
+    tuple val(model_name), path(cv_data), emit: meta
 
 
     script:
