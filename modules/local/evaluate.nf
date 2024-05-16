@@ -12,15 +12,18 @@ process EVALUATE {
     tuple val(model_name), path(cv_data)
 
     output:
-    path "*.pkl"    , emit: eval_results
+    val result, emit: metric
     tuple val(model_name), path(cv_data), emit: meta
 
 
     script:
     """
-    evaluate.py \\
-        --pred_data $pred_data \\
-        --metric $metric
+    #!/usr/bin/env python
+    import pickle
+    from dreval.evaluation import evaluate
+    pred_data = pickle.load(open('$pred_data', 'rb'))
+    results = evaluate(dataset=pred_data, metric=[$metric])
+    print(results[$metric])
     """
 
 }
