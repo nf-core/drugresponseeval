@@ -98,7 +98,7 @@ def parse_args(argv=None):
     )
 
     parser.add_argument(
-        "--path_out", type=str, default="results/", help="Path to the output directory"
+        "--outdir", type=str, default="results/", help="Path to the output directory"
     )
 
     parser.add_argument(
