@@ -31,7 +31,7 @@ include { LOAD_RESPONSE } from '../modules/local/load_response'
 include { CV_SPLIT } from '../modules/local/cv_split'
 include { HPAM_SPLIT } from '../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV } from '../modules/local/train_and_predict_cv'
-include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
+//include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
 include { EVALUATE } from '../modules/local/evaluate'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -54,8 +54,7 @@ include { EVALUATE } from '../modules/local/evaluate'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// Info required for completion email and summary
-def multiqc_report = []
+def models = params.models.split(",")
 
 workflow DRUGRESPONSEEVAL {
 
@@ -64,6 +63,9 @@ workflow DRUGRESPONSEEVAL {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
+
+    ch_models = channel.from(models)
+
     PARAMS_CHECK (
         params.models,
         params.test_mode,
@@ -85,17 +87,22 @@ workflow DRUGRESPONSEEVAL {
     ch_cv_splits = CV_SPLIT.out.response_cv_splits.flatten()
 
     HPAM_SPLIT (
-        params.models
+        ch_models
     )
 
     ch_hpam_combis = HPAM_SPLIT.out.hpam_combi.flatten()
 
     TRAIN_AND_PREDICT_CV (
-        params.models,
+        ch_models,
         params.test_mode,
         ch_hpam_combis,
         ch_cv_splits,
         params.response_transformation
+    )
+
+    EVALUATE (
+        TRAIN_AND_PREDICT_CV.out.pred_data,
+        params.optim_metric
     )
 
 
@@ -109,11 +116,6 @@ workflow DRUGRESPONSEEVAL {
         params.response_transformation,
         params.cl_features,
         params.drug_features
-    )
-
-    EVALUATE (
-        TRAIN_AND_PREDICT.out.pred_data,
-        params.optim_metric
     )
 */
 }

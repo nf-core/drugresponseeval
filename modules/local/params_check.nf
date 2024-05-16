@@ -1,6 +1,6 @@
 process PARAMS_CHECK {
     //tag "$samplesheet"
-    //label 'process_single'
+    label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -26,7 +26,7 @@ process PARAMS_CHECK {
     script: // This script is bundled with the pipeline, in nf-core/drugresponseeval/bin/
     """
     check_params.py \\
-        --models $models \\
+        --models ${models.replace(',', ' ')} \\
         --test_mode $test_mode \\
         --dataset_name $dataset_name \\
         --n_cv_splits $n_cv_splits \\
