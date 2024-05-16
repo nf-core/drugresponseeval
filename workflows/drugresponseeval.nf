@@ -94,7 +94,7 @@ workflow DRUGRESPONSEEVAL {
     ch_model_cv = ch_models.combine(ch_cv_splits.flatten())
     ch_hpam_combis = ch_hpam_combis.transpose()
 
-    ch_test_combis = ch_model_cv.join(ch_hpam_combis)
+    ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
 
     TRAIN_AND_PREDICT_CV (
         ch_test_combis,
