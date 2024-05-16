@@ -66,7 +66,7 @@ workflow DRUGRESPONSEEVAL {
 
     ch_models = channel.from(models)
 
-    PARAMS_CHECK (
+    /*PARAMS_CHECK (
         params.models,
         params.test_mode,
         params.dataset_name,
@@ -75,7 +75,7 @@ workflow DRUGRESPONSEEVAL {
         params.curve_curator,
         params.response_transformation,
         params.optim_metric
-    )
+    )*/
 
     LOAD_RESPONSE(params.dataset_name, params.path_data)
 
@@ -84,13 +84,15 @@ workflow DRUGRESPONSEEVAL {
         params.n_cv_splits,
         params.test_mode
     )
-    ch_cv_splits = CV_SPLIT.out.response_cv_splits.flatten()
+    ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
-    HPAM_SPLIT (
+    ch_models.cross(ch_cv_splits).view()
+
+    /*HPAM_SPLIT (
         ch_models
     )
 
-    ch_hpam_combis = HPAM_SPLIT.out.hpam_combi.flatten()
+    ch_hpam_combis = HPAM_SPLIT.out.hpam_combis
 
     TRAIN_AND_PREDICT_CV (
         ch_models,
@@ -104,7 +106,7 @@ workflow DRUGRESPONSEEVAL {
     EVALUATE (
         TRAIN_AND_PREDICT_CV.out.pred_data,
         params.optim_metric
-    )
+    )*/
 
 
 /*
