@@ -2,11 +2,9 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_single'
 
     input:
-    val model_name
+    tuple val(model_name), path(cv_data), path(hyperparameters)
     val path_data
     val test_mode
-    path hyperparameters
-    path cv_data
     val response_transformation
 
     output:

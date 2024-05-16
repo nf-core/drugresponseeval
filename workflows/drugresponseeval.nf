@@ -86,20 +86,21 @@ workflow DRUGRESPONSEEVAL {
     )
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
-    ch_models.cross(ch_cv_splits).view()
-
-    /*HPAM_SPLIT (
+    HPAM_SPLIT (
         ch_models
     )
 
-    ch_hpam_combis = HPAM_SPLIT.out.hpam_combis
+    ch_hpam_combis = HPAM_SPLIT.out.hpam_combi
+    ch_model_cv = ch_models.combine(ch_cv_splits.flatten())
+    ch_model_hpam = ch_models.combine(ch_hpam_combis)
+    ch_model_hpam.view()
+    //ch_test_combis = ch_model_cv.join(ch_model_hpam)
+    //ch_test_combis.view()
 
-    TRAIN_AND_PREDICT_CV (
-        ch_models,
+    /*TRAIN_AND_PREDICT_CV (
+        ch_test_combis,
         params.path_data,
         params.test_mode,
-        ch_hpam_combis,
-        ch_cv_splits,
         params.response_transformation
     )
 
