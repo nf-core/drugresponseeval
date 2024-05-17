@@ -1,5 +1,5 @@
 process HPAM_SPLIT {
-    //tag "$samplesheet"
+    tag "$model_name"
     label 'process_single'
 
     //conda "conda-forge::python=3.8.3"

@@ -1,31 +1,26 @@
 process EVALUATE {
-    //tag "$samplesheet"
-    //label 'process_single'
+    tag "${model_name}_${split_id}"
+    label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    val pred_data
+    tuple val(model_name), val(split_id), path(hpam_yamls), path(pred_datas)
     val metric
-    tuple val(model_name), path(cv_data)
 
     output:
-    path 'result_metrics.yaml', emit: result_metrics
-    tuple val(model_name), path(cv_data), emit: meta
-
+    tuple val(model_name), val(split_id), path('best_hpam_combi_*.yaml'), emit: best_combis
 
     script:
     """
-    #!/usr/bin/env python
-    import pickle
-    import yaml
-    from dreval.evaluation import evaluate
-    pred_data = pickle.load(open('$pred_data', 'rb'))
-    results = evaluate(dataset=pred_data, metric=['$metric'])
-    with open('result_metrics.yaml', 'w') as f:
-        yaml.dump(results, f, default_flow_style=False)
+    evaluate_and_find_max.py \\
+        --model_name $model_name \\
+        --split_id $split_id \\
+        --hpam_yamls $hpam_yamls \\
+        --pred_datas $pred_datas \\
+        --metric $metric
     """
 
 }

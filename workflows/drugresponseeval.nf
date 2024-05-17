@@ -31,8 +31,9 @@ include { LOAD_RESPONSE } from '../modules/local/load_response'
 include { CV_SPLIT } from '../modules/local/cv_split'
 include { HPAM_SPLIT } from '../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV } from '../modules/local/train_and_predict_cv'
-//include { TRAIN_AND_PREDICT } from '../modules/local/train_and_predict'
 include { EVALUATE } from '../modules/local/evaluate'
+include { PREDICT_FULL } from '../modules/local/predict_full'
+include { RANDOMIZATION_SPLIT } from '../modules/local/randomization_split'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -55,6 +56,7 @@ include { EVALUATE } from '../modules/local/evaluate'
 */
 
 def models = params.models.split(",")
+def randomizations = params.randomization_mode.split(",")
 
 workflow DRUGRESPONSEEVAL {
 
@@ -103,26 +105,33 @@ workflow DRUGRESPONSEEVAL {
         params.response_transformation
     )
 
+    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1])
+
     EVALUATE (
-        TRAIN_AND_PREDICT_CV.out.pred_data,
-        params.optim_metric,
-        TRAIN_AND_PREDICT_CV.out.meta
+        ch_combined_hpams,
+        params.optim_metric
     )
-    EVALUATE.out.result_metrics.view()
 
+    ch_best_hpams_per_split = ch_cv_splits
+    .map { it -> [it, it.baseName]}
+    .transpose()
+    .combine(EVALUATE.out.best_combis, by: 1)
 
-/*
-    TRAIN_AND_PREDICT (
-        params.model_name,
-        params.hyperparameters,
-        params.train_data,
-        params.prediction_data,
-        params.early_stopping_data,
+    PREDICT_FULL (
+        ch_best_hpams_per_split,
         params.response_transformation,
-        params.cl_features,
-        params.drug_features
+        params.test_mode,
+        params.path_data
     )
-*/
+
+    if (params.randomization_mode != 'None') {
+        ch_randomization = channel.from(randomizations)
+        ch_models_rand = ch_models.combine(ch_randomization)
+        RANDOMIZATION_SPLIT (
+            ch_models_rand
+        )
+        RANDOMIZATION_SPLIT.out.randomization_test_views.view()
+    }
 }
 
 /*

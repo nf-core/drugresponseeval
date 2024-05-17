@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import random
 import sys
 import pickle
 import yaml
@@ -8,7 +9,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
 
 from dreval.models import MODEL_FACTORY
-from dreval.experiment import train_and_predict, split_early_stopping
+from dreval.experiment import train_and_predict
 
 
 def get_parser():
@@ -31,7 +32,8 @@ def main():
     validation_dataset = split["validation"]
     hpams = yaml.load(open(args.hyperparameters, 'r'), Loader=yaml.FullLoader)
     if model_class.early_stopping:
-        validation_dataset, es_dataset = split_early_stopping(validation_dataset, args.test_mode)
+        validation_dataset = split["validation_es"]
+        es_dataset = split["early_stopping"]
     else:
         es_dataset = None
     model = model_class(target='IC50')
@@ -54,7 +56,7 @@ def main():
         early_stopping_dataset=es_dataset,
         response_transformation=response_transform
     )
-    with open('prediction_dataset.pkl', 'wb') as f:
+    with open(f'prediction_dataset_{validation_dataset.__hash__()}.pkl', 'wb') as f:
         pickle.dump(validation_dataset, f)
 
 

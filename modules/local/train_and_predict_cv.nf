@@ -1,4 +1,5 @@
 process TRAIN_AND_PREDICT_CV {
+    tag "$model_name"
     label 'process_single'
 
     input:
@@ -8,8 +9,7 @@ process TRAIN_AND_PREDICT_CV {
     val response_transformation
 
     output:
-    path "prediction_dataset.pkl", emit: pred_data
-    tuple val(model_name), path(cv_data), emit: meta
+    tuple val(model_name), val(cv_data.baseName), path(hyperparameters), path("prediction_dataset_*.pkl"), emit: pred_data
 
     script:
     """
