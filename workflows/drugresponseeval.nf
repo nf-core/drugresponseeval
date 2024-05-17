@@ -108,6 +108,7 @@ workflow DRUGRESPONSEEVAL {
         params.optim_metric,
         TRAIN_AND_PREDICT_CV.out.meta
     )
+    EVALUATE.out.result_metrics.view()
 
 
 /*

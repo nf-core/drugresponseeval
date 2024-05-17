@@ -12,7 +12,7 @@ process EVALUATE {
     tuple val(model_name), path(cv_data)
 
     output:
-    val result, emit: metric
+    path 'result_metrics.yaml', emit: result_metrics
     tuple val(model_name), path(cv_data), emit: meta
 
 
@@ -20,10 +20,12 @@ process EVALUATE {
     """
     #!/usr/bin/env python
     import pickle
+    import yaml
     from dreval.evaluation import evaluate
     pred_data = pickle.load(open('$pred_data', 'rb'))
-    results = evaluate(dataset=pred_data, metric=[$metric])
-    print(results[$metric])
+    results = evaluate(dataset=pred_data, metric=['$metric'])
+    with open('result_metrics.yaml', 'w') as f:
+        yaml.dump(results, f, default_flow_style=False)
     """
 
 }
