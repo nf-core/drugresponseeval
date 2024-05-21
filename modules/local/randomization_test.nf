@@ -1,5 +1,5 @@
-process PREDICT_FULL {
-    tag "${model_name}_${split_id}"
+process RANDOMIZATION_TEST {
+    tag "${model_name}_${randomization_type}"
     label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
@@ -7,10 +7,11 @@ process PREDICT_FULL {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    tuple val(split_id), path(split_dataset), val(model_name), path(hpam_combi)
-    val(response_transformation)
+    tuple val(model_name), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
+    path(path_data)
     val(test_mode)
-    val(path_data)
+    val(randomization_type)
+    val(response_transformation)
 
     output:
     path('test_dataset_*.csv'),     emit: test_dataset
@@ -18,14 +19,16 @@ process PREDICT_FULL {
     script:
     """
     train_and_predict_final.py \\
-        --mode full \\
+        --mode randomization \\
         --model_name $model_name \\
         --split_id $split_id \\
         --split_dataset_path $split_dataset \\
-        --hyperparameters_path $hpam_combi \\
+        --hyperparameters_path $best_hpams \\
         --response_transformation $response_transformation \\
         --test_mode $test_mode \\
-        --path_data $path_data
+        --path_data $path_data \\
+        --randomization_views_path $randomization_views \\
+        --randomization_type $randomization_type
     """
 
 }
