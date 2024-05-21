@@ -4,7 +4,7 @@ import sys
 import argparse
 import pickle
 import warnings
-from typing import Dict, List, Optional
+from typing import Dict, Optional
 
 import yaml
 from dreval.datasets.dataset import DrugResponseDataset
@@ -17,7 +17,8 @@ from dreval.experiment import train_and_predict
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description='Train and predict: either full mode, randomization mode, or robustness mode.')
+    parser = argparse.ArgumentParser(description='Train and predict: either full mode, randomization mode, '
+                                                 'or robustness mode.')
     parser.add_argument('--mode', type=str, default='full', help='Mode: full, randomization, or robustness.')
     parser.add_argument('--model_name', type=str, required=True, help='Model name.')
     parser.add_argument('--split_id', type=str, required=True, help='Split id.')
@@ -28,6 +29,7 @@ def get_parser():
     parser.add_argument('--path_data', type=str, required=True, help='Path to data.')
     parser.add_argument('--randomization_views_path', type=str, default=None, help='Path to randomization views.')
     parser.add_argument('--randomization_type', type=str, default='permutation', help='Randomization type (permutation, zeroing, gaussian).')
+    parser.add_argument('--robustness_trial', type=int, help='Robustness trial index.')
     return parser
 
 
@@ -108,38 +110,82 @@ def compute_randomization(
     test_dataset.save(randomization_test_file)
 
 
+def compute_robustness(
+        model: DRPModel,
+        hpam_set: Dict,
+        path_data: str,
+        train_dataset: DrugResponseDataset,
+        test_dataset: DrugResponseDataset,
+        early_stopping_dataset: Optional[DrugResponseDataset],
+        split_id: str,
+        test_mode: str,
+        trial: int,
+        response_transformation=Optional[TransformerMixin]
+):
+    robustness_test_file = f'test_dataset_{model.model_name}_robustness_{test_mode}_{split_id}_{trial}.csv'
+    train_dataset.shuffle(random_state=trial)
+    test_dataset.shuffle(random_state=trial)
+    if early_stopping_dataset is not None:
+        early_stopping_dataset.shuffle(random_state=trial)
+    test_dataset = train_and_predict(
+        model=model,
+        hpams=hpam_set,
+        path_data=path_data,
+        train_dataset=train_dataset,
+        prediction_dataset=test_dataset,
+        early_stopping_dataset=early_stopping_dataset,
+        response_transformation=response_transformation
+    )
+    test_dataset.save(robustness_test_file)
+
+
 if __name__ == "__main__":
-    parser = get_parser()
-    args = parser.parse_args()
-    model, best_hpams, train_dataset, test_dataset, es_dataset, response_transform = prep_data(args)
+    arg_parser = get_parser()
+    args = arg_parser.parse_args()
+    selected_model, hpam_combi, train_set, test_set, es_set, transformation = prep_data(args)
 
     if args.mode == 'full':
-        test_dataset = train_and_predict(
-            model=model,
-            hpams=best_hpams,
+        test_set = train_and_predict(
+            model=selected_model,
+            hpams=hpam_combi,
             path_data=args.path_data,
-            train_dataset=train_dataset,
-            prediction_dataset=test_dataset,
-            early_stopping_dataset=es_dataset,
-            response_transformation=response_transform
+            train_dataset=train_set,
+            prediction_dataset=test_set,
+            early_stopping_dataset=es_set,
+            response_transformation=transformation
         )
-        prediction_dataset = f'test_dataset_{model.model_name}_predictions_{args.test_mode}_{args.split_id}.csv'
-        test_dataset.save(prediction_dataset)
+        prediction_dataset = f'test_dataset_{selected_model.model_name}_predictions_{args.test_mode}_{args.split_id}.csv'
+        test_set.save(prediction_dataset)
     elif args.mode == 'randomization':
         with open(args.randomization_views_path, 'r') as f:
-            randomization_test_view = yaml.safe_load(f)
+            rand_test_view = yaml.safe_load(f)
         compute_randomization(
-            randomization_test_view=randomization_test_view,
-            model=model,
-            hpam_set=best_hpams,
+            randomization_test_view=rand_test_view,
+            model=selected_model,
+            hpam_set=hpam_combi,
             path_data=args.path_data,
-            train_dataset=train_dataset,
-            test_dataset=test_dataset,
-            early_stopping_dataset=es_dataset,
+            train_dataset=train_set,
+            test_dataset=test_set,
+            early_stopping_dataset=es_set,
             split_id=args.split_id,
             test_mode=args.test_mode,
             randomization_type=args.randomization_type,
-            response_transformation=response_transform
+            response_transformation=transformation
         )
+    elif args.mode == 'robustness':
+        compute_robustness(
+            model=selected_model,
+            hpam_set=hpam_combi,
+            path_data=args.path_data,
+            train_dataset=train_set,
+            test_dataset=test_set,
+            early_stopping_dataset=es_set,
+            split_id=args.split_id,
+            test_mode=args.test_mode,
+            trial=args.robustness_trial,
+            response_transformation=transformation
+        )
+    else:
+        raise ValueError(f"Invalid mode: {args.mode}. Choose full, randomization, or robustness.")
 
     sys.exit(0)

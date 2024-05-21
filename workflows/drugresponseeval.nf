@@ -35,6 +35,7 @@ include { EVALUATE } from '../modules/local/evaluate'
 include { PREDICT_FULL } from '../modules/local/predict_full'
 include { RANDOMIZATION_SPLIT } from '../modules/local/randomization_split'
 include { RANDOMIZATION_TEST } from '../modules/local/randomization_test'
+include { ROBUSTNESS_TEST } from '../modules/local/robustness_test'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -138,6 +139,19 @@ workflow DRUGRESPONSEEVAL {
         ch_randomization = ch_best_hpams_per_split.combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
         RANDOMIZATION_TEST (
             ch_randomization,
+            params.path_data,
+            params.test_mode,
+            params.randomization_type,
+            params.response_transformation
+        )
+    }
+
+    if (params.n_trials_robustness > 0) {
+        ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
+        ch_robustness = ch_best_hpams_per_split.combine(ch_trials_robustness)
+
+        ROBUSTNESS_TEST (
+            ch_robustness,
             params.path_data,
             params.test_mode,
             params.randomization_type,
