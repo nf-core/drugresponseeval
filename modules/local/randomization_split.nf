@@ -17,8 +17,8 @@ process RANDOMIZATION_SPLIT {
     #!/usr/bin/env python
     import pickle
     import yaml
-    from dreval.models import MODEL_FACTORY
-    from dreval.experiment import get_randomization_test_views
+    from drevalpy.models import MODEL_FACTORY
+    from drevalpy.experiment import get_randomization_test_views
 
     model_class = MODEL_FACTORY['${model_name}']
     model = model_class(target='IC50')

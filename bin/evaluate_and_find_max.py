@@ -4,7 +4,7 @@ import argparse
 import pickle
 import yaml
 
-from dreval.experiment import evaluate
+from drevalpy.experiment import evaluate
 
 
 def get_parser():

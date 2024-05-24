@@ -7,13 +7,13 @@ import warnings
 from typing import Dict, Optional
 
 import yaml
-from dreval.datasets.dataset import DrugResponseDataset
-from dreval.models.drp_model import DRPModel
+from drevalpy.datasets.dataset import DrugResponseDataset
+from drevalpy.models.drp_model import DRPModel
 from sklearn.base import TransformerMixin
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
-from dreval.models import MODEL_FACTORY
-from dreval.experiment import train_and_predict
+from drevalpy.models import MODEL_FACTORY
+from drevalpy.experiment import train_and_predict
 
 
 def get_parser():

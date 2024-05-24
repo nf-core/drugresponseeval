@@ -2,7 +2,7 @@
 
 import argparse
 import yaml
-from dreval.models import MODEL_FACTORY
+from drevalpy.models import MODEL_FACTORY
 
 
 def get_parser():

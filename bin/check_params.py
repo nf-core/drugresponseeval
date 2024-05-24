@@ -7,9 +7,10 @@
 import argparse
 import logging
 import sys
-from dreval.models import MODEL_FACTORY
-from dreval.datasets import RESPONSE_DATASET_FACTORY
-from dreval.evaluation import AVAILABLE_METRICS
+
+from drevalpy.models import MODEL_FACTORY
+from drevalpy.datasets import RESPONSE_DATASET_FACTORY
+from drevalpy.evaluation import AVAILABLE_METRICS
 
 logger = logging.getLogger()
 

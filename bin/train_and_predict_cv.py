@@ -7,8 +7,8 @@ import yaml
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
 
-from dreval.models import MODEL_FACTORY
-from dreval.experiment import train_and_predict
+from drevalpy.models import MODEL_FACTORY
+from drevalpy.experiment import train_and_predict
 
 
 def get_parser():
