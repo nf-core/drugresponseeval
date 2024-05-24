@@ -83,7 +83,7 @@ def compute_randomization(
     cl_features = model.load_cell_line_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
     drug_features = model.load_drug_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
 
-    randomization_test_file = f'test_dataset_{model.model_name}_{randomization_test_view["test_name"]}_{test_mode}_{split_id}.csv'
+    randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
 
     cl_features_rand = cl_features.copy()
     drug_features_rand = drug_features.copy()
@@ -122,7 +122,7 @@ def compute_robustness(
         trial: int,
         response_transformation=Optional[TransformerMixin]
 ):
-    robustness_test_file = f'test_dataset_{model.model_name}_robustness_{test_mode}_{split_id}_{trial}.csv'
+    robustness_test_file = f'robustness_{split_id}_{trial}.csv'
     train_dataset.shuffle(random_state=trial)
     test_dataset.shuffle(random_state=trial)
     if early_stopping_dataset is not None:
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             early_stopping_dataset=es_set,
             response_transformation=transformation
         )
-        prediction_dataset = f'test_dataset_{selected_model.model_name}_predictions_{args.test_mode}_{args.split_id}.csv'
+        prediction_dataset = f'predictions_{args.split_id}.csv'
         test_set.save(prediction_dataset)
     elif args.mode == 'randomization':
         with open(args.randomization_views_path, 'r') as f:

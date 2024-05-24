@@ -1,6 +1,7 @@
 process ROBUSTNESS_TEST {
     tag "${model_name}_${robustness_iteration}"
     label 'process_single'
+    publishDir "${params.outdir}/${params.run_id}/${test_mode}/${model_name}/robustness_test"
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -13,7 +14,7 @@ process ROBUSTNESS_TEST {
     val(response_transformation)
 
     output:
-    path('test_dataset_*.csv'),     emit: test_dataset
+    path('robustness_*.csv'),     emit: test_dataset
 
     script:
     """

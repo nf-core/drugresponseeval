@@ -1,6 +1,7 @@
 process PREDICT_FULL {
     tag "${test_mode}_${model_name}_${split_id}"
     label 'process_single'
+    publishDir "${params.outdir}/${params.run_id}/${test_mode}/${model_name}/predictions"
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -12,7 +13,7 @@ process PREDICT_FULL {
     val(path_data)
 
     output:
-    path('test_dataset_*.csv'),     emit: test_dataset
+    path('predictions_*.csv'),     emit: test_dataset
 
     script:
     """
