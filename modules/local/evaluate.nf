@@ -1,5 +1,5 @@
 process EVALUATE {
-    tag "${model_name}_${split_id}"
+    tag "${test_mode}_${model_name}_${split_id}"
     label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
@@ -7,11 +7,11 @@ process EVALUATE {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    tuple val(model_name), val(split_id), path(hpam_yamls), path(pred_datas)
+    tuple val(model_name), val(test_mode), val(split_id), path(hpam_yamls), path(pred_datas)
     val metric
 
     output:
-    tuple val(model_name), val(split_id), path('best_hpam_combi_*.yaml'), emit: best_combis
+    tuple val(model_name), val(split_id), val(test_mode), path('best_hpam_combi_*.yaml'), emit: best_combis
 
     script:
     """

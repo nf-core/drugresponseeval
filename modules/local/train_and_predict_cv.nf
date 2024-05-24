@@ -1,15 +1,14 @@
 process TRAIN_AND_PREDICT_CV {
-    tag "$model_name"
+    tag "${model_name}_${test_mode}"
     label 'process_single'
 
     input:
-    tuple val(model_name), path(cv_data), path(hyperparameters)
+    tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
     val path_data
-    val test_mode
     val response_transformation
 
     output:
-    tuple val(model_name), val(cv_data.baseName), path(hyperparameters), path("prediction_dataset_*.pkl"), emit: pred_data
+    tuple val(model_name), val(test_mode), val(cv_data.baseName), path(hyperparameters), path("prediction_dataset_*.pkl"), emit: pred_data
 
     script:
     """

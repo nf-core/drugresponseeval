@@ -1,5 +1,5 @@
 process RANDOMIZATION_TEST {
-    tag "${model_name}_${randomization_type}"
+    tag "${test_mode}_${model_name}_${randomization_type}"
     label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
@@ -7,9 +7,8 @@ process RANDOMIZATION_TEST {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    tuple val(model_name), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
+    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
     path(path_data)
-    val(test_mode)
     val(randomization_type)
     val(response_transformation)
 

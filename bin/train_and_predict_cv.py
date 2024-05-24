@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import random
 import sys
 import pickle
 import yaml

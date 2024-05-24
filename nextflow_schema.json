@@ -5,6 +5,24 @@
     "description": "This pipeline takes a drug response prediction model architecture as input and evaluates its performance by using custom training, validation, and test sets. It compares it against existing deep learning models and baseline models. Additionally, it tests the model for overfitting, consistency, robustness, and generalization. ",
     "type": "object",
     "definitions": {
+        "model_options": {
+            "title": "Model options",
+            "type": "object",
+            "fa_icon": "fas fa-cogs",
+            "description": "Define the models and baselines to be tested.",
+            "required": ["models", "baselines"],
+            "properties": {
+                "model": {
+                    "type": "string",
+                    "description": "Model to be tested.",
+                    "help_text": "Model to be tested."
+            },
+            "baselines": {
+                "type": "string",
+                "description": "Baselines to be tested.",
+                "help_text": "Baselines to be tested."
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import sys
 import yaml
 from dreval.models import MODEL_FACTORY
 

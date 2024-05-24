@@ -7,9 +7,8 @@ process ROBUSTNESS_TEST {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    tuple val(split_id), path(split_dataset), val(model_name), path(best_hpams), val(robustness_iteration)
+    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration)
     path(path_data)
-    val(test_mode)
     val(randomization_type)
     val(response_transformation)
 

@@ -57,7 +57,9 @@ include { ROBUSTNESS_TEST } from '../modules/local/robustness_test'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+def test_modes = params.test_mode.split(",")
 def models = params.models.split(",")
+def baselines = params.baselines.split(",")
 def randomizations = params.randomization_mode.split(",")
 
 workflow DRUGRESPONSEEVAL {
@@ -67,10 +69,13 @@ workflow DRUGRESPONSEEVAL {
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
-
+    ch_test_modes = channel.from(test_modes)
     ch_models = channel.from(models)
+    ch_baselines = channel.from(baselines)
+    ch_models_baselines = ch_models.concat(ch_baselines)
 
-    /*PARAMS_CHECK (
+    PARAMS_CHECK (
+        params.baselines,
         params.models,
         params.test_mode,
         params.dataset_name,
@@ -79,68 +84,75 @@ workflow DRUGRESPONSEEVAL {
         params.curve_curator,
         params.response_transformation,
         params.optim_metric
-    )*/
+    )
 
     LOAD_RESPONSE(params.dataset_name, params.path_data)
 
+    ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
+
     CV_SPLIT (
-        LOAD_RESPONSE.out.response_dataset,
-        params.n_cv_splits,
-        params.test_mode
+        ch_data,
+        params.n_cv_splits
     )
+    // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
     HPAM_SPLIT (
-        ch_models
+        ch_models_baselines
     )
 
+    // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
     ch_hpam_combis = HPAM_SPLIT.out.hpam_combi
-    ch_model_cv = ch_models.combine(ch_cv_splits.flatten())
+    // [model_name, hpam_X.yaml]
     ch_hpam_combis = ch_hpam_combis.transpose()
 
+    // [model_name, test_mode, split_X.pkl]
+    ch_model_cv = ch_models_baselines.combine(ch_cv_splits.transpose())
+
+    // [model_name, test_mode, split_X.pkl, hpam_X.yaml]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
 
     TRAIN_AND_PREDICT_CV (
         ch_test_combis,
         params.path_data,
-        params.test_mode,
         params.response_transformation
     )
-
-    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1])
+    // [model_name, test_mode, split_id, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml], [prediction_dataset_0.pkl, prediction_dataset_1.pkl, ..., prediction_dataset_n.pkl]]
+    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
 
     EVALUATE (
         ch_combined_hpams,
         params.optim_metric
     )
 
+    // [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     ch_best_hpams_per_split = ch_cv_splits
-    .map { it -> [it, it.baseName]}
+    .map { test_mode, it -> [it, it.baseName, test_mode]}
     .transpose()
-    .combine(EVALUATE.out.best_combis, by: 1)
+    .combine(EVALUATE.out.best_combis, by: [1, 2])
 
     PREDICT_FULL (
         ch_best_hpams_per_split,
         params.response_transformation,
-        params.test_mode,
         params.path_data
     )
 
     if (params.randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
+        // randomizations only for models, not for baselines
         ch_models_rand = ch_models.combine(ch_randomization)
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
-        ch_best_hpams_per_split = ch_best_hpams_per_split.map {
-            split_id, path_to_split, model_name, path_to_hpams ->
-            return [model_name, split_id, path_to_split, path_to_hpams]
+        ch_best_hpams_per_split_rand = ch_best_hpams_per_split.map {
+            split_id, test_mode, path_to_split, model_name, path_to_hpams ->
+            return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
         }
-        ch_randomization = ch_best_hpams_per_split.combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
+        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml, randomization_views]
+        ch_randomization = ch_best_hpams_per_split_rand.combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
         RANDOMIZATION_TEST (
             ch_randomization,
             params.path_data,
-            params.test_mode,
             params.randomization_type,
             params.response_transformation
         )
@@ -148,12 +160,18 @@ workflow DRUGRESPONSEEVAL {
 
     if (params.n_trials_robustness > 0) {
         ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
-        ch_robustness = ch_best_hpams_per_split.combine(ch_trials_robustness)
+        ch_trials_robustness = ch_models.combine(ch_trials_robustness)
 
+        ch_best_hpams_per_split_rob = ch_best_hpams_per_split.map {
+            split_id, test_mode, path_to_split, model_name, path_to_hpams ->
+            return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
+        }
+
+        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml, robustness_iteration]
+        ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0)
         ROBUSTNESS_TEST (
             ch_robustness,
             params.path_data,
-            params.test_mode,
             params.randomization_type,
             params.response_transformation
         )

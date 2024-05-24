@@ -8,6 +8,7 @@ process PARAMS_CHECK {
     //    'biocontainers/python:3.8.3' }"
 
     input:
+    val baselines
     val models
     val test_mode
     val dataset_name
@@ -26,11 +27,11 @@ process PARAMS_CHECK {
     script: // This script is bundled with the pipeline, in nf-core/drugresponseeval/bin/
     """
     check_params.py \\
-        --models ${models.replace(',', ' ')} \\
-        --test_mode $test_mode \\
+        --models ${models.replace(',', ' ')} ${baselines.replace(',', ' ')} \\
+        --test_mode ${test_mode.replace(',', ' ')} \\
         --dataset_name $dataset_name \\
         --n_cv_splits $n_cv_splits \\
-        --randomization_mode $randomization_mode \\
+        --randomization_mode ${randomization_mode.replace(',', ' ')} \\
         --curve_curator $curve_curator \\
         --response_transformation $response_transformation \\
         --optim_metric $optim_metric

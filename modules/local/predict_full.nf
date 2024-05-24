@@ -1,5 +1,5 @@
 process PREDICT_FULL {
-    tag "${model_name}_${split_id}"
+    tag "${test_mode}_${model_name}_${split_id}"
     label 'process_single'
 
     //conda "conda-forge::python=3.8.3"
@@ -7,9 +7,8 @@ process PREDICT_FULL {
     //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
     //    'biocontainers/python:3.8.3' }"
     input:
-    tuple val(split_id), path(split_dataset), val(model_name), path(hpam_combi)
+    tuple val(split_id), val(test_mode), path(split_dataset), val(model_name), path(hpam_combi)
     val(response_transformation)
-    val(test_mode)
     val(path_data)
 
     output:
