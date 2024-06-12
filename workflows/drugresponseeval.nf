@@ -38,7 +38,8 @@ include { RANDOMIZATION_TEST } from '../modules/local/randomization_test'
 include { ROBUSTNESS_TEST } from '../modules/local/robustness_test'
 include { EVALUATE_FINAL } from '../modules/local/evaluate_final'
 include { COLLECT_RESULTS } from '../modules/local/collect_results'
-include { PARSE_RESULTS } from '../modules/local/parse_results'
+include { DRAW_VIOLIN } from '../modules/local/draw_violin'
+include { DRAW_HEATMAP } from '../modules/local/draw_heatmap'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -194,11 +195,20 @@ workflow DRUGRESPONSEEVAL {
         ch_collapse
     )
 
-    /*PARSE_RESULTS (
-            ch_vis.count(),
-            params.run_id,
-            outdirPath
-    )*/
+    ch_test_modes_normalized = ch_test_modes.map { it + "_normalized" }
+    ch_combined = ch_test_modes.combine(ch_models_baselines)
+    ch_combined_mapped = ch_combined.map { it[0] + "_" + it[1] }
+    ch_vio_heat = ch_test_modes.concat(ch_test_modes_normalized).concat(ch_combined_mapped)
+
+    DRAW_VIOLIN (
+        ch_vio_heat,
+        COLLECT_RESULTS.out.evaluation_results
+    )
+
+    DRAW_HEATMAP (
+        ch_vio_heat,
+        COLLECT_RESULTS.out.evaluation_results
+    )
 }
 
 /*
