@@ -13,7 +13,7 @@ process PREDICT_FULL {
     val(path_data)
 
     output:
-    path('predictions_*.csv'),     emit: test_dataset
+    tuple val(test_mode), val(model_name), path('predictions_*.csv'),     emit: ch_vis
 
     script:
     """

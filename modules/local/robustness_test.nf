@@ -14,7 +14,7 @@ process ROBUSTNESS_TEST {
     val(response_transformation)
 
     output:
-    path('robustness_*.csv'),     emit: test_dataset
+    tuple val(test_mode), val(model_name), path('robustness_*.csv'),     emit: ch_vis
 
     script:
     """

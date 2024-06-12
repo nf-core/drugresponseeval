@@ -31,11 +31,14 @@ include { LOAD_RESPONSE } from '../modules/local/load_response'
 include { CV_SPLIT } from '../modules/local/cv_split'
 include { HPAM_SPLIT } from '../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV } from '../modules/local/train_and_predict_cv'
-include { EVALUATE } from '../modules/local/evaluate'
+include { EVALUATE_FIND_MAX } from '../modules/local/evaluate_find_max'
 include { PREDICT_FULL } from '../modules/local/predict_full'
 include { RANDOMIZATION_SPLIT } from '../modules/local/randomization_split'
 include { RANDOMIZATION_TEST } from '../modules/local/randomization_test'
 include { ROBUSTNESS_TEST } from '../modules/local/robustness_test'
+include { EVALUATE_FINAL } from '../modules/local/evaluate_final'
+include { COLLECT_RESULTS } from '../modules/local/collect_results'
+include { PARSE_RESULTS } from '../modules/local/parse_results'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -61,6 +64,7 @@ def test_modes = params.test_mode.split(",")
 def models = params.models.split(",")
 def baselines = params.baselines.split(",")
 def randomizations = params.randomization_mode.split(",")
+def outdirPath = new File(params.outdir).getAbsolutePath()
 
 workflow DRUGRESPONSEEVAL {
 
@@ -120,7 +124,7 @@ workflow DRUGRESPONSEEVAL {
     // [model_name, test_mode, split_id, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml], [prediction_dataset_0.pkl, prediction_dataset_1.pkl, ..., prediction_dataset_n.pkl]]
     ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
 
-    EVALUATE (
+    EVALUATE_FIND_MAX (
         ch_combined_hpams,
         params.optim_metric
     )
@@ -129,13 +133,14 @@ workflow DRUGRESPONSEEVAL {
     ch_best_hpams_per_split = ch_cv_splits
     .map { test_mode, it -> [it, it.baseName, test_mode]}
     .transpose()
-    .combine(EVALUATE.out.best_combis, by: [1, 2])
+    .combine(EVALUATE_FIND_MAX.out.best_combis, by: [1, 2])
 
     PREDICT_FULL (
         ch_best_hpams_per_split,
         params.response_transformation,
         params.path_data
     )
+    ch_vis = PREDICT_FULL.out.ch_vis
 
     if (params.randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
@@ -156,6 +161,7 @@ workflow DRUGRESPONSEEVAL {
             params.randomization_type,
             params.response_transformation
         )
+        ch_vis = ch_vis.concat(RANDOMIZATION_TEST.out.ch_vis)
     }
 
     if (params.n_trials_robustness > 0) {
@@ -175,7 +181,24 @@ workflow DRUGRESPONSEEVAL {
             params.randomization_type,
             params.response_transformation
         )
+        ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
+
+    EVALUATE_FINAL (
+        ch_vis
+    )
+
+    ch_collapse = EVALUATE_FINAL.out.ch_individual_results.collect()
+
+    COLLECT_RESULTS (
+        ch_collapse
+    )
+
+    /*PARSE_RESULTS (
+            ch_vis.count(),
+            params.run_id,
+            outdirPath
+    )*/
 }
 
 /*

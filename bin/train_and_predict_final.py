@@ -122,7 +122,7 @@ def compute_robustness(
         trial: int,
         response_transformation=Optional[TransformerMixin]
 ):
-    robustness_test_file = f'robustness_{split_id}_{trial}.csv'
+    robustness_test_file = f'robustness_{trial}_{split_id}.csv'
     train_dataset.shuffle(random_state=trial)
     test_dataset.shuffle(random_state=trial)
     if early_stopping_dataset is not None:

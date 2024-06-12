@@ -1,4 +1,4 @@
-process EVALUATE {
+process EVALUATE_FIND_MAX {
     tag "${test_mode}_${model_name}_${split_id}"
     label 'process_single'
 
