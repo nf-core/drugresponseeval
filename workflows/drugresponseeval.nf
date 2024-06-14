@@ -40,6 +40,11 @@ include { EVALUATE_FINAL } from '../modules/local/evaluate_final'
 include { COLLECT_RESULTS } from '../modules/local/collect_results'
 include { DRAW_VIOLIN } from '../modules/local/draw_violin'
 include { DRAW_HEATMAP } from '../modules/local/draw_heatmap'
+include { DRAW_CORR_COMP } from '../modules/local/draw_corr_comp'
+include { DRAW_REGRESSION } from '../modules/local/draw_regression'
+include { SAVE_TABLES } from '../modules/local/save_tables'
+include { WRITE_HTML } from '../modules/local/write_html'
+include { WRITE_INDEX } from '../modules/local/write_index'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -209,6 +214,90 @@ workflow DRUGRESPONSEEVAL {
         ch_vio_heat,
         COLLECT_RESULTS.out.evaluation_results
     )
+
+    def suffixes = ['LCO': '_drug',
+                'LDO': '_cell_line',
+                'LPO': ['_drug', '_cell_line']]
+
+    ch_test_modes_extended = ch_test_modes.flatMap { test_mode ->
+        def modeSuffixes = suffixes[test_mode]
+        if (modeSuffixes instanceof String) {
+            return [test_mode + modeSuffixes]
+        } else {
+            return modeSuffixes.collect { test_mode + it }
+        }
+    }
+
+    ch_modes_algos = ch_test_modes_extended.combine(ch_models_baselines)
+    ch_modes_algos = ch_modes_algos.map { it[1] + "_" + it[0] }
+    ch_test_modes_extended = ch_test_modes_extended.concat(ch_modes_algos)
+
+    ch_test_modes_extended_drug = ch_test_modes_extended.filter { it.endsWith("_drug") }
+    ch_test_modes_extended_cl = ch_test_modes_extended.filter { it.endsWith("_cell_line") }
+
+    ch_test_modes_extended_drug = ch_test_modes_extended_drug.combine(COLLECT_RESULTS.out.evaluation_results_per_drug)
+    ch_test_modes_extended_cl = ch_test_modes_extended_cl.combine(COLLECT_RESULTS.out.evaluation_results_per_cl)
+
+    ch_test_modes_extended = ch_test_modes_extended_drug.concat(ch_test_modes_extended_cl)
+
+    DRAW_CORR_COMP (
+        ch_test_modes_extended
+    )
+
+    def suffixes_regr = ['LCO': ['_cell_line', '_cell_line_normalized'],
+                'LDO': ['_drug', '_drug_normalized'],
+                'LPO': ['_drug', '_drug_normalized', '_cell_line', '_cell_line_normalized']]
+
+    ch_regr = ch_test_modes.flatMap { test_mode ->
+        def modeSuffixes = suffixes_regr[test_mode]
+        return modeSuffixes.collect { test_mode + it }
+    }
+    ch_regr = ch_regr.combine(ch_models_baselines).combine(COLLECT_RESULTS.out.true_vs_pred)
+
+    DRAW_REGRESSION (
+        ch_regr
+    )
+
+    ch_drug = ch_test_modes.filter { it == 'LCO' || it == 'LPO' }
+    ch_drug = ch_drug.combine(COLLECT_RESULTS.out.evaluation_results_per_drug)
+    ch_cl = ch_test_modes.filter { it == 'LDO' || it == 'LPO' }
+    ch_cl = ch_cl.combine(COLLECT_RESULTS.out.evaluation_results_per_cl)
+
+    ch_tables = ch_test_modes.combine(COLLECT_RESULTS.out.evaluation_results)
+    ch_tables = ch_tables.concat(ch_drug).concat(ch_cl)
+
+    SAVE_TABLES (
+        ch_tables
+    )
+
+    ch_html_files = DRAW_VIOLIN.out.violin_plot
+                    .concat(DRAW_HEATMAP.out.heatmap)
+                    .concat(DRAW_CORR_COMP.out.corr_comp_scatter)
+                    .concat(DRAW_REGRESSION.out.regression_lines)
+                    .concat(SAVE_TABLES.out.html_table)
+                    .flatten()
+    ch_lpo = ch_html_files
+            .filter { it.baseName.contains('LPO') }
+            .map { it -> ['LPO', it] }
+    ch_lco = ch_html_files
+            .filter { it.baseName.contains('LCO') }
+            .map { it -> ['LCO', it] }
+    ch_ldo = ch_html_files
+            .filter { it.baseName.contains('LDO') }
+            .map { it -> ['LDO', it] }
+    ch_html_files = ch_lpo.concat(ch_lco).concat(ch_ldo).groupTuple(by: 0)
+
+    WRITE_HTML (
+        params.run_id,
+        ch_html_files
+    )
+
+    WRITE_INDEX (
+        params.run_id,
+        params.test_mode
+    )
+
+
 }
 
 /*

@@ -7,9 +7,9 @@ from drevalpy.visualization.heatmap import Heatmap
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description='Draw violin plots.')
+    parser = argparse.ArgumentParser(description='Draw violin plots or heatmaps.')
     parser.add_argument('--plot', type=str, default='violinplot', help='Type of plot (violin or heatmap).')
-    parser.add_argument('--name', type=str, required=True, help='Name/Setting of violin plot.')
+    parser.add_argument('--name', type=str, required=True, help='Name/Setting of plot.')
     parser.add_argument('--data', type=str, required=True, help='Path to data.')
     return parser
 
