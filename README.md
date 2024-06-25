@@ -1,4 +1,5 @@
 # ![nf-core/drugresponseeval](docs/images/nf-core-drugresponseeval_logo_light.png#gh-light-mode-only) ![nf-core/drugresponseeval](docs/images/nf-core-drugresponseeval_logo_dark.png#gh-dark-mode-only)
+# ![DrEval_pipeline](https://github.com/JudithBernett/nf-core-drugresponseeval/assets/38618495/2cca1d76-7814-479e-b34c-02e162a614b7)
 
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/drugresponseeval/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
