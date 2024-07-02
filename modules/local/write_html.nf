@@ -14,7 +14,6 @@ process WRITE_HTML {
 
     output:
     path('*.html'), emit: html_out
-    path('*.png'), emit: graphic_elements
 
     script:
     """

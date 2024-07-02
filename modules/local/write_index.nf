@@ -23,12 +23,14 @@ process WRITE_INDEX {
     import importlib.resources as pkg_resources
     from drevalpy.visualization.utils import parse_layout
 
-    lpo_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/LPO.png"))
-    shutil.copyfile(lpo_path, "LPO.png")
-    lco_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/LCO.png"))
-    shutil.copyfile(lco_path, "LCO.png")
-    ldo_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/LDO.png"))
-    shutil.copyfile(ldo_path, "LDO.png")
+    files_to_copy = [
+        "favicon.png",
+        "nf-core-drugresponseeval_logo_light.png",
+    ]
+    for file in files_to_copy:
+        file_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils", file))
+        shutil.copyfile(file_path, file)
+
     layout_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/index_layout.html"))
 
     with open("index.html", "w") as f:
@@ -42,6 +44,8 @@ process WRITE_INDEX {
         settings = '$test_modes'.split(",")
         settings.sort()
         for setting in settings:
+            img_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils", f"{setting}.png"))
+            shutil.copyfile(img_path, f"{setting}.png")
             f.write(
                 f'<a href="{setting}.html" target="_blank"><img src="{setting}.png" style="width:300px;height:300px;"></a>\\n'
             )

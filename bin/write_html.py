@@ -37,13 +37,7 @@ def write_table(f, table):
 
 
 def write_html(run_id: str, lpo_lco_ldo: str, files: list):
-    favicon_path = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/favicon.png"))
-    logo_path = str(
-        pkg_resources.files("drevalpy").joinpath("visualization/style_utils/nf-core-drugresponseeval_logo_light.png")
-    )
     page_layout = str(pkg_resources.files("drevalpy").joinpath("visualization/style_utils/page_layout.html"))
-    shutil.copyfile(favicon_path, "favicon.png")
-    shutil.copyfile(logo_path, "nf-core-drugresponseeval_logo_light.png")
 
     with open(f"{lpo_lco_ldo}.html", "w") as f:
         parse_layout(f=f, path_to_layout=page_layout)
