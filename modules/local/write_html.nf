@@ -1,7 +1,6 @@
 process WRITE_HTML {
     tag "${test_mode}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}"
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

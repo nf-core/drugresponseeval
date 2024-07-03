@@ -294,7 +294,8 @@ workflow DRUGRESPONSEEVAL {
 
     WRITE_INDEX (
         params.run_id,
-        params.test_mode
+        params.test_mode,
+        WRITE_HTML.out.html_out.count()
     )
 
 

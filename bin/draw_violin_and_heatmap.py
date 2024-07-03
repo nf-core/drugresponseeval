@@ -17,14 +17,17 @@ def get_parser():
 def draw_violin_or_heatmap(plot_type: str, path_to_df: str, setting: str):
     df = pd.read_csv(path_to_df, index_col=0)
     if setting in ['LPO', 'LDO', 'LCO', 'LPO_normalized', 'LDO_normalized', 'LCO_normalized']:
-        # subset df such that the column 'LPO_LCO_LDO' == setting and the column 'rand_setting' == 'predictions'
-        df = df[(df['LPO_LCO_LDO'] == setting) & (df['rand_setting'] == 'predictions')]
         if setting in ['LPO', 'LDO', 'LCO']:
+            # subset df such that the column 'LPO_LCO_LDO' == setting and the column 'rand_setting' == 'predictions'
+            df = df[(df['LPO_LCO_LDO'] == setting) & (df['rand_setting'] == 'predictions')]
             if plot_type == 'violinplot':
                 out_plot = Violin(df=df, normalized_metrics=False, whole_name=False)
             else:
                 out_plot = Heatmap(df=df, normalized_metrics=False, whole_name=False)
         else:
+            lpo_lco_ldo = setting.split('_')[0]
+            # subset df such that the column 'LPO_LCO_LDO' == lpo_lco_ldo and the column 'rand_setting' == 'predictions'
+            df = df[(df['LPO_LCO_LDO'] == lpo_lco_ldo) & (df['rand_setting'] == 'predictions')]
             if plot_type == 'violinplot':
                 out_plot = Violin(df=df, normalized_metrics=True, whole_name=False)
             else:
