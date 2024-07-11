@@ -21,7 +21,6 @@ process DRAW_HEATMAP {
         --plot heatmap \\
         --name $name \\
         --data $eval_results
-
     """
 
 }
