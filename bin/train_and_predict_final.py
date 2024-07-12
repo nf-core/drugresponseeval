@@ -11,7 +11,7 @@ from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from sklearn.base import TransformerMixin
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict
+from drevalpy.experiment import train_and_predict, randomize_train_predict
 from drevalpy.utils import get_response_transformation
 
 def get_parser():
@@ -73,30 +73,24 @@ def compute_randomization(
     drug_features = model.load_drug_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
 
     randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
-
-    cl_features_rand = cl_features.copy()
-    drug_features_rand = drug_features.copy()
-    view = randomization_test_view['view']
-    if view in cl_features.get_view_names():
-        cl_features_rand.randomize_features(view, randomization_type=randomization_type)
-    elif view in drug_features.get_view_names():
-        drug_features_rand.randomize_features(view, randomization_type=randomization_type)
-    else:
-        warnings.warn(f"View {view} not found in cell line or drug features. Skipping randomization {randomization_test_view['test_name']}.")
+    if (randomization_test_view["view"] not in cl_features.get_view_names()) and (randomization_test_view["view"] not in drug_features.get_view_names()):
+        warnings.warn(f"View {randomization_test_view["view"]} not found in features. Skipping randomization test {randomization_test_view["test_name"]} which includes this view.")
         return
-
-    test_dataset = train_and_predict(
-        model=model,
-        hpams=hpam_set,
-        path_data=path_data,
-        train_dataset=train_dataset,
-        prediction_dataset=test_dataset,
-        early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation,
-        cl_features=cl_features_rand,
-        drug_features=drug_features_rand
-    )
-    test_dataset.save(randomization_test_file)
+    
+    randomize_train_predict(
+                    view=randomization_test_view["view"],
+                    randomization_type=randomization_type,
+                    randomization_test_file=randomization_test_file,
+                    model=model,
+                    hpam_set=hpam_set,
+                    path_data=path_data,
+                    train_dataset=train_dataset,
+                    test_dataset=test_dataset,
+                    early_stopping_dataset=early_stopping_dataset,
+                    response_transformation=response_transformation,
+                    cl_features=cl_features,
+                    drug_features=drug_features,
+                )
 
 
 def compute_robustness(
