@@ -11,7 +11,7 @@ from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from sklearn.base import TransformerMixin
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict, randomize_train_predict
+from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict
 from drevalpy.utils import get_response_transformation
 
 def get_parser():
@@ -106,20 +106,18 @@ def compute_robustness(
         response_transformation=Optional[TransformerMixin]
 ):
     robustness_test_file = f'robustness_{trial}_{split_id}.csv'
-    train_dataset.shuffle(random_state=trial)
-    test_dataset.shuffle(random_state=trial)
-    if early_stopping_dataset is not None:
-        early_stopping_dataset.shuffle(random_state=trial)
-    test_dataset = train_and_predict(
-        model=model,
-        hpams=hpam_set,
-        path_data=path_data,
-        train_dataset=train_dataset,
-        prediction_dataset=test_dataset,
-        early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation
-    )
-    test_dataset.save(robustness_test_file)
+
+    robustness_train_predict(
+                trial=trial,
+                trial_file=robustness_test_file,
+                train_dataset=train_dataset,
+                test_dataset=test_dataset,
+                early_stopping_dataset=early_stopping_dataset,
+                model=model,
+                hpam_set=hpam_set,
+                path_data=path_data,
+                response_transformation=response_transformation,
+            )
 
 
 if __name__ == "__main__":
