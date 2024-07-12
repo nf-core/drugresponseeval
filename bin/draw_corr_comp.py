@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.corr_comp_scatter import CorrelationComparisonScatter
+from drevalpy.visualization.utils import draw_scatter_grids_per_group
 from drevalpy.models import MODEL_FACTORY
 
 
@@ -15,23 +15,18 @@ def get_parser():
 
 def draw_corr_comp(path_to_df: str, setting: str):
     df = pd.read_csv(path_to_df, index_col=0)
-    # extract which lpo_ldo_lco setting is used
-    lpo_lco_ldo = [name for name in ['LPO', 'LDO', 'LCO'] if name in setting][0]
-    # if setting ends with _drug, set group_by to 'drug'
     group_by = 'drug' if setting.endswith('_drug') else 'cell_line'
-    # if one of the names in model factory occurs in the setting, subset df accordingly
+    lpo_lco_ldo = [name for name in ['LPO', 'LDO', 'LCO'] if name in setting][0]
     if any(name in setting for name in MODEL_FACTORY):
-        # get the name of the algorithm
         algorithm = setting.split('_')[0]
-        # subset df such that the column 'algorithm' == algorithm
-        df = df[(df['LPO_LCO_LDO'] == lpo_lco_ldo) & (df['algorithm'] == algorithm)]
-        corr_comp = CorrelationComparisonScatter(df=df, color_by=group_by)
     else:
-        # subset df such that the column 'LPO_LCO_LDO' == lpo_lco_ldo
-        df = df[(df['LPO_LCO_LDO'] == lpo_lco_ldo) & (df['rand_setting'] == 'predictions')]
-        corr_comp = CorrelationComparisonScatter(df=df, color_by=group_by)
-    corr_comp.dropdown_fig.write_html(f'corr_comp_scatter_{setting}.html')
-    corr_comp.fig_overall.write_html(f'corr_comp_scatter_overall_{setting}.html')
+        algorithm = None
+    draw_scatter_grids_per_group(df=df,
+                                 group_by=group_by,
+                                 lpo_lco_ldo=lpo_lco_ldo,
+                                 out_prefix='',
+                                 algorithm=algorithm
+                                 )
 
 
 if __name__ == "__main__":

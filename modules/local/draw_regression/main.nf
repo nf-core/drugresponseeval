@@ -18,23 +18,25 @@ process DRAW_REGRESSION {
     """
     #!/usr/bin/env python
     import pandas as pd
-    from drevalpy.visualization.regression_slider_plot import RegressionSliderPlot
+    from drevalpy.visualization.utils import draw_regr_slider
 
+    true_vs_pred = pd.read_csv('${true_vs_pred}', index_col=0)
     name_split = '${name}'.split('_')
     lpo_lco_ldo = name_split[0]
     group_by = name_split[1]
     if group_by == 'cell':
         group_by = 'cell_line'
-    normalized = '${name}'.endswith('normalized')
-    true_vs_pred = pd.read_csv('${true_vs_pred}')
-    true_vs_pred = true_vs_pred[(true_vs_pred['LPO_LCO_LDO'] == lpo_lco_ldo) & (true_vs_pred['algorithm'] == '${model}')]
+    normalize = '${name}'.endswith('normalized')
 
-    regr_slider = RegressionSliderPlot(
-        df=true_vs_pred,
-        group_by=group_by,
-        normalize=normalized
+    draw_regr_slider(
+        t_v_p=true_vs_pred,
+        lpo_lco_ldo=lpo_lco_ldo,
+        model='${model}',
+        grouping_slider=group_by,
+        out_prefix='',
+        name='${name}',
+        normalize=normalize
     )
-    regr_slider.fig.write_html('regression_lines_${name}_${model}.html')
     """
 
 }
