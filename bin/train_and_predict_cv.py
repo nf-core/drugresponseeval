@@ -4,12 +4,11 @@ import argparse
 import sys
 import pickle
 import yaml
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 
 
 from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import train_and_predict
-
+from drevalpy.utils import get_reponse_transformation
 
 def get_parser():
     parser = argparse.ArgumentParser(description='Train and predict using a drug response prediction model.')
@@ -36,16 +35,7 @@ def main():
     else:
         es_dataset = None
     model = model_class(target='IC50')
-    if args.response_transformation == "None":
-        response_transform = None
-    elif args.response_transformation == "standard":
-        response_transform = StandardScaler()
-    elif args.response_transformation == "minmax":
-        response_transform = MinMaxScaler()
-    elif args.response_transformation == "robust":
-        response_transform = RobustScaler()
-    else:
-        raise ValueError(f"Invalid response_transform: {args.response_transformation}. Choose robust, minmax or standard.")
+    response_transform = get_reponse_transformation(args.response_transformation)
     validation_dataset = train_and_predict(
         model=model,
         hpams=hpams,

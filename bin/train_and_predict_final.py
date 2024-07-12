@@ -10,11 +10,9 @@ import yaml
 from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from sklearn.base import TransformerMixin
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
-
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict
-
+from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict
+from drevalpy.utils import get_response_transformation
 
 def get_parser():
     parser = argparse.ArgumentParser(description='Train and predict: either full mode, randomization mode, '
@@ -54,16 +52,7 @@ def prep_data(arguments):
     best_hpams = best_hpam_dict[f'{arguments.model_name}_{arguments.split_id}']['best_hpam_combi']
 
     model = model_class(target='IC50')
-    if arguments.response_transformation == "None":
-        response_transform = None
-    elif arguments.response_transformation == "standard":
-        response_transform = StandardScaler()
-    elif arguments.response_transformation == "minmax":
-        response_transform = MinMaxScaler()
-    elif arguments.response_transformation == "robust":
-        response_transform = RobustScaler()
-    else:
-        raise ValueError("Invalid response_transform: ${response_transformation}. Choose robust, minmax or standard.")
+    response_transform = get_response_transformation(arguments.response_transformation)
     return model, best_hpams, train_dataset, test_dataset, es_dataset, response_transform
 
 
@@ -84,30 +73,24 @@ def compute_randomization(
     drug_features = model.load_drug_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
 
     randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
-
-    cl_features_rand = cl_features.copy()
-    drug_features_rand = drug_features.copy()
-    view = randomization_test_view['view']
-    if view in cl_features.get_view_names():
-        cl_features_rand.randomize_features(view, randomization_type=randomization_type)
-    elif view in drug_features.get_view_names():
-        drug_features_rand.randomize_features(view, randomization_type=randomization_type)
-    else:
-        warnings.warn(f"View {view} not found in cell line or drug features. Skipping randomization {randomization_test_view['test_name']}.")
+    if (randomization_test_view["view"] not in cl_features.get_view_names()) and (randomization_test_view["view"] not in drug_features.get_view_names()):
+        warnings.warn(f"View {randomization_test_view["view"]} not found in features. Skipping randomization test {randomization_test_view["test_name"]} which includes this view.")
         return
-
-    test_dataset = train_and_predict(
-        model=model,
-        hpams=hpam_set,
-        path_data=path_data,
-        train_dataset=train_dataset,
-        prediction_dataset=test_dataset,
-        early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation,
-        cl_features=cl_features_rand,
-        drug_features=drug_features_rand
-    )
-    test_dataset.save(randomization_test_file)
+    
+    randomize_train_predict(
+                    view=randomization_test_view["view"],
+                    randomization_type=randomization_type,
+                    randomization_test_file=randomization_test_file,
+                    model=model,
+                    hpam_set=hpam_set,
+                    path_data=path_data,
+                    train_dataset=train_dataset,
+                    test_dataset=test_dataset,
+                    early_stopping_dataset=early_stopping_dataset,
+                    response_transformation=response_transformation,
+                    cl_features=cl_features,
+                    drug_features=drug_features,
+                )
 
 
 def compute_robustness(
@@ -123,20 +106,18 @@ def compute_robustness(
         response_transformation=Optional[TransformerMixin]
 ):
     robustness_test_file = f'robustness_{trial}_{split_id}.csv'
-    train_dataset.shuffle(random_state=trial)
-    test_dataset.shuffle(random_state=trial)
-    if early_stopping_dataset is not None:
-        early_stopping_dataset.shuffle(random_state=trial)
-    test_dataset = train_and_predict(
-        model=model,
-        hpams=hpam_set,
-        path_data=path_data,
-        train_dataset=train_dataset,
-        prediction_dataset=test_dataset,
-        early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation
-    )
-    test_dataset.save(robustness_test_file)
+
+    robustness_train_predict(
+                trial=trial,
+                trial_file=robustness_test_file,
+                train_dataset=train_dataset,
+                test_dataset=test_dataset,
+                early_stopping_dataset=early_stopping_dataset,
+                model=model,
+                hpam_set=hpam_set,
+                path_data=path_data,
+                response_transformation=response_transformation,
+            )
 
 
 if __name__ == "__main__":
