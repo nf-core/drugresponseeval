@@ -10,11 +10,9 @@ import yaml
 from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from sklearn.base import TransformerMixin
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
-
 from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import train_and_predict
-
+from drevalpy.utils import get_response_transformation
 
 def get_parser():
     parser = argparse.ArgumentParser(description='Train and predict: either full mode, randomization mode, '
@@ -54,16 +52,7 @@ def prep_data(arguments):
     best_hpams = best_hpam_dict[f'{arguments.model_name}_{arguments.split_id}']['best_hpam_combi']
 
     model = model_class(target='IC50')
-    if arguments.response_transformation == "None":
-        response_transform = None
-    elif arguments.response_transformation == "standard":
-        response_transform = StandardScaler()
-    elif arguments.response_transformation == "minmax":
-        response_transform = MinMaxScaler()
-    elif arguments.response_transformation == "robust":
-        response_transform = RobustScaler()
-    else:
-        raise ValueError("Invalid response_transform: ${response_transformation}. Choose robust, minmax or standard.")
+    response_transform = get_response_transformation(arguments.response_transformation)
     return model, best_hpams, train_dataset, test_dataset, es_dataset, response_transform
 
 
