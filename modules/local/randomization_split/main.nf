@@ -14,27 +14,7 @@ process RANDOMIZATION_SPLIT {
 
     script:
     """
-    #!/usr/bin/env python
-    import pickle
-    import yaml
-    from drevalpy.models import MODEL_FACTORY
-    from drevalpy.experiment import get_randomization_test_views
-
-    model_class = MODEL_FACTORY['${model_name}']
-    model = model_class(target='IC50')
-
-    randomization_test_views = get_randomization_test_views(
-                                    model=model,
-                                    randomization_mode=['${randomization_mode}']
-                               )
-
-    key = list(randomization_test_views.keys())[0]
-    # create as many dicts as there are elements in the value list of the key
-    randomization_test_view_dicts = [{'test_name': key, 'view': value} for value in randomization_test_views[key]]
-
-    for rand_dict in randomization_test_view_dicts:
-        with open(f'randomization_test_view_{rand_dict["test_name"]}.yaml', 'w') as f:
-            yaml.dump(rand_dict, f)
+    randomization_split.py --model_name ${model_name} --randomization_mode ${randomization_mode}
     """
 
 }
