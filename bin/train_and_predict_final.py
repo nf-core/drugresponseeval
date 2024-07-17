@@ -5,11 +5,11 @@ import argparse
 import pickle
 import warnings
 from typing import Dict, Optional
-
 import yaml
+from sklearn.base import TransformerMixin
+
 from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
-from sklearn.base import TransformerMixin
 from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict
 from drevalpy.utils import get_response_transformation
@@ -45,6 +45,8 @@ def prep_data(arguments):
     test_dataset = split["test"]
 
     model_class = MODEL_FACTORY[arguments.model_name]
+    model = model_class()
+
     if model_class.early_stopping:
         validation_dataset = split["validation_es"]
         es_dataset = split["early_stopping"]
@@ -58,7 +60,6 @@ def prep_data(arguments):
         best_hpam_dict = yaml.safe_load(f)
     best_hpams = best_hpam_dict[f"{arguments.model_name}_{arguments.split_id}"]["best_hpam_combi"]
 
-    model = model_class(target="IC50")
     response_transform = get_response_transformation(arguments.response_transformation)
     return model, best_hpams, train_dataset, test_dataset, es_dataset, response_transform
 
