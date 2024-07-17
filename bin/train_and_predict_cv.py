@@ -35,7 +35,7 @@ def main():
         es_dataset = split["early_stopping"]
     else:
         es_dataset = None
-    model = model_class(target="IC50")
+    model = model_class()
     response_transform = get_response_transformation(args.response_transformation)
     validation_dataset = train_and_predict(
         model=model,
