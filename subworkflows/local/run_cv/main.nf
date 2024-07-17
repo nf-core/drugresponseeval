@@ -11,7 +11,7 @@ workflow RUN_CV {
     baselines                        // model names for comparison
 
     main:
-    LOAD_RESPONSE(params.dataset_name, params.path_data)
+    LOAD_RESPONSE(params.dataset_name, params.path_data, params.cross_study_datasets)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)

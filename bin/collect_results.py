@@ -50,8 +50,10 @@ if __name__ == "__main__":
     )
 
     # save the results to csv files
-    write_results(path_out="",
-                  eval_results=eval_results,
-                  eval_results_per_drug=eval_results_per_drug,
-                  eval_results_per_cl=eval_results_per_cell_line,
-                  t_vs_p=t_vs_p)
+    write_results(
+        path_out="",
+        eval_results=eval_results,
+        eval_results_per_drug=eval_results_per_drug,
+        eval_results_per_cl=eval_results_per_cell_line,
+        t_vs_p=t_vs_p,
+    )
