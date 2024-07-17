@@ -20,7 +20,7 @@ def draw_corr_comp(path_to_df: str, setting: str):
     if any(name in setting for name in MODEL_FACTORY):
         algorithm = setting.split('_')[0]
     else:
-        algorithm = None
+        algorithm = "all"
     draw_scatter_grids_per_group(df=df,
                                  group_by=group_by,
                                  lpo_lco_ldo=lpo_lco_ldo,

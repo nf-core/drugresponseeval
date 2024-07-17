@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import prep_results
+from drevalpy.visualization.utils import prep_results, write_results
 
 
 def get_parser():
@@ -50,7 +50,8 @@ if __name__ == "__main__":
     )
 
     # save the results to csv files
-    eval_results.to_csv("evaluation_results.csv", index=True)
-    eval_results_per_drug.to_csv("evaluation_results_per_drug.csv", index=True)
-    eval_results_per_cell_line.to_csv("evaluation_results_per_cl.csv", index=True)
-    t_vs_p.to_csv("true_vs_pred.csv", index=True)
+    write_results(path_out="",
+                  eval_results=eval_results,
+                  eval_results_per_drug=eval_results_per_drug,
+                  eval_results_per_cl=eval_results_per_cell_line,
+                  t_vs_p=t_vs_p)

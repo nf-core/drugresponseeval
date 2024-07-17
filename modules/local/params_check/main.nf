@@ -8,15 +8,19 @@ process PARAMS_CHECK {
     //    'biocontainers/python:3.8.3' }"
 
     input:
-    val baselines
+    val run_id
     val models
+    val baselines
     val test_mode
-    val dataset_name
-    val n_cv_splits
     val randomization_mode
+    val randomization_type
+    val n_trials_robustness
+    val dataset_name
+    val cross_study_datasets
     val curve_curator
-    val response_transformation
     val optim_metric
+    val n_cv_splits
+    val response_transformation
 
     output:
 
@@ -24,16 +28,21 @@ process PARAMS_CHECK {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/drugresponseeval/bin/
+    script:
     """
     check_params.py \\
-        --models ${models.replace(',', ' ')} ${baselines.replace(',', ' ')} \\
+        --run_id $run_id \\
+        --models ${models.replace(',', ' ')} \\
+        --baselines ${baselines.replace(',', ' ')} \\
         --test_mode ${test_mode.replace(',', ' ')} \\
-        --dataset_name $dataset_name \\
-        --n_cv_splits $n_cv_splits \\
         --randomization_mode ${randomization_mode.replace(',', ' ')} \\
-        --curve_curator $curve_curator \\
-        --response_transformation $response_transformation \\
-        --optim_metric $optim_metric
+        --randomization_type $randomization_type \\
+        --n_trials_robustness $n_trials_robustness \\
+        --dataset_name $dataset_name \\
+        ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
+        ${curve_curator ? '--curve_curator' : ''} \\
+        --optim_metric $optim_metric \\
+        --n_cv_splits $n_cv_splits \\
+        --response_transformation $response_transformation
     """
 }

@@ -76,15 +76,19 @@ workflow DRUGRESPONSEEVAL {
     ch_models_baselines = ch_models.concat(ch_baselines)
 
     PARAMS_CHECK (
-        params.baselines,
+        params.run_id,
         params.models,
+        params.baselines,
         params.test_mode,
-        params.dataset_name,
-        params.n_cv_splits,
         params.randomization_mode,
+        params.randomization_type,
+        params.n_trials_robustness,
+        params.dataset_name,
+        params.cross_study_datasets,
         params.curve_curator,
-        params.response_transformation,
-        params.optim_metric
+        params.optim_metric,
+        params.n_cv_splits,
+        params.response_transformation
     )
 
     RUN_CV (
