@@ -7,9 +7,8 @@ import yaml
 
 
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict
+from drevalpy.experiment import train_and_predict, instantiate_model
 from drevalpy.utils import get_response_transformation
-
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Train and predict using a drug response prediction model.")
@@ -30,12 +29,14 @@ def main():
     train_dataset = split["train"]
     validation_dataset = split["validation"]
     hpams = yaml.load(open(args.hyperparameters, "r"), Loader=yaml.FullLoader)
+
     if model_class.early_stopping:
         validation_dataset = split["validation_es"]
         es_dataset = split["early_stopping"]
     else:
         es_dataset = None
-    model = model_class()
+
+    model = instantiate_model(model_class)
     response_transform = get_response_transformation(args.response_transformation)
     validation_dataset = train_and_predict(
         model=model,
