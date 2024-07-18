@@ -16,22 +16,9 @@ process SAVE_TABLES {
 
     script:
     """
-    #!/usr/bin/env python
-    import pandas as pd
-    from drevalpy.visualization.utils import export_setting_html_table
-
-    df = pd.read_csv('${eval_results}')
-    df = df[df['LPO_LCO_LDO'] == '${lpo_lco_ldo}']
-
-    if 'per_drug' in '${eval_results}':
-        grouping = 'drug'
-    elif 'per_cl' in '${eval_results}':
-        grouping = 'cell_line'
-    else:
-        grouping = 'all'
-
-    export_path = f'table_{grouping}_${lpo_lco_ldo}.html'
-    export_setting_html_table(df=df, export_path=export_path, grouping=grouping)
+    save_tables.py \\
+        --path_eval_results ${eval_results} \\
+        --lpo_lco_ldo ${lpo_lco_ldo}
     """
 
 }
