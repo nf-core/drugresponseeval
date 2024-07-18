@@ -8,9 +8,13 @@ def get_parser():
     parser = argparse.ArgumentParser(description="Load data for drug response prediction.")
     parser.add_argument("--dataset_name", type=str, required=True, help="Name of the dataset to load.")
     parser.add_argument("--path_data", type=str, default="data", help="Path to the data directory.")
-    parser.add_argument("--cross_study_datasets", nargs='+', default=[],
-                        help="List of datasets to use to evaluate predictions across studies. "
-                             "Default is empty list which means no cross-study datasets are used.")
+    parser.add_argument(
+        "--cross_study_datasets",
+        nargs="+",
+        default=[],
+        help="List of datasets to use to evaluate predictions across studies. "
+        "Default is empty list which means no cross-study datasets are used.",
+    )
     return parser
 
 

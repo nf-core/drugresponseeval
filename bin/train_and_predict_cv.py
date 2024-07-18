@@ -10,6 +10,7 @@ from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import train_and_predict, instantiate_model
 from drevalpy.utils import get_response_transformation
 
+
 def get_parser():
     parser = argparse.ArgumentParser(description="Train and predict using a drug response prediction model.")
     parser.add_argument("--model_name", type=str, help="model to evaluate or list of models to compare")

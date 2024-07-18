@@ -16,27 +16,10 @@ process DRAW_REGRESSION {
 
     script:
     """
-    #!/usr/bin/env python
-    import pandas as pd
-    from drevalpy.visualization.utils import draw_regr_slider
-
-    true_vs_pred = pd.read_csv('${true_vs_pred}', index_col=0)
-    name_split = '${name}'.split('_')
-    lpo_lco_ldo = name_split[0]
-    group_by = name_split[1]
-    if group_by == 'cell':
-        group_by = 'cell_line'
-    normalize = '${name}'.endswith('normalized')
-
-    draw_regr_slider(
-        t_v_p=true_vs_pred,
-        lpo_lco_ldo=lpo_lco_ldo,
-        model='${model}',
-        grouping_slider=group_by,
-        out_prefix='',
-        name='${name}',
-        normalize=normalize
-    )
+    draw_regression.py \\
+    --path_t_vs_p ${true_vs_pred} \\
+    --name ${name} \\
+    --model ${model}
     """
 
 }

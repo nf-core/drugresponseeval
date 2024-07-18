@@ -18,7 +18,12 @@ def main():
     args = parser.parse_args()
     response_data = pickle.load(open(args.response, "rb"))
     response_data.split_dataset(
-        n_cv_splits=args.n_cv_splits, mode=args.test_mode, split_validation=True, split_early_stopping=True, validation_ratio=0.1, random_state=42
+        n_cv_splits=args.n_cv_splits,
+        mode=args.test_mode,
+        split_validation=True,
+        split_early_stopping=True,
+        validation_ratio=0.1,
+        random_state=42,
     )
     for split_index, split in enumerate(response_data.cv_splits):
         with open(f"split_{split_index}.pkl", "wb") as f:

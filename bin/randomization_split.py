@@ -17,17 +17,14 @@ def main(args):
     model_class = MODEL_FACTORY[args.model_name]
     model = model_class()
 
-    randomization_test_views = get_randomization_test_views(
-        model=model,
-        randomization_mode=[args.randomization_mode]
-    )
+    randomization_test_views = get_randomization_test_views(model=model, randomization_mode=[args.randomization_mode])
 
     key = list(randomization_test_views.keys())[0]
     # create as many dicts as there are elements in the value list of the key
-    randomization_test_view_dicts = [{'test_name': key, 'view': value} for value in randomization_test_views[key]]
+    randomization_test_view_dicts = [{"test_name": key, "view": value} for value in randomization_test_views[key]]
 
     for rand_dict in randomization_test_view_dicts:
-        with open(f'randomization_test_view_{rand_dict["test_name"]}.yaml', 'w') as f:
+        with open(f'randomization_test_view_{rand_dict["test_name"]}.yaml', "w") as f:
             yaml.dump(rand_dict, f)
 
 
