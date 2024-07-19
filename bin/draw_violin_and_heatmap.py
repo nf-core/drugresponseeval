@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import draw_violin_or_heatmap
+from drevalpy.visualization import Violin, Heatmap
 
 
 def get_parser():
@@ -20,20 +20,38 @@ def prep_df(plot_type: str, path_to_df: str, setting: str):
         if setting in ["LPO", "LDO", "LCO"]:
             # overview for setting, only 'rand_setting' == 'predictions'
             df = df[(df["LPO_LCO_LDO"] == setting) & (df["rand_setting"] == "predictions")]
-            out_plot = draw_violin_or_heatmap(plot_type, df, normalized_metrics=False, whole_name=False)
+            normalized_metrics = False
+            whole_name = False
+            out_suffix = f"algorithms_{setting}"
         else:
             # overview for normalized setting, only 'rand_setting' == 'predictions'
             lpo_lco_ldo = setting.split("_")[0]
             df = df[(df["LPO_LCO_LDO"] == lpo_lco_ldo) & (df["rand_setting"] == "predictions")]
-            out_plot = draw_violin_or_heatmap(plot_type, df, normalized_metrics=True, whole_name=False)
+            normalized_metrics = True
+            whole_name = False
+            out_suffix = f"algorithms_{lpo_lco_ldo}_normalized"
     else:
         # algorithm-wise plots
         name_split = setting.split("_")
         lpo_lco_ldo = name_split[0]
         algorithm = name_split[1]
         df = df[(df["LPO_LCO_LDO"] == lpo_lco_ldo) & (df["algorithm"] == algorithm)]
-        out_plot = draw_violin_or_heatmap(plot_type, df, normalized_metrics=False, whole_name=True)
-    out_plot.fig.write_html(f"{plot_type}_{setting}.html")
+        normalized_metrics = False
+        whole_name = True
+        out_suffix = f"{algorithm}_{lpo_lco_ldo}"
+    if plot_type == "violin":
+        out_plot = Violin(
+            df=df,
+            normalized_metrics=normalized_metrics,
+            whole_name=whole_name
+        )
+    else:
+        out_plot = Heatmap(
+            df=df,
+            normalized_metrics=normalized_metrics,
+            whole_name=whole_name
+        )
+    out_plot.draw_and_save(out_prefix="", out_suffix=out_suffix)
 
 
 if __name__ == "__main__":

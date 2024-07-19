@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import draw_regr_slider
+from drevalpy.visualization import RegressionSliderPlot
 
 
 def get_parser():
@@ -23,15 +23,14 @@ def main(path_to_true_vs_pred: str, name: str, model: str):
         group_by = "cell_line"
     normalize = name.endswith("normalized")
 
-    draw_regr_slider(
-        t_v_p=true_vs_pred,
+    regr_slider = RegressionSliderPlot(
+        df=true_vs_pred,
         lpo_lco_ldo=lpo_lco_ldo,
         model=model,
-        grouping_slider=group_by,
-        out_prefix="",
-        name=name,
+        group_by=group_by,
         normalize=normalize,
     )
+    regr_slider.draw_and_save(out_prefix="", out_suffix=f"{name}_{model}")
 
 
 if __name__ == "__main__":

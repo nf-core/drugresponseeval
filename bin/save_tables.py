@@ -18,14 +18,21 @@ def main(path_eval_results: str, lpo_lco_ldo: str):
 
     if "per_drug" in path_eval_results:
         grouping = "drug"
+        out_suffix = f"{grouping}_{lpo_lco_ldo}"
     elif "per_cl" in path_eval_results:
         grouping = "cell_line"
+        out_suffix = f"{grouping}_{lpo_lco_ldo}"
     else:
         grouping = "all"
+        out_suffix = lpo_lco_ldo
 
-    export_path = f"table_{grouping}_{lpo_lco_ldo}.html"
-    html_table = HTMLTable(df=df, export_path=export_path, grouping=grouping)
-    html_table.export_html_table()
+    html_table = HTMLTable(df=df,
+                           group_by=grouping)
+    html_table.draw_and_save(
+        out_prefix="",
+        out_suffix=out_suffix
+
+    )
 
 
 if __name__ == "__main__":

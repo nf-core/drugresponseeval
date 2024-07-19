@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import draw_scatter_grids_per_group
+from drevalpy.visualization.utils import CorrelationComparisonScatter
 from drevalpy.models import MODEL_FACTORY
 
 
@@ -21,7 +21,13 @@ def draw_corr_comp(path_to_df: str, setting: str):
         algorithm = setting.split("_")[0]
     else:
         algorithm = "all"
-    draw_scatter_grids_per_group(df=df, group_by=group_by, lpo_lco_ldo=lpo_lco_ldo, out_prefix="", algorithm=algorithm)
+    corr_comp = CorrelationComparisonScatter(
+        df=df,
+        color_by=group_by,
+        lpo_lco_ldo=lpo_lco_ldo,
+        algorithm=algorithm
+    )
+    corr_comp.draw_and_save(out_prefix="", out_suffix=corr_comp.name)
 
 
 if __name__ == "__main__":
