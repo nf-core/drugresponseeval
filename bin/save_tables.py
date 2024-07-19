@@ -18,13 +18,12 @@ def main(path_eval_results: str, lpo_lco_ldo: str):
 
     if "per_drug" in path_eval_results:
         grouping = "drug"
-        out_suffix = f"{grouping}_{lpo_lco_ldo}"
     elif "per_cl" in path_eval_results:
         grouping = "cell_line"
-        out_suffix = f"{grouping}_{lpo_lco_ldo}"
     else:
         grouping = "all"
-        out_suffix = lpo_lco_ldo
+
+    out_suffix = f"{grouping}_{lpo_lco_ldo}" if grouping != "all" else lpo_lco_ldo
 
     html_table = HTMLTable(df=df,
                            group_by=grouping)
