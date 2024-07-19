@@ -3,7 +3,7 @@ import argparse
 import shutil
 import importlib.resources as pkg_resources
 
-from drevalpy.visualization.utils import parse_layout, write_violins_and_heatmaps, write_scatter_eval_models
+from drevalpy.visualization.utils import parse_layout, write_violins_and_heatmaps, write_corr_comp_scatter
 
 
 def get_parser():
@@ -59,11 +59,11 @@ def write_html(run_id: str, lpo_lco_ldo: str, files: list):
         corr_files = [
             f for f in files if lpo_lco_ldo in f and f.startswith("corr_comp_scatter") and f.endswith("drug.html")
         ]
-        write_scatter_eval_models(f=f, setting=lpo_lco_ldo, group_by="drug", plot_list=corr_files)
+        write_corr_comp_scatter(f=f, setting=lpo_lco_ldo, group_by="drug", plot_list=corr_files)
         corr_files = [
             f for f in files if lpo_lco_ldo in f and f.startswith("corr_comp_scatter") and f.endswith("cell_line.html")
         ]
-        write_scatter_eval_models(f=f, setting=lpo_lco_ldo, group_by="cell_line", plot_list=corr_files)
+        write_corr_comp_scatter(f=f, setting=lpo_lco_ldo, group_by="cell_line", plot_list=corr_files)
 
         f.write('<h2 id="tables"> Evaluation Results Table</h2>\n')
         whole_table = [f for f in files if f == f"table_{lpo_lco_ldo}.html"][0]
