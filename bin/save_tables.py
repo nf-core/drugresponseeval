@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import export_html_table
+from drevalpy.visualization import HTMLTable
 
 
 def get_parser():
@@ -24,7 +24,8 @@ def main(path_eval_results: str, lpo_lco_ldo: str):
         grouping = "all"
 
     export_path = f"table_{grouping}_{lpo_lco_ldo}.html"
-    export_html_table(df=df, export_path=export_path, grouping=grouping)
+    html_table = HTMLTable(df=df, export_path=export_path, grouping=grouping)
+    html_table.export_html_table()
 
 
 if __name__ == "__main__":
