@@ -21,12 +21,7 @@ def draw_corr_comp(path_to_df: str, setting: str):
         algorithm = setting.split("_")[0]
     else:
         algorithm = "all"
-    corr_comp = CorrelationComparisonScatter(
-        df=df,
-        color_by=group_by,
-        lpo_lco_ldo=lpo_lco_ldo,
-        algorithm=algorithm
-    )
+    corr_comp = CorrelationComparisonScatter(df=df, color_by=group_by, lpo_lco_ldo=lpo_lco_ldo, algorithm=algorithm)
     corr_comp.draw_and_save(out_prefix="", out_suffix=corr_comp.name)
 
 

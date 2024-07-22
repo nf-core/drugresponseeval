@@ -13,9 +13,4 @@ def get_parser():
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
-    create_html(
-        run_id=args.run_id,
-        lpo_lco_ldo=args.test_mode,
-        files=args.files,
-        prefix_results=""
-    )
+    create_html(run_id=args.run_id, lpo_lco_ldo=args.test_mode, files=args.files, prefix_results="")
