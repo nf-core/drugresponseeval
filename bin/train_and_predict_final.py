@@ -73,7 +73,6 @@ def compute_randomization(
     test_dataset: DrugResponseDataset,
     early_stopping_dataset: Optional[DrugResponseDataset],
     split_id: str,
-    test_mode: str,
     randomization_type: str = "permutation",
     response_transformation=Optional[TransformerMixin],
 ):
@@ -161,7 +160,6 @@ if __name__ == "__main__":
             test_dataset=test_set,
             early_stopping_dataset=es_set,
             split_id=args.split_id,
-            test_mode=args.test_mode,
             randomization_type=args.randomization_type,
             response_transformation=transformation,
         )
