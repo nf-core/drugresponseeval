@@ -76,12 +76,10 @@ def compute_randomization(
     randomization_type: str = "permutation",
     response_transformation=Optional[TransformerMixin],
 ):
-    # TODO: remove redundancy to drevalpy
     cl_features = model.load_cell_line_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
     drug_features = model.load_drug_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
 
     randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
-    # TODO: remove redundancy to drevalpy
     if (randomization_test_view["view"] not in cl_features.get_view_names()) and (
         randomization_test_view["view"] not in drug_features.get_view_names()
     ):
