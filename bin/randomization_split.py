@@ -14,6 +14,7 @@ def get_parser():
 
 
 def main(args):
+    # TODO: remove redundancy to drevalpy
     model_class = MODEL_FACTORY[args.model_name]
     model = model_class()
 
