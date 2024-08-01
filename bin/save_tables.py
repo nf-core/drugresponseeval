@@ -25,13 +25,8 @@ def main(path_eval_results: str, lpo_lco_ldo: str):
 
     out_suffix = f"{grouping}_{lpo_lco_ldo}" if grouping != "all" else lpo_lco_ldo
 
-    html_table = HTMLTable(df=df,
-                           group_by=grouping)
-    html_table.draw_and_save(
-        out_prefix="",
-        out_suffix=out_suffix
-
-    )
+    html_table = HTMLTable(df=df, group_by=grouping)
+    html_table.draw_and_save(out_prefix="", out_suffix=out_suffix)
 
 
 if __name__ == "__main__":
