@@ -86,7 +86,7 @@
                     "type": "string",
                     "default": "permutation",
                     "description": "Randomization type for the pipeline.",
-                    "help_text": "type of randomization to use. Choose from \"gaussian\", \"zeroing\", \"permutation\". Default is \"permutation"
+                    "help_text": "type of randomization to use. Choose from \"permutation\", \"invariant\". Default is \"permutation"
                 }
             }
         },

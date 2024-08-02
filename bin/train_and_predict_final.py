@@ -3,7 +3,6 @@
 import sys
 import argparse
 import pickle
-import warnings
 from typing import Dict, Optional
 import yaml
 from sklearn.base import TransformerMixin
@@ -32,7 +31,7 @@ def get_parser():
         "--randomization_type",
         type=str,
         default="permutation",
-        help="Randomization type (permutation, zeroing, gaussian).",
+        help="Randomization type (permutation, invariant).",
     )
     parser.add_argument("--robustness_trial", type=int, help="Robustness trial index.")
     return parser
@@ -76,20 +75,11 @@ def compute_randomization(
     randomization_type: str = "permutation",
     response_transformation=Optional[TransformerMixin],
 ):
-    cl_features = model.load_cell_line_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
-    drug_features = model.load_drug_features(data_path=path_data, dataset_name=train_dataset.dataset_name)
-
     randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
-    if (randomization_test_view["view"] not in cl_features.get_view_names()) and (
-        randomization_test_view["view"] not in drug_features.get_view_names()
-    ):
-        warnings.warn(
-            f"View {randomization_test_view['view']} not found in features. Skipping randomization test {randomization_test_view['test_name']} which includes this view."
-        )
-        return
 
     randomize_train_predict(
         view=randomization_test_view["view"],
+        test_name=randomization_test_view["test_name"],
         randomization_type=randomization_type,
         randomization_test_file=randomization_test_file,
         model=model,
@@ -98,9 +88,7 @@ def compute_randomization(
         train_dataset=train_dataset,
         test_dataset=test_dataset,
         early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation,
-        cl_features=cl_features,
-        drug_features=drug_features,
+        response_transformation=response_transformation
     )
 
 
