@@ -13,7 +13,7 @@ process DRAW_VIOLIN {
     path(eval_results)
 
     output:
-    path('violinplot*.html'), emit: violin_plot
+    path('violin*.html'), emit: violin_plot
 
     script:
     """

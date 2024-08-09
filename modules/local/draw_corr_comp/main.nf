@@ -12,7 +12,7 @@ process DRAW_CORR_COMP {
     tuple val(name), path(eval_results_per_group)
 
     output:
-    path('corr_comp_scatter*.html'), emit: corr_comp_scatter
+    path('corr_comp_scatter*.html'), emit: corr_comp_scatter, optional: true
 
     script:
     """

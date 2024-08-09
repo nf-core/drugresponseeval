@@ -39,7 +39,7 @@ def prep_df(plot_type: str, path_to_df: str, setting: str):
         normalized_metrics = False
         whole_name = True
         out_suffix = f"{algorithm}_{lpo_lco_ldo}"
-    if plot_type == "violin":
+    if plot_type == "violinplot":
         out_plot = Violin(df=df, normalized_metrics=normalized_metrics, whole_name=whole_name)
     else:
         out_plot = Heatmap(df=df, normalized_metrics=normalized_metrics, whole_name=whole_name)

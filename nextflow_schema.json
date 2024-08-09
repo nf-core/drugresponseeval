@@ -142,6 +142,11 @@
                     "format": "directory-path",
                     "description": "Path to the data directory.",
                     "help_text": "Path to the data directory."
+                },
+                "cross_study_datasets": {
+                    "type": "string",
+                    "description": "Datasets for cross-study prediction.",
+                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
                 }
             }
         },

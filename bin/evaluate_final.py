@@ -24,6 +24,6 @@ def write_results(overall_eval, evaluation_results_per_drug, evaluation_results_
 if __name__ == "__main__":
     args = get_parser().parse_args()
     results_all, eval_res_d, eval_res_cl, t_vs_pred, mname = evaluate_file(
-        args.test_mode, args.model_name, args.pred_file
+        test_mode=args.test_mode, model_name=args.model_name, pred_file=args.pred_file
     )
     write_results(results_all, eval_res_d, eval_res_cl, t_vs_pred, mname)

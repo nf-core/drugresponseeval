@@ -9,14 +9,32 @@ include { COLLECT_RESULTS               } from '../../../modules/local/collect_r
 workflow MODEL_TESTING {
     take:
     models                      // from input
-    best_hpam_per_split         // from RUN_CV
+    best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
+    cross_study_datasets        // from LOAD_RESPONSE
 
     main:
     ch_models = channel.from(models)
+    if (params.cross_study_datasets == '') {
+        cross_study_datasets = Channel.fromPath(['./NONE.csv'])
+    }
+    ch_tmp = best_hpam_per_split.map{
+        split_id, test_mode, path_to_split, model_name, path_to_hpams ->
+        return ["dummy", model_name, test_mode, split_id, path_to_split, path_to_hpams]
+    }
+    ch_tmp2 = cross_study_datasets
+                            .collect()
+                            .map{it -> ["dummy",  it]}
+    ch_predict_final = ch_tmp2.combine(ch_tmp, by: 0)
+    // remove dummy from the beginning
+    ch_predict_final = ch_predict_final
+                            .map{
+                                dummy, cross_study_datasets, model_name, test_mode, split_id, path_to_split, path_to_hpams ->
+                                return [cross_study_datasets, model_name, test_mode, split_id, path_to_split, path_to_hpams]
+                            }
 
     PREDICT_FULL (
-        best_hpam_per_split,
+        ch_predict_final,
         params.response_transformation,
         params.path_data
     )

@@ -1,6 +1,7 @@
 process LOAD_RESPONSE {
-    //tag "$samplesheet"
+    tag "${dataset_name} (cross: ${cross_study_datasets})"
     //label 'process_single'
+    publishDir "${path_data}", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

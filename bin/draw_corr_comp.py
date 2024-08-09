@@ -22,9 +22,10 @@ def draw_corr_comp(path_to_df: str, setting: str):
     else:
         algorithm = "all"
     corr_comp = CorrelationComparisonScatter(df=df, color_by=group_by, lpo_lco_ldo=lpo_lco_ldo, algorithm=algorithm)
-    corr_comp.draw_and_save(out_prefix="", out_suffix=corr_comp.name)
+    if corr_comp.name is not None:
+        corr_comp.draw_and_save(out_prefix="", out_suffix=corr_comp.name)
 
 
 if __name__ == "__main__":
     args = get_parser().parse_args()
-    draw_corr_comp(args.data, args.name)
+    draw_corr_comp(path_to_df=args.data, setting=args.name)

@@ -10,7 +10,7 @@ from sklearn.base import TransformerMixin
 from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict
+from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict, cross_study_prediction
 from drevalpy.utils import get_response_transformation
 
 
@@ -34,6 +34,7 @@ def get_parser():
         help="Randomization type (permutation, invariant).",
     )
     parser.add_argument("--robustness_trial", type=int, help="Robustness trial index.")
+    parser.add_argument("--cross_study_datasets", nargs="+", help="Path to cross study datasets.")
     return parser
 
 
@@ -100,7 +101,6 @@ def compute_robustness(
     test_dataset: DrugResponseDataset,
     early_stopping_dataset: Optional[DrugResponseDataset],
     split_id: str,
-    test_mode: str,
     trial: int,
     response_transformation=Optional[TransformerMixin],
 ):
@@ -116,6 +116,34 @@ def compute_robustness(
         hpam_set=hpam_set,
         path_data=path_data,
         response_transformation=response_transformation,
+    )
+
+
+def compute_cross(
+    cross_study_dataset,
+    model,
+    test_mode,
+    train_dataset,
+    path_data,
+    early_stopping_dataset,
+    response_transformation,
+    split_index
+):
+    split_index = split_index.split("split_")[1]
+    cross_study_dataset = pickle.load(open(cross_study_dataset, "rb"))
+    cross_study_dataset.remove_nan_responses()
+    cross_study_prediction(
+        dataset=cross_study_dataset,
+        model=model,
+        test_mode=test_mode,
+        train_dataset=train_dataset,
+        path_data=path_data,
+        early_stopping_dataset=(
+            early_stopping_dataset if model.early_stopping else None
+        ),
+        response_transformation=response_transformation,
+        predictions_path='',
+        split_index=split_index,
     )
 
 
@@ -136,6 +164,19 @@ if __name__ == "__main__":
         )
         prediction_dataset = f"predictions_{args.split_id}.csv"
         test_set.save(prediction_dataset)
+        for ds in args.cross_study_datasets:
+            if ds == "NONE.csv":
+                continue
+            compute_cross(
+                cross_study_dataset=ds,
+                model=selected_model,
+                test_mode=args.test_mode,
+                train_dataset=train_set,
+                path_data=args.path_data,
+                early_stopping_dataset=es_set,
+                response_transformation=transformation,
+                split_index=args.split_id
+            )
     elif args.mode == "randomization":
         with open(args.randomization_views_path, "r") as f:
             rand_test_view = yaml.safe_load(f)
@@ -160,7 +201,6 @@ if __name__ == "__main__":
             test_dataset=test_set,
             early_stopping_dataset=es_set,
             split_id=args.split_id,
-            test_mode=args.test_mode,
             trial=args.robustness_trial,
             response_transformation=transformation,
         )

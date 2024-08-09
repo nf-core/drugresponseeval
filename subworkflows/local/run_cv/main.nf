@@ -62,5 +62,6 @@ workflow RUN_CV {
 
     emit:
     best_hpam_per_split = ch_best_hpams_per_split
+    cross_study_datasets = LOAD_RESPONSE.out.cross_study_datasets
 
 }

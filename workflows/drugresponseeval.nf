@@ -100,7 +100,8 @@ workflow DRUGRESPONSEEVAL {
     MODEL_TESTING (
         models,
         RUN_CV.out.best_hpam_per_split,
-        randomizations
+        randomizations,
+        RUN_CV.out.cross_study_datasets
     )
 
     VISUALIZATION (
