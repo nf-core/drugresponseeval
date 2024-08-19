@@ -1,10 +1,11 @@
-include { DRAW_VIOLIN       } from '../../../modules/local/draw_violin'
-include { DRAW_HEATMAP      } from '../../../modules/local/draw_heatmap'
-include { DRAW_CORR_COMP    } from '../../../modules/local/draw_corr_comp'
-include { DRAW_REGRESSION   } from '../../../modules/local/draw_regression'
-include { SAVE_TABLES       } from '../../../modules/local/save_tables'
-include { WRITE_HTML        } from '../../../modules/local/write_html'
-include { WRITE_INDEX       } from '../../../modules/local/write_index'
+include { DRAW_CRITICAL_DIFFERENCE  } from '../../../modules/local/draw_critical_difference'
+include { DRAW_VIOLIN               } from '../../../modules/local/draw_violin'
+include { DRAW_HEATMAP              } from '../../../modules/local/draw_heatmap'
+include { DRAW_CORR_COMP            } from '../../../modules/local/draw_corr_comp'
+include { DRAW_REGRESSION           } from '../../../modules/local/draw_regression'
+include { SAVE_TABLES               } from '../../../modules/local/save_tables'
+include { WRITE_HTML                } from '../../../modules/local/write_html'
+include { WRITE_INDEX               } from '../../../modules/local/write_index'
 
 
 workflow VISUALIZATION {
@@ -27,6 +28,11 @@ workflow VISUALIZATION {
 
     ch_combined = ch_test_modes.combine(ch_models_baselines)
     ch_combined_mapped = ch_combined.map { it[0] + "_" + it[1] }
+
+    ch_cd = ch_test_modes.combine(evaluation_results)
+    DRAW_CRITICAL_DIFFERENCE(
+        ch_cd
+    )
 
     ch_vio_heat = ch_test_modes.concat(ch_test_modes_normalized).concat(ch_combined_mapped)
 
@@ -95,7 +101,8 @@ workflow VISUALIZATION {
         ch_tables
     )
 
-    ch_html_files = DRAW_VIOLIN.out.violin_plot
+    ch_html_files = DRAW_CRITICAL_DIFFERENCE.out.critical_difference
+                    .concat(DRAW_VIOLIN.out.violin_plot)
                     .concat(DRAW_HEATMAP.out.heatmap)
                     .concat(DRAW_CORR_COMP.out.corr_comp_scatter)
                     .concat(DRAW_REGRESSION.out.regression_lines)
