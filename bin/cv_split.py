@@ -17,6 +17,7 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
     response_data = pickle.load(open(args.response, "rb"))
+    response_data.remove_nan_responses()
     response_data.split_dataset(
         n_cv_splits=args.n_cv_splits,
         mode=args.test_mode,

@@ -1,4 +1,5 @@
 include { LOAD_RESPONSE                     } from '../../../modules/local/load_response'
+include { MAKE_MODEL_CHANNEL                } from '../../../modules/local/make_model_channel'
 include { CV_SPLIT                          } from '../../../modules/local/cv_split'
 include { HPAM_SPLIT                        } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
@@ -26,6 +27,26 @@ workflow RUN_CV {
     ch_models = channel.from(models)
     ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)
+    if (params.cross_study_datasets) {
+        all_data = LOAD_RESPONSE.out.response_dataset
+                    .combine(LOAD_RESPONSE.out.cross_study_datasets)
+    } else {
+        all_data = LOAD_RESPONSE.out.response_dataset
+    }
+    all_data = all_data.flatten()
+    ch_input_models = ch_models_baselines
+                        .collect()
+                        .map { models -> [models] }
+                        .combine(all_data)
+
+    MAKE_MODEL_CHANNEL (
+        ch_input_models
+    )
+
+    ch_models_baselines = MAKE_MODEL_CHANNEL.out.all_models
+                        .splitCsv(strip: true)
+                        .flatten()
+
     HPAM_SPLIT (
         ch_models_baselines
     )
@@ -48,6 +69,7 @@ workflow RUN_CV {
     )
     // [model_name, test_mode, split_id, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml], [prediction_dataset_0.pkl, prediction_dataset_1.pkl, ..., prediction_dataset_n.pkl]]
     ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
+    ch_combined_hpams.view()
 
     EVALUATE_FIND_MAX (
         ch_combined_hpams,

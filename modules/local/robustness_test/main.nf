@@ -20,7 +20,7 @@ process ROBUSTNESS_TEST {
     """
     train_and_predict_final.py \\
         --mode robustness \\
-        --model_name $model_name \\
+        --model_name "${model_name}" \\
         --split_id $split_id \\
         --split_dataset_path $split_dataset \\
         --hyperparameters_path $best_hpams \\

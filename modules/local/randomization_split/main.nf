@@ -14,7 +14,7 @@ process RANDOMIZATION_SPLIT {
 
     script:
     """
-    randomization_split.py --model_name ${model_name} --randomization_mode ${randomization_mode}
+    randomization_split.py --model_name "${model_name}" --randomization_mode ${randomization_mode}
     """
 
 }

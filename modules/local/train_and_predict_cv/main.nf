@@ -14,7 +14,7 @@ process TRAIN_AND_PREDICT_CV {
     script:
     """
     train_and_predict_cv.py \\
-        --model_name $model_name \\
+        --model_name "${model_name}" \\
         --path_data $path_data \\
         --test_mode $test_mode \\
         --hyperparameters $hyperparameters \\

@@ -16,7 +16,7 @@ process EVALUATE_FIND_MAX {
     script:
     """
     evaluate_and_find_max.py \\
-        --model_name $model_name \\
+        --model_name "${model_name}" \\
         --split_id $split_id \\
         --hpam_yamls $hpam_yamls \\
         --pred_datas $pred_datas \\

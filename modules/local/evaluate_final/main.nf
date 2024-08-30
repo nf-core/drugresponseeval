@@ -18,7 +18,7 @@ process EVALUATE_FINAL {
     """
     evaluate_final.py \\
         --test_mode $test_mode \\
-        --model_name $model_name \\
+        --model_name "${model_name}" \\
         --pred_file $pred_file
     """
 

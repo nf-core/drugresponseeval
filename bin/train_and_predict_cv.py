@@ -7,7 +7,7 @@ import yaml
 
 
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict, instantiate_model
+from drevalpy.experiment import train_and_predict, get_model_name_and_drug_id, get_datasets_from_cv_split
 from drevalpy.utils import get_response_transformation
 
 
@@ -25,20 +25,18 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    model_class = MODEL_FACTORY[args.model_name]
+
+    model_name, drug_id = get_model_name_and_drug_id(args.model_name)
+
+    model_class = MODEL_FACTORY[model_name]
     split = pickle.load(open(args.cv_data, "rb"))
-    train_dataset = split["train"]
-    validation_dataset = split["validation"]
-    hpams = yaml.load(open(args.hyperparameters, "r"), Loader=yaml.FullLoader)
 
-    if model_class.early_stopping:
-        validation_dataset = split["validation_es"]
-        es_dataset = split["early_stopping"]
-    else:
-        es_dataset = None
+    train_dataset, validation_dataset, es_dataset, test_dataset = get_datasets_from_cv_split(
+        split, model_class, model_name, drug_id)
 
-    model = instantiate_model(model_class)
     response_transform = get_response_transformation(args.response_transformation)
+    hpams = yaml.load(open(args.hyperparameters, "r"), Loader=yaml.FullLoader)
+    model = model_class()
     validation_dataset = train_and_predict(
         model=model,
         hpams=hpams,

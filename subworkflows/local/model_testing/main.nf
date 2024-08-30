@@ -51,8 +51,10 @@ workflow MODEL_TESTING {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->
             return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
         }
-        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml, randomization_views]
-        ch_randomization = ch_best_hpams_per_split_rand.combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
+        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml,
+        // randomization_views]
+        ch_randomization = ch_best_hpams_per_split_rand
+                            .combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
         RANDOMIZATION_TEST (
             ch_randomization,
             params.path_data,
@@ -71,7 +73,8 @@ workflow MODEL_TESTING {
             return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
         }
 
-        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml, robustness_iteration]
+        // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml,
+        // robustness_iteration]
         ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0)
         ROBUSTNESS_TEST (
             ch_robustness,
