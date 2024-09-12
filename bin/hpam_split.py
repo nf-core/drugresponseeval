@@ -2,7 +2,7 @@
 
 import argparse
 import yaml
-from drevalpy.models import MODEL_FACTORY, SINGLE_DRUG_MODEL_FACTORY
+from drevalpy.models import MODEL_FACTORY, MULTI_DRUG_MODEL_FACTORY, SINGLE_DRUG_MODEL_FACTORY
 
 
 def get_parser():
@@ -16,13 +16,13 @@ def get_parser():
 if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
-    if args.model_name in MODEL_FACTORY:
+    if args.model_name in MULTI_DRUG_MODEL_FACTORY:
         model_name = args.model_name
     else:
         model_name = str(args.model_name).split(".")[0]
         assert model_name in SINGLE_DRUG_MODEL_FACTORY, (f"{model_name} neither in "
                                                          f"SINGLE_DRUG_MODEL_FACTORY nor in "
-                                                         f"MODEL_FACTORY.")
+                                                         f"MULTI_DRUG_MODEL_FACTORY.")
     model_class = MODEL_FACTORY[model_name]
     hyperparameters = model_class.get_hyperparameter_set()
     hpam_idx = 0

@@ -4,7 +4,7 @@ import argparse
 import pickle
 
 from drevalpy.experiment import make_model_list
-from drevalpy.models import FULL_MODEL_FACTORY
+from drevalpy.models import MODEL_FACTORY
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Split data into CV splits")
@@ -19,7 +19,7 @@ def main():
     models = args.models.replace("[", "").replace("]", "").split(", ")
     response_data = pickle.load(open(args.data, "rb"))
     dataset_name = response_data.dataset_name
-    models = [FULL_MODEL_FACTORY[model] for model in models]
+    models = [MODEL_FACTORY[model] for model in models]
     all_models = make_model_list(models, response_data)
     with open(f'models_{dataset_name}.txt', 'w', encoding='utf-8') as f:
         for model in all_models:
