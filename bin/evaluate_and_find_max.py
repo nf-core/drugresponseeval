@@ -5,7 +5,7 @@ import pickle
 import yaml
 
 from drevalpy.evaluation import evaluate
-
+from drevalpy.evaluation import MAXIMIZATION_METRICS, MINIMIZATION_METRICS
 
 def get_parser():
     parser = argparse.ArgumentParser(
@@ -20,12 +20,14 @@ def get_parser():
 
 
 def best_metric(metric, current_metric, best_metric):
-    if metric in ["MSE", "RMSE", "MAE"]:
+    if metric in MINIMIZATION_METRICS:
         if current_metric < best_metric:
             return True
-    else:
+    elif metric in MAXIMIZATION_METRICS:
         if current_metric > best_metric:
             return True
+    else:
+        raise ValueError(f"Metric {metric} not recognized.")
     return False
 
 
