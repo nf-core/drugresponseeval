@@ -67,9 +67,11 @@ workflow RUN_CV {
         params.path_data,
         params.response_transformation
     )
-    // [model_name, test_mode, split_id, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml], [prediction_dataset_0.pkl, prediction_dataset_1.pkl, ..., prediction_dataset_n.pkl]]
+    // [model_name, test_mode, split_id,
+    // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
+    // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
     ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
-    ch_combined_hpams.view()
+    //ch_combined_hpams.view()
 
     EVALUATE_FIND_MAX (
         ch_combined_hpams,

@@ -46,7 +46,9 @@ def main():
         early_stopping_dataset=es_dataset,
         response_transformation=response_transform,
     )
-    with open(f"prediction_dataset_{validation_dataset.__hash__()}.pkl", "wb") as f:
+    with open(f"prediction_dataset_{model_name}_{str(args.cv_data).split('.pkl')[0]}_"
+              f"{str(args.hyperparameters).split('.yaml')[0]}.pkl",
+              "wb") as f:
         pickle.dump(validation_dataset, f)
 
 

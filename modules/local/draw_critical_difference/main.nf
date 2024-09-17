@@ -12,7 +12,7 @@ process DRAW_CRITICAL_DIFFERENCE {
     tuple val(lpo_lco_ldo), path(eval_results)
 
     output:
-    path('critical_difference*.svg'), emit: critical_difference
+    path('critical_difference*.svg'), emit: critical_difference, optional: true
 
     script:
     """

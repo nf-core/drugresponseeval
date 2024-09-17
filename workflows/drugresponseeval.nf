@@ -96,7 +96,7 @@ workflow DRUGRESPONSEEVAL {
         models,
         baselines
     )
-/*
+
     MODEL_TESTING (
         models,
         RUN_CV.out.best_hpam_per_split,
@@ -112,7 +112,7 @@ workflow DRUGRESPONSEEVAL {
         MODEL_TESTING.out.evaluation_results_per_drug,
         MODEL_TESTING.out.evaluation_results_per_cl,
         MODEL_TESTING.out.true_vs_predicted
-    )*/
+    )
 
 }
 

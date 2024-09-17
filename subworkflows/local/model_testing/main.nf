@@ -20,18 +20,12 @@ workflow MODEL_TESTING {
     }
     ch_tmp = best_hpam_per_split.map{
         split_id, test_mode, path_to_split, model_name, path_to_hpams ->
-        return ["dummy", model_name, test_mode, split_id, path_to_split, path_to_hpams]
+        return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
     }
     ch_tmp2 = cross_study_datasets
                             .collect()
-                            .map{it -> ["dummy",  it]}
-    ch_predict_final = ch_tmp2.combine(ch_tmp, by: 0)
-    // remove dummy from the beginning
-    ch_predict_final = ch_predict_final
-                            .map{
-                                dummy, cross_study_datasets, model_name, test_mode, split_id, path_to_split, path_to_hpams ->
-                                return [cross_study_datasets, model_name, test_mode, split_id, path_to_split, path_to_hpams]
-                            }
+                            .map{it -> [it]}
+    ch_predict_final = ch_tmp2.combine(ch_tmp)
 
     PREDICT_FULL (
         ch_predict_final,
