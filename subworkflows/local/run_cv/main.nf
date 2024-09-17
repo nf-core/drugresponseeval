@@ -27,17 +27,17 @@ workflow RUN_CV {
     ch_models = channel.from(models)
     ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)
-    if (params.cross_study_datasets) {
+    /*if (params.cross_study_datasets) {
         all_data = LOAD_RESPONSE.out.response_dataset
                     .combine(LOAD_RESPONSE.out.cross_study_datasets)
     } else {
         all_data = LOAD_RESPONSE.out.response_dataset
     }
-    all_data = all_data.flatten()
+    all_data = all_data.flatten()*/
     ch_input_models = ch_models_baselines
                         .collect()
                         .map { models -> [models] }
-                        .combine(all_data)
+                        .combine(LOAD_RESPONSE.out.response_dataset)
 
     MAKE_MODEL_CHANNEL (
         ch_input_models
