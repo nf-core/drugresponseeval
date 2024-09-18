@@ -10,7 +10,12 @@ from sklearn.base import TransformerMixin
 from drevalpy.datasets.dataset import DrugResponseDataset
 from drevalpy.models.drp_model import DRPModel
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import train_and_predict, randomize_train_predict, robustness_train_predict, cross_study_prediction
+from drevalpy.experiment import (get_model_name_and_drug_id,
+                                 get_datasets_from_cv_split,
+                                 train_and_predict,
+                                 randomize_train_predict,
+                                 robustness_train_predict,
+                                 cross_study_prediction)
 from drevalpy.utils import get_response_transformation
 
 
@@ -39,13 +44,13 @@ def get_parser():
 
 
 def prep_data(arguments):
-    split = pickle.load(open(arguments.split_dataset_path, "rb"))
-    train_dataset = split["train"]
-    validation_dataset = split["validation"]
-    test_dataset = split["test"]
-
-    model_class = MODEL_FACTORY[arguments.model_name]
+    model_name, drug_id = get_model_name_and_drug_id(arguments.model_name)
+    model_class = MODEL_FACTORY[model_name]
     model = model_class()
+
+    split = pickle.load(open(arguments.split_dataset_path, "rb"))
+    train_dataset, validation_dataset, es_dataset, test_dataset = get_datasets_from_cv_split(
+        split, model_class, model_name, drug_id)
 
     if model_class.early_stopping:
         validation_dataset = split["validation_es"]
