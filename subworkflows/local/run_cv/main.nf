@@ -1,5 +1,6 @@
 include { LOAD_RESPONSE                     } from '../../../modules/local/load_response'
-include { MAKE_MODEL_CHANNEL                } from '../../../modules/local/make_model_channel'
+include { MAKE_MODEL_CHANNEL as MAKE_MODELS } from '../../../modules/local/make_model_channel'
+include { MAKE_MODEL_CHANNEL as MAKE_BASELINES } from '../../../modules/local/make_model_channel'
 include { CV_SPLIT                          } from '../../../modules/local/cv_split'
 include { HPAM_SPLIT                        } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
@@ -34,18 +35,32 @@ workflow RUN_CV {
         all_data = LOAD_RESPONSE.out.response_dataset
     }
     all_data = all_data.flatten()*/
-    ch_input_models = ch_models_baselines
+    ch_input_models = ch_models
+                        .collect()
+                        .map { models -> [models] }
+                        .combine(LOAD_RESPONSE.out.response_dataset)
+    ch_input_baselines = ch_baselines
                         .collect()
                         .map { models -> [models] }
                         .combine(LOAD_RESPONSE.out.response_dataset)
 
-    MAKE_MODEL_CHANNEL (
-        ch_input_models
+    MAKE_MODELS (
+        ch_input_models,
+        "models"
     )
 
-    ch_models_baselines = MAKE_MODEL_CHANNEL.out.all_models
+    MAKE_BASELINES (
+        ch_input_baselines,
+        "baselines"
+    )
+
+    ch_models_expanded = MAKE_MODELS.out.all_models
                         .splitCsv(strip: true)
-                        .flatten()
+                        .map { it -> it[1] }
+    ch_baselines = MAKE_BASELINES.out.all_models
+                        .splitCsv(strip: true)
+                        .map { it -> it[1] }
+    ch_models_baselines = ch_models_expanded.concat(ch_baselines)
 
     HPAM_SPLIT (
         ch_models_baselines
@@ -86,5 +101,5 @@ workflow RUN_CV {
     emit:
     best_hpam_per_split = ch_best_hpams_per_split
     cross_study_datasets = LOAD_RESPONSE.out.cross_study_datasets
-
+    ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
 }

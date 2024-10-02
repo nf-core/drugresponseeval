@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+import os
+import json
 import sys
 import argparse
 import pickle
@@ -12,6 +13,7 @@ from drevalpy.models.drp_model import DRPModel
 from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import (get_model_name_and_drug_id,
                                  get_datasets_from_cv_split,
+                                 generate_data_saving_path,
                                  train_and_predict,
                                  randomize_train_predict,
                                  robustness_train_predict,
@@ -66,7 +68,7 @@ def prep_data(arguments):
     best_hpams = best_hpam_dict[f"{arguments.model_name}_{arguments.split_id}"]["best_hpam_combi"]
 
     response_transform = get_response_transformation(arguments.response_transformation)
-    return model, best_hpams, train_dataset, test_dataset, es_dataset, response_transform
+    return model, drug_id, best_hpams, train_dataset, test_dataset, es_dataset, response_transform
 
 
 def compute_randomization(
@@ -80,9 +82,12 @@ def compute_randomization(
     split_id: str,
     randomization_type: str = "permutation",
     response_transformation=Optional[TransformerMixin],
+    randomization_test_path: str = ""
 ):
-    randomization_test_file = f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
-
+    randomization_test_file = os.path.join(
+        randomization_test_path,
+        f'randomization_{randomization_test_view["test_name"]}_{split_id}.csv'
+    )
     randomize_train_predict(
         view=randomization_test_view["view"],
         test_name=randomization_test_view["test_name"],
@@ -108,9 +113,12 @@ def compute_robustness(
     split_id: str,
     trial: int,
     response_transformation=Optional[TransformerMixin],
+    rob_path: str = ""
 ):
-    robustness_test_file = f"robustness_{trial}_{split_id}.csv"
-
+    robustness_test_file = os.path.join(
+        rob_path,
+        f"robustness_{trial}_{split_id}.csv",
+    )
     robustness_train_predict(
         trial=trial,
         trial_file=robustness_test_file,
@@ -132,6 +140,7 @@ def compute_cross(
     path_data,
     early_stopping_dataset,
     response_transformation,
+    path_out,
     split_index
 ):
     split_index = split_index.split("split_")[1]
@@ -147,7 +156,7 @@ def compute_cross(
             early_stopping_dataset if model.early_stopping else None
         ),
         response_transformation=response_transformation,
-        predictions_path='',
+        path_out=path_out,
         split_index=split_index,
     )
 
@@ -155,9 +164,31 @@ def compute_cross(
 if __name__ == "__main__":
     arg_parser = get_parser()
     args = arg_parser.parse_args()
-    selected_model, hpam_combi, train_set, test_set, es_set, transformation = prep_data(args)
+    selected_model, drug_id, hpam_combi, train_set, test_set, es_set, transformation = prep_data(
+        args)
 
     if args.mode == "full":
+        predictions_path = generate_data_saving_path(
+            model_name=selected_model.model_name,
+            drug_id=drug_id,
+            result_path='',
+            suffix='predictions',
+        )
+        hpam_path = generate_data_saving_path(
+            model_name=selected_model.model_name,
+            drug_id=drug_id,
+            result_path='',
+            suffix='best_hpams',
+        )
+        hpam_path = os.path.join(hpam_path, f"best_hpams_{args.split_id}.json")
+        # save the best hyperparameters as json
+        with open(
+            hpam_path,
+            "w",
+            encoding="utf-8",
+        ) as f:
+            json.dump(hpam_combi, f)
+
         test_set = train_and_predict(
             model=selected_model,
             hpams=hpam_combi,
@@ -167,7 +198,10 @@ if __name__ == "__main__":
             early_stopping_dataset=es_set,
             response_transformation=transformation,
         )
-        prediction_dataset = f"predictions_{args.split_id}.csv"
+        prediction_dataset = os.path.join(
+            predictions_path,
+            f"predictions_{args.split_id}.csv",
+        )
         test_set.save(prediction_dataset)
         for ds in args.cross_study_datasets:
             if ds == "NONE.csv":
@@ -180,11 +214,18 @@ if __name__ == "__main__":
                 path_data=args.path_data,
                 early_stopping_dataset=es_set,
                 response_transformation=transformation,
+                path_out=os.path.dirname(predictions_path),
                 split_index=args.split_id
             )
     elif args.mode == "randomization":
         with open(args.randomization_views_path, "r") as f:
             rand_test_view = yaml.safe_load(f)
+        rand_path = generate_data_saving_path(
+            model_name=selected_model.model_name,
+            drug_id=drug_id,
+            result_path='',
+            suffix='randomization',
+        )
         compute_randomization(
             randomization_test_view=rand_test_view,
             model=selected_model,
@@ -196,8 +237,15 @@ if __name__ == "__main__":
             split_id=args.split_id,
             randomization_type=args.randomization_type,
             response_transformation=transformation,
+            randomization_test_path=rand_path,
         )
     elif args.mode == "robustness":
+        rob_path = generate_data_saving_path(
+            model_name=selected_model.model_name,
+            drug_id=drug_id,
+            result_path='',
+            suffix='robustness',
+        )
         compute_robustness(
             model=selected_model,
             hpam_set=hpam_combi,
@@ -208,6 +256,7 @@ if __name__ == "__main__":
             split_id=args.split_id,
             trial=args.robustness_trial,
             response_transformation=transformation,
+            rob_path=rob_path
         )
     else:
         raise ValueError(f"Invalid mode: {args.mode}. Choose full, randomization, or robustness.")

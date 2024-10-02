@@ -101,9 +101,10 @@ workflow DRUGRESPONSEEVAL {
         models,
         RUN_CV.out.best_hpam_per_split,
         randomizations,
-        RUN_CV.out.cross_study_datasets
+        RUN_CV.out.cross_study_datasets,
+        RUN_CV.out.ch_models
     )
-
+/*
     VISUALIZATION (
         test_modes,
         models,
@@ -112,7 +113,7 @@ workflow DRUGRESPONSEEVAL {
         MODEL_TESTING.out.evaluation_results_per_drug,
         MODEL_TESTING.out.evaluation_results_per_cl,
         MODEL_TESTING.out.true_vs_predicted
-    )
+    )*/
 
 }
 

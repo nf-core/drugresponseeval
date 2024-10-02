@@ -1,7 +1,7 @@
 process RANDOMIZATION_TEST {
     tag "${test_mode}_${model_name}_${randomization_type}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/${test_mode}/${model_name}/randomization_test"
+    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -14,7 +14,7 @@ process RANDOMIZATION_TEST {
     val(response_transformation)
 
     output:
-    tuple val(test_mode), val(model_name), path('randomization_*.csv'),     emit: ch_vis
+    tuple val(test_mode), val(model_name), path('**randomization*.csv'),     emit: ch_vis
 
     script:
     """

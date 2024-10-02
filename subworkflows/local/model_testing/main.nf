@@ -2,6 +2,7 @@ include { PREDICT_FULL                  } from '../../../modules/local/predict_f
 include { RANDOMIZATION_SPLIT           } from '../../../modules/local/randomization_split'
 include { RANDOMIZATION_TEST            } from '../../../modules/local/randomization_test'
 include { ROBUSTNESS_TEST               } from '../../../modules/local/robustness_test'
+include { CONSOLIDATE_RESULTS           } from '../../../modules/local/consolidate_results'
 include { EVALUATE_FINAL                } from '../../../modules/local/evaluate_final'
 include { COLLECT_RESULTS               } from '../../../modules/local/collect_results'
 
@@ -12,9 +13,9 @@ workflow MODEL_TESTING {
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
     cross_study_datasets        // from LOAD_RESPONSE
+    ch_models                  // from RUN_CV
 
     main:
-    ch_models = channel.from(models)
     if (params.cross_study_datasets == '') {
         cross_study_datasets = Channel.fromPath(['./NONE.csv'])
     }
@@ -26,7 +27,6 @@ workflow MODEL_TESTING {
                             .collect()
                             .map{it -> [it]}
     ch_predict_final = ch_tmp2.combine(ch_tmp)
-
     PREDICT_FULL (
         ch_predict_final,
         params.response_transformation,
@@ -37,10 +37,17 @@ workflow MODEL_TESTING {
     if (params.randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
         // randomizations only for models, not for baselines
-        ch_models_rand = ch_models.combine(ch_randomization)
+        ch_models_rand = ch_models
+                         .map{it -> it[0]}
+                         .unique()
+                         .combine(ch_randomization)
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
+        ch_rand_views = ch_models
+                        .combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
+                        .map{ model_class, model_name, rand_file -> [model_name, rand_file] }
+
         ch_best_hpams_per_split_rand = best_hpam_per_split.map {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->
             return [model_name, test_mode, split_id, path_to_split, path_to_hpams]
@@ -48,7 +55,8 @@ workflow MODEL_TESTING {
         // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml,
         // randomization_views]
         ch_randomization = ch_best_hpams_per_split_rand
-                            .combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
+                            .combine(ch_rand_views, by: 0)
+
         RANDOMIZATION_TEST (
             ch_randomization,
             params.path_data,
@@ -60,7 +68,9 @@ workflow MODEL_TESTING {
 
     if (params.n_trials_robustness > 0) {
         ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
-        ch_trials_robustness = ch_models.combine(ch_trials_robustness)
+        ch_trials_robustness = ch_models
+                               .map{it -> it[1]}
+                               .combine(ch_trials_robustness)
 
         ch_best_hpams_per_split_rob = best_hpam_per_split.map {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->
@@ -79,6 +89,12 @@ workflow MODEL_TESTING {
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
 
+    CONSOLIDATE_RESULTS (
+        ch_vis.groupTuple(),
+        randomizations
+    )
+
+/*
     EVALUATE_FINAL (
         ch_vis
     )
@@ -92,5 +108,5 @@ workflow MODEL_TESTING {
     evaluation_results = COLLECT_RESULTS.out.evaluation_results
     evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug
     evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl
-    true_vs_predicted = COLLECT_RESULTS.out.true_vs_pred
+    true_vs_predicted = COLLECT_RESULTS.out.true_vs_pred*/
 }

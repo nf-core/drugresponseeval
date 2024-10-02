@@ -8,15 +8,17 @@ process MAKE_MODEL_CHANNEL {
     //    'biocontainers/python:3.8.3' }"
     input:
     tuple val(models), path(response_data)
+    val(name)
 
     output:
-    path 'models*.txt',    emit: all_models
+    path '{models,baselines}*.txt',    emit: all_models
 
     script:
     """
     make_model_channel.py \\
         --models "${models}" \\
-        --data ${response_data}
+        --data ${response_data} \\
+        --file_name ${name}
     """
 
 }
