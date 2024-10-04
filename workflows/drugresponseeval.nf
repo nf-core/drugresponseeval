@@ -62,7 +62,6 @@ def test_modes = params.test_mode.split(",")
 def models = params.models.split(",")
 def baselines = params.baselines.split(",")
 def randomizations = params.randomization_mode.split(",")
-def outdirPath = new File(params.outdir).getAbsolutePath()
 
 workflow DRUGRESPONSEEVAL {
 
@@ -98,13 +97,13 @@ workflow DRUGRESPONSEEVAL {
     )
 
     MODEL_TESTING (
-        models,
+        ch_models_baselines,
         RUN_CV.out.best_hpam_per_split,
         randomizations,
         RUN_CV.out.cross_study_datasets,
         RUN_CV.out.ch_models
     )
-/*
+
     VISUALIZATION (
         test_modes,
         models,
@@ -113,7 +112,7 @@ workflow DRUGRESPONSEEVAL {
         MODEL_TESTING.out.evaluation_results_per_drug,
         MODEL_TESTING.out.evaluation_results_per_cl,
         MODEL_TESTING.out.true_vs_predicted
-    )*/
+    )
 
 }
 
