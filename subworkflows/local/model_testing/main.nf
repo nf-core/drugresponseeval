@@ -95,7 +95,8 @@ workflow MODEL_TESTING {
 
     CONSOLIDATE_RESULTS (
         ch_consolidate,
-        randomizations
+        randomizations,
+        ch_vis.count() // wait for ch_vis to finish
     )
     CONSOLIDATE_RESULTS.out.ch_vis.transpose()
 

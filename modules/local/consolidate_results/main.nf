@@ -6,6 +6,7 @@ process CONSOLIDATE_RESULTS {
     input:
     tuple val(test_mode), val(model_name)
     val(rand_modes)
+    val(nr_files)
 
     output:
     tuple val(test_mode), val(model_name), path('**split*.csv'), emit: ch_vis, optional: true

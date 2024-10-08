@@ -4,6 +4,7 @@ import os
 import argparse
 from drevalpy.models import MODEL_FACTORY
 from drevalpy.experiment import consolidate_single_drug_model_predictions, get_randomization_test_views
+from drevalpy.datasets import RESPONSE_DATASET_FACTORY
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Consolidate results for SingleDrugModels")
@@ -33,14 +34,12 @@ def main():
     randomizations = args.randomization_modes.split('[')[1].split(']')[0].split(', ')
     model = MODEL_FACTORY[args.model_name]
     if args.cross_study_datasets is None:
-        cross_study_datasets = []
-    else:
-        cross_study_datasets = args.cross_study_datasets.split('[')[1].split(']')[0].split(', ')
+        args.cross_study_datasets = []
     consolidate_single_drug_model_predictions(
         models=[model],
         n_cv_splits=args.n_cv_splits,
         results_path=results_path,
-        cross_study_datasets=cross_study_datasets,
+        cross_study_datasets=args.cross_study_datasets,
         randomization_mode=randomizations,
         n_trials_robustness=args.n_trials_robustness,
         out_path=""
