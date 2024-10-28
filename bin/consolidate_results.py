@@ -3,8 +3,8 @@
 import os
 import argparse
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.experiment import consolidate_single_drug_model_predictions, get_randomization_test_views
-from drevalpy.datasets import RESPONSE_DATASET_FACTORY
+from drevalpy.experiment import consolidate_single_drug_model_predictions
+
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Consolidate results for SingleDrugModels")
