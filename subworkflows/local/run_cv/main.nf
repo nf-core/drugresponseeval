@@ -28,13 +28,6 @@ workflow RUN_CV {
     ch_models = channel.from(models)
     ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)
-    /*if (params.cross_study_datasets) {
-        all_data = LOAD_RESPONSE.out.response_dataset
-                    .combine(LOAD_RESPONSE.out.cross_study_datasets)
-    } else {
-        all_data = LOAD_RESPONSE.out.response_dataset
-    }
-    all_data = all_data.flatten()*/
     ch_input_models = ch_models
                         .collect()
                         .map { models -> [models] }
@@ -56,24 +49,25 @@ workflow RUN_CV {
 
     ch_models_expanded = MAKE_MODELS.out.all_models
                         .splitCsv(strip: true)
-                        .map { it -> it[1] }
-    ch_baselines = MAKE_BASELINES.out.all_models
+    ch_baselines_expanded = MAKE_BASELINES.out.all_models
                         .splitCsv(strip: true)
-                        .map { it -> it[1] }
-    ch_models_baselines = ch_models_expanded.concat(ch_baselines)
+    ch_models_baselines_expanded = ch_models_expanded.concat(ch_baselines_expanded)
 
     HPAM_SPLIT (
         ch_models_baselines
     )
-
     // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
-    ch_hpam_combis = HPAM_SPLIT.out.hpam_combi
+    ch_hpam_combis = ch_models_baselines_expanded
+        .combine(HPAM_SPLIT.out.hpam_combi, by: 0)
+        .map { model_class, model_name, hpam_combis -> [model_name, hpam_combis] }
+
     // [model_name, hpam_X.yaml]
     ch_hpam_combis = ch_hpam_combis.transpose()
 
     // [model_name, test_mode, split_X.pkl]
-    ch_model_cv = ch_models_baselines.combine(ch_cv_splits.transpose())
-
+    ch_model_cv = ch_models_baselines_expanded
+        .combine(ch_cv_splits.transpose())
+        .map { model_class, model_name, test_mode, split -> [model_name, test_mode, split] }
     // [model_name, test_mode, split_X.pkl, hpam_X.yaml]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
 
