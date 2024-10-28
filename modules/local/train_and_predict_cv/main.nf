@@ -1,7 +1,6 @@
 process TRAIN_AND_PREDICT_CV {
     tag "${model_name}_${test_mode}"
     label 'process_single'
-    cpus 3
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
