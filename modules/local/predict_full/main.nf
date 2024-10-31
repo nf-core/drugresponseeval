@@ -1,5 +1,5 @@
 process PREDICT_FULL {
-    tag "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}"
+    tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
     label 'process_medium'
     label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
