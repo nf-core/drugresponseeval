@@ -1,7 +1,7 @@
 process TRAIN_AND_PREDICT_CV {
-    tag "${model_name}_${test_mode}"
+    tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_medium'
-    label 'process_gpu'
+    label { "${ task.ext.use_gpu ? 'process_gpu' : '' }" }
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
