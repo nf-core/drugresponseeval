@@ -1,6 +1,6 @@
 process RANDOMIZATION_TEST {
     tag { "${test_mode}_${model_name}_${randomization_type}_gpu:${task.ext.use_gpu}" }
-    label 'process_medium'
+    label 'process_high'
     label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 

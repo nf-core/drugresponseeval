@@ -1,6 +1,6 @@
 process TRAIN_AND_PREDICT_CV {
     tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
-    label 'process_medium'
+    label 'process_high'
     label 'process_gpu'
 
     input:
