@@ -32,6 +32,16 @@ The response data is loaded into the pipeline. This step is necessary to provide
 
 All models are trained and evaluated in a cross-validation setting. The models are trained on the training set and evaluated on the validation set. The performance of the models is evaluated using various metrics such as accuracy, precision, recall, F1-score, and ROC-AUC.
 
+### Determine best hyperparameters
+
+### Train model on full training set
+
+### Randomization tests
+
+### Robustness tests
+
+### Create plots
+
 ### Pipeline information
 
 <details markdown="1">
