@@ -1,7 +1,7 @@
 process DRAW_CORR_COMP {
     tag "${name}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/corr_comp_scatter"
+    publishDir "${params.outdir}/${params.run_id}/corr_comp_scatter", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

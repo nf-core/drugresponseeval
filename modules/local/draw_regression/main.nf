@@ -1,7 +1,7 @@
 process DRAW_REGRESSION {
     tag "${name}_${model}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/regression_plots"
+    publishDir "${params.outdir}/${params.run_id}/regression_plots", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

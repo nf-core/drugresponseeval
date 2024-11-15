@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import CorrelationComparisonScatter
+from drevalpy.visualization.corr_comp_scatter import CorrelationComparisonScatter
 from drevalpy.models import MODEL_FACTORY
 
 

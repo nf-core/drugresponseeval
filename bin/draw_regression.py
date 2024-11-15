@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization import RegressionSliderPlot
+from drevalpy.visualization.regression_slider_plot import RegressionSliderPlot
 
 
 def get_parser():

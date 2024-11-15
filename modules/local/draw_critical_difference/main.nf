@@ -1,7 +1,7 @@
 process DRAW_CRITICAL_DIFFERENCE {
     tag "${lpo_lco_ldo}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/critical_difference_plots"
+    publishDir "${params.outdir}/${params.run_id}/critical_difference_plots", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

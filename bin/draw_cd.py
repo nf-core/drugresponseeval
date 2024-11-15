@@ -2,8 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import CriticalDifferencePlot
-
+from drevalpy.visualization.critical_difference_plot import CriticalDifferencePlot
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Draw critical difference plots.")

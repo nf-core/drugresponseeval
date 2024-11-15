@@ -1,7 +1,7 @@
 process COLLECT_RESULTS {
     //tag "${test_mode}_${model_name}_${pred_file}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}"
+    publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

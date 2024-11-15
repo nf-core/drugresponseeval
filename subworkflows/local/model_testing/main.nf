@@ -38,9 +38,9 @@ workflow MODEL_TESTING {
         ch_randomization = channel.from(randomizations)
         // randomizations only for models, not for baselines
         ch_models_rand = ch_models
-                         .map{it -> it[0]}
-                         .unique()
-                         .combine(ch_randomization)
+                            .map{it -> it[0]}
+                            .unique()
+                            .combine(ch_randomization)
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
@@ -69,8 +69,8 @@ workflow MODEL_TESTING {
     if (params.n_trials_robustness > 0) {
         ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
         ch_trials_robustness = ch_models
-                               .map{it -> it[1]}
-                               .combine(ch_trials_robustness)
+                                .map{it -> it[1]}
+                                .combine(ch_trials_robustness)
 
         ch_best_hpams_per_split_rob = best_hpam_per_split.map {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->

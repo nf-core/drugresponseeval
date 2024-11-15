@@ -1,6 +1,7 @@
 process ROBUSTNESS_TEST {
-    tag "${model_name}_${robustness_iteration}"
-    label 'process_single'
+    tag { "${model_name}_${robustness_iteration}_gpu:${task.ext.use_gpu}" }
+    label 'process_high'
+    label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
