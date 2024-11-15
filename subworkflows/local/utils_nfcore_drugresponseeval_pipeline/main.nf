@@ -31,7 +31,7 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    //input             //  string: Path to input samplesheet
 
     main:
 
@@ -47,7 +47,7 @@ workflow PIPELINE_INITIALISATION {
         workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
     )
 
-    
+
     //
     // Validate parameters and generate parameter summary to stdout
     //
@@ -56,7 +56,7 @@ workflow PIPELINE_INITIALISATION {
         validate_params,
         null
     )
-    
+
 
     //
     // Check config provided to the pipeline
@@ -72,7 +72,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-
+    /*
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
@@ -92,9 +92,9 @@ workflow PIPELINE_INITIALISATION {
                 return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
-
+    */
     emit:
-    samplesheet = ch_samplesheet
+    //samplesheet = ch_samplesheet
     versions    = ch_versions
 }
 
@@ -110,11 +110,11 @@ workflow PIPELINE_COMPLETION {
     email           //  string: email address
     email_on_fail   //  string: email address sent on pipeline failure
     plaintext_email // boolean: Send plain-text email instead of HTML
-    
+
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
+    //multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
@@ -130,8 +130,8 @@ workflow PIPELINE_COMPLETION {
                 email_on_fail,
                 plaintext_email,
                 outdir,
-                monochrome_logs,
-                multiqc_report.toList()
+                monochrome_logs//,
+                //multiqc_report.toList()
             )
         }
 
@@ -155,7 +155,7 @@ workflow PIPELINE_COMPLETION {
 // Check and validate pipeline parameters
 //
 def validateInputParameters() {
-    genomeExistsError()
+    //genomeExistsError()
 }
 
 //
@@ -175,7 +175,7 @@ def validateInputSamplesheet(input) {
 //
 // Get attribute from genome config file e.g. fasta
 //
-def getGenomeAttribute(attribute) {
+/*def getGenomeAttribute(attribute) {
     if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
         if (params.genomes[ params.genome ].containsKey(attribute)) {
             return params.genomes[ params.genome ][ attribute ]
@@ -196,7 +196,7 @@ def genomeExistsError() {
             "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         error(error_string)
     }
-}
+}*/
 //
 // Generate methods description for MultiQC
 //
