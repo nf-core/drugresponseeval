@@ -67,9 +67,6 @@ workflow DRUGRESPONSEEVAL {
 
     ch_versions = Channel.empty()
 
-    //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
-    //
     ch_models = channel.from(models)
     ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)

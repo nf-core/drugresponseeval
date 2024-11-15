@@ -8,7 +8,7 @@
         "model_options": {
             "title": "Model options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-laptop-code",
             "description": "Define the models and baselines to be tested.",
             "required": ["models", "baselines"],
             "properties": {
@@ -57,15 +57,15 @@
             }
         },
         "mode_options": {
-            "title": "Mode options",
+            "title": "Mode options (LPO/LCO/LDO)",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-table-cells-column-lock",
             "description": "Define the mode in which the pipeline will be run.",
             "required": ["test_mode"],
             "properties": {
                 "test_mode": {
                     "type": "string",
-                    "description": "Run the pipeline in test mode LPO, LCO, or LDO.",
+                    "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), or LDO (Leave-Drug-Out).",
                     "default": "LPO",
                     "help_text": "Which tests to run (LPO=Leave-random-Pairs-Out, LCO=Leave-Cell-line-Out, LDO=Leave-Drug-Out). Can be a list of test runs e.g. 'LPO LCO LDO' to run all tests. Default is LPO."
                 }
@@ -74,7 +74,7 @@
         "randomization_options": {
             "title": "Randomization options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-dice",
             "description": "Options for randomization.",
             "properties": {
                 "randomization_mode": {
@@ -93,7 +93,7 @@
         "robustness_options": {
             "title": "Robustness options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-repeat",
             "description": "Options for robustness.",
             "properties": {
                 "n_trials_robustness": {
@@ -101,6 +101,25 @@
                     "default": 0,
                     "description": "Number of trials to run for the robustness test",
                     "help_text": "Number of trials to run for the robustness test. Default is 0, which means no robustness test is run. The robustness test is a test where the model is trained with varying seeds. This is done multiple times to see how stable the model is."
+                }
+            }
+        },
+        "data_options": {
+            "title": "Data options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-database",
+            "description": "Options for data input.",
+            "properties": {
+                "path_data": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Path to the data directory.",
+                    "help_text": "Path to the data directory."
+                },
+                "cross_study_datasets": {
+                    "type": "string",
+                    "description": "Datasets for cross-study prediction.",
+                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
                 }
             }
         },
@@ -115,11 +134,6 @@
                     "description": "Run the curve curator.",
                     "help_text": "Whether to run \" \"CurveCurator \" \"to sort out \" \"non-reactive \" \"curves"
                 },
-                "overwrite": {
-                    "type": "boolean",
-                    "description": "Overwrite existing results.",
-                    "help_text": "Whether to overwrite existing results."
-                },
                 "optim_metric": {
                     "type": "string",
                     "description": "Optimization metric for the pipeline.",
@@ -128,7 +142,7 @@
                 },
                 "n_cv_splits": {
                     "type": "integer",
-                    "default": 5,
+                    "default": 10,
                     "description": "Number of cross-validation splits.",
                     "help_text": "Number of cross-validation splits. Default is 5."
                 },
@@ -136,17 +150,6 @@
                     "type": "string",
                     "description": "Response transformation",
                     "help_text": "Transformation to apply to the response variable possible values: standard, minmax, robust"
-                },
-                "path_data": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "description": "Path to the data directory.",
-                    "help_text": "Path to the data directory."
-                },
-                "cross_study_datasets": {
-                    "type": "string",
-                    "description": "Datasets for cross-study prediction.",
-                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
                 }
             }
         },
