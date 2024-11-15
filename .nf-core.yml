@@ -18,11 +18,7 @@ org_path: null
 repository_type: pipeline
 template:
   author: Judith Bernett
-  description: This pipeline takes a drug response prediction model architecture
-    as input and evaluates its performance by using custom training, validation, and
-    test sets. It compares it against existing deep learning models and baseline models.
-    Additionally, it tests the model for overfitting, consistency, robustness, and
-    generalization.
+  description: This pipeline evaluates drug response models in various settings on a variety of datasets.
   force: false
   is_nfcore: true
   name: drugresponseeval
