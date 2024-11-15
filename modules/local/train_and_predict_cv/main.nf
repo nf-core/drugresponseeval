@@ -1,7 +1,7 @@
 process TRAIN_AND_PREDICT_CV {
-    tag "${model_name}_${test_mode}"
-    label 'process_single'
-    cpus 3
+    tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
+    label 'process_high'
+    label 'process_gpu'
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)

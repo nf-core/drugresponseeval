@@ -2,7 +2,8 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization import Violin, Heatmap
+from drevalpy.visualization.violin import Violin
+from drevalpy.visualization.heatmap import Heatmap
 
 
 def get_parser():

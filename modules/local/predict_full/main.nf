@@ -1,6 +1,7 @@
 process PREDICT_FULL {
-    tag "${test_mode}_${model_name}_${split_id}"
-    label 'process_single'
+    tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
+    label 'process_high'
+    label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
@@ -14,7 +15,7 @@ process PREDICT_FULL {
 
     output:
     tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    path('cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
+    path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
     path('**best_hpams*.json'),             emit: ch_hpams
 
     script:

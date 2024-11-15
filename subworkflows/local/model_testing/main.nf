@@ -9,7 +9,7 @@ include { COLLECT_RESULTS               } from '../../../modules/local/collect_r
 
 workflow MODEL_TESTING {
     take:
-    models                      // from input
+    ch_models_baselines         // from input
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
     cross_study_datasets        // from LOAD_RESPONSE
@@ -38,9 +38,9 @@ workflow MODEL_TESTING {
         ch_randomization = channel.from(randomizations)
         // randomizations only for models, not for baselines
         ch_models_rand = ch_models
-                         .map{it -> it[0]}
-                         .unique()
-                         .combine(ch_randomization)
+                            .map{it -> it[0]}
+                            .unique()
+                            .combine(ch_randomization)
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
@@ -69,8 +69,8 @@ workflow MODEL_TESTING {
     if (params.n_trials_robustness > 0) {
         ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
         ch_trials_robustness = ch_models
-                               .map{it -> it[1]}
-                               .combine(ch_trials_robustness)
+                                .map{it -> it[1]}
+                                .combine(ch_trials_robustness)
 
         ch_best_hpams_per_split_rob = best_hpam_per_split.map {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->
@@ -89,12 +89,24 @@ workflow MODEL_TESTING {
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
 
-    CONSOLIDATE_RESULTS (
-        ch_vis.groupTuple(),
-        randomizations
-    )
+    ch_consolidate = ch_vis
+                        .map{ test_mode, model, pred_file -> [test_mode, model.split("\\.")[0]] }
+                        .unique()
 
-/*
+    CONSOLIDATE_RESULTS (
+        ch_consolidate,
+        randomizations,
+        ch_vis.count() // wait for ch_vis to finish
+    )
+    CONSOLIDATE_RESULTS.out.ch_vis.transpose()
+
+    // filter out SingleDrugModels that have been consolidated
+    ch_vis = ch_vis
+                .concat(CONSOLIDATE_RESULTS.out.ch_vis.transpose())
+                .map{ test_mode, model, pred_file -> [model, test_mode, pred_file] }
+                .combine(ch_models_baselines, by: 0)
+                .map{ model, test_mode, pred_file -> [test_mode, model, pred_file] }
+
     EVALUATE_FINAL (
         ch_vis
     )
@@ -104,9 +116,10 @@ workflow MODEL_TESTING {
     COLLECT_RESULTS (
         ch_collapse
     )
+
     emit:
     evaluation_results = COLLECT_RESULTS.out.evaluation_results
     evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug
     evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl
-    true_vs_predicted = COLLECT_RESULTS.out.true_vs_pred*/
+    true_vs_predicted = COLLECT_RESULTS.out.true_vs_pred
 }

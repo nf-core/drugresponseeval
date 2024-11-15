@@ -4,8 +4,7 @@ import argparse
 import pickle
 import yaml
 
-from drevalpy.evaluation import evaluate
-from drevalpy.evaluation import MAXIMIZATION_METRICS, MINIMIZATION_METRICS
+from drevalpy.evaluation import evaluate, MAXIMIZATION_METRICS, MINIMIZATION_METRICS
 
 def get_parser():
     parser = argparse.ArgumentParser(

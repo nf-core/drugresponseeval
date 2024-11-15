@@ -1,7 +1,7 @@
 process SAVE_TABLES {
     tag "${lpo_lco_ldo}_${eval_results}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/html_tables"
+    publishDir "${params.outdir}/${params.run_id}/html_tables", mode: 'copy'
 
     //conda "conda-forge::python=3.8.3"
     //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
