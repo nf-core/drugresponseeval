@@ -25,12 +25,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 8. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### Load response
+
 The response data is loaded into the pipeline. This step is necessary to provide the pipeline with the response data that will be used to train and evaluate the models.
 
 ### Train and evaluate models
 
 All models are trained and evaluated in a cross-validation setting. The models are trained on the training set and evaluated on the validation set. The performance of the models is evaluated using various metrics such as accuracy, precision, recall, F1-score, and ROC-AUC.
-
 
 ### Pipeline information
 

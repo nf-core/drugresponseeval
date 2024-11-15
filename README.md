@@ -86,6 +86,7 @@ We thank the following people for their extensive assistance in the development 
 ## Contributions and Support
 
 Contributors to nf-core/drugresponseeval and the drevalpy PyPI package:
+
 - [Judith Bernett](https://github.com/JudithBernett) (TUM)
 - [Pascal Iversen](https://github.com/PascalIversen) (FU Berlin)
 - [Mario Picciani](https://github.com/picciama) (TUM)
