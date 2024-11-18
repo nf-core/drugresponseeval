@@ -21,9 +21,10 @@ process PARAMS_CHECK {
     val optim_metric
     val n_cv_splits
     val response_transformation
+    val path_data
 
     output:
-
+    path path_data,     emit: path_data
 
     when:
     task.ext.when == null || task.ext.when

@@ -11,7 +11,7 @@ process PREDICT_FULL {
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi)
     val(response_transformation)
-    val(path_data)
+    path(path_data)
 
     output:
     tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis

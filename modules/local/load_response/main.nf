@@ -9,7 +9,7 @@ process LOAD_RESPONSE {
     //    'biocontainers/python:3.8.3' }"
     input:
     val dataset_name
-    val path_data
+    path path_data
     val cross_study_datasets
 
     output:
