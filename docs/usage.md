@@ -33,7 +33,7 @@ Furthermore, we offer a variety of more advanced **baseline models** and some **
 your model against. Similarly, we provide commonly used datasets to evaluate your model on (GDSC1, GDSC2, CCLE,
 CTRPv2). You can also provide your **own dataset or your own model by contributing to our PyPI package
 [drevalpy](https://github.com/daisybio/drevalpy.git)** Before contributing, you can pull our respective repositories.
-More information will be supplied soon.
+More information can be found in the [drevalpy readthedocs](https://drevalpy.readthedocs.io/en/latest/).
 
 We first identify the best hyperparameters for all models and baselines in a cross-validation setting. Then, we
 train the models on the whole training set and evaluate them on the test set. Furthermore, we offer randomization

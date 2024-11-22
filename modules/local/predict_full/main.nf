@@ -4,10 +4,6 @@ process PREDICT_FULL {
     label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi)
     val(response_transformation)
