@@ -4,12 +4,7 @@ lint:
     - conf/igenomes.config
     - conf/igenomes_ignored.config
     - assets/multiqc_config.yml
-    - conf/igenomes.config
-    - conf/igenomes_ignored.config
-    - assets/multiqc_config.yml
   files_unchanged:
-    - .github/CONTRIBUTING.md
-    - assets/sendmail_template.txt
     - .github/CONTRIBUTING.md
     - assets/sendmail_template.txt
   multiqc_config: false
