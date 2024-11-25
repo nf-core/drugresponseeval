@@ -13,6 +13,13 @@ workflow RUN_CV {
     baselines                        // model names for comparison
 
     main:
+    if (params.curve_curator_input)
+        FIT_CURVES (
+            params.dataset_name
+            params.path_data,
+            params.curve_curator_input,
+        )
+
     LOAD_RESPONSE(params.dataset_name, params.path_data, params.cross_study_datasets)
 
     ch_test_modes = channel.from(test_modes)

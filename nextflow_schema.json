@@ -39,7 +39,7 @@
                 "dataset_name": {
                     "type": "string",
                     "description": "Name of the dataset.",
-                    "help_text": "Name of the dataset used for the pipeline. Allowed values are GDSC1, GDSC2, and Custom."
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'Toy_Data') in which case the datasets with the fitted curves is downloaded, or a custom name, in which case raw viability measurements are expected (the option 'curve_curator_input' is required in this case)."
                 },
                 "outdir": {
                     "type": "string",
@@ -110,10 +110,10 @@
             "fa_icon": "fas fa-cogs",
             "description": "Additional options for the pipeline.",
             "properties": {
-                "curve_curator": {
-                    "type": "boolean",
-                    "description": "Run the curve curator.",
-                    "help_text": "Whether to run \" \"CurveCurator \" \"to sort out \" \"non-reactive \" \"curves"
+                "curve_curator_input": {
+                    "type": "string",
+                    "description": "Path to configuration file for CurveCurator.",
+                    "help_text": "This allows specifying the configuration for preprocessing of custom viability data using CurveCurator. If provided, custom viability data specified in the config file will be fitted with custom settings. Please note: The output path in the configuration file must point to '<path_data>/<dataset_name>/'. A default configuration file reflecting the exact settings that were used to preprocess the available datasets (see option dataset_name) is provided in documentation, to allow reproduction or fair comparison."
                 },
                 "overwrite": {
                     "type": "boolean",

@@ -26,6 +26,7 @@ WorkflowDrugresponseeval.initialise(params, log)
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { FIT_CURVES } from '../modules/local/fit_curves'
 include { PARAMS_CHECK } from '../modules/local/params_check'
 include { DRAW_VIOLIN } from '../modules/local/draw_violin'
 include { DRAW_HEATMAP } from '../modules/local/draw_heatmap'
@@ -85,7 +86,7 @@ workflow DRUGRESPONSEEVAL {
         params.n_trials_robustness,
         params.dataset_name,
         params.cross_study_datasets,
-        params.curve_curator,
+        params.curve_curator_input,
         params.optim_metric,
         params.n_cv_splits,
         params.response_transformation
