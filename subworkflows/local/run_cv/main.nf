@@ -11,9 +11,10 @@ workflow RUN_CV {
     test_modes                      // LPO,LDO,LCO
     models                          // model names for full testing
     baselines                        // model names for comparison
+    path_data                      // path to data
 
     main:
-    LOAD_RESPONSE(params.dataset_name, params.path_data, params.cross_study_datasets)
+    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
@@ -73,7 +74,7 @@ workflow RUN_CV {
 
     TRAIN_AND_PREDICT_CV (
         ch_test_combis,
-        params.path_data,
+        path_data,
         params.response_transformation
     )
     // [model_name, test_mode, split_id,

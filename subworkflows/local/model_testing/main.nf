@@ -14,6 +14,7 @@ workflow MODEL_TESTING {
     randomizations              // from input
     cross_study_datasets        // from LOAD_RESPONSE
     ch_models                  // from RUN_CV
+    path_data                  // from input
 
     main:
     if (params.cross_study_datasets == '') {
@@ -30,7 +31,7 @@ workflow MODEL_TESTING {
     PREDICT_FULL (
         ch_predict_final,
         params.response_transformation,
-        params.path_data
+        path_data
     )
     ch_vis = PREDICT_FULL.out.ch_vis
 
@@ -59,7 +60,7 @@ workflow MODEL_TESTING {
 
         RANDOMIZATION_TEST (
             ch_randomization,
-            params.path_data,
+            path_data,
             params.randomization_type,
             params.response_transformation
         )
@@ -82,7 +83,7 @@ workflow MODEL_TESTING {
         ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0)
         ROBUSTNESS_TEST (
             ch_robustness,
-            params.path_data,
+            path_data,
             params.randomization_type,
             params.response_transformation
         )
