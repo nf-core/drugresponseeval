@@ -2,7 +2,7 @@
 import argparse
 import pandas as pd
 
-from drevalpy.visualization import HTMLTable
+from drevalpy.visualization.html_tables import HTMLTable
 
 
 def get_parser():

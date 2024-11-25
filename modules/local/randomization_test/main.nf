@@ -1,12 +1,9 @@
 process RANDOMIZATION_TEST {
-    tag "${test_mode}_${model_name}_${randomization_type}"
-    label 'process_single'
+    tag { "${test_mode}_${model_name}_${randomization_type}_gpu:${task.ext.use_gpu}" }
+    label 'process_high'
+    label 'process_gpu'
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
     path(path_data)

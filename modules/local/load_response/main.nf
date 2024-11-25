@@ -1,15 +1,11 @@
 process LOAD_RESPONSE {
     tag "${dataset_name} (cross: ${cross_study_datasets})"
-    //label 'process_single'
+    label 'process_single'
     publishDir "${path_data}", mode: 'copy'
 
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
     input:
     val dataset_name
-    val path_data
+    path path_data
     val cross_study_datasets
 
     output:

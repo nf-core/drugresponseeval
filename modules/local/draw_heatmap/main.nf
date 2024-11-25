@@ -1,12 +1,7 @@
 process DRAW_HEATMAP {
     tag "${name}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/heatmaps"
-
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
+    publishDir "${params.outdir}/${params.run_id}/heatmaps", mode: 'copy'
 
     input:
     val(name)

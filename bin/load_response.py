@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import pickle
-from drevalpy.utils import load_data
+from drevalpy.datasets.loader import load_dataset
 
 
 def get_parser():
@@ -19,9 +19,8 @@ def get_parser():
 
 
 def main(args):
-    response_data, cross_study_datasets = load_data(
-        dataset_name=args.dataset_name, cross_study_datasets=args.cross_study_datasets, path_data=args.path_data
-    )
+    response_data = load_dataset(dataset_name=args.dataset_name, path_data=args.path_data)
+    cross_study_datasets = [load_dataset(dataset_name=ds, path_data=args.path_data) for ds in args.cross_study_datasets]
 
     # Pickle the object to a file
     with open("response_dataset.pkl", "wb") as f:

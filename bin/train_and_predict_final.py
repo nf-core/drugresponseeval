@@ -169,13 +169,13 @@ if __name__ == "__main__":
 
     if args.mode == "full":
         predictions_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='predictions',
         )
         hpam_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='best_hpams',
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         with open(args.randomization_views_path, "r") as f:
             rand_test_view = yaml.safe_load(f)
         rand_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='randomization',
@@ -241,7 +241,7 @@ if __name__ == "__main__":
         )
     elif args.mode == "robustness":
         rob_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='robustness',
