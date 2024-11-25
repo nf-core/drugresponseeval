@@ -34,7 +34,7 @@ tuning is fair and consistent. With its flexible model interface, DrEval support
 ranging from statistical models to complex neural networks. By contributing your model to the
 DrEval catalog, you can increase your work's exposure, reusability, and transferability.
 
-# ![DrEval_pipeline](assets/DrEval_pipeline_simplified.png)
+# ![Pipeline diagram showing the major steps of nf-core/drugresponseeval](assets/drugresponseeval_pipeline_simplified.png)
 
 1. The response data is loaded
 2. All models are trained and evaluated in a cross-validation setting

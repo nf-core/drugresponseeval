@@ -14,25 +14,25 @@
 
 ## Pipeline tools
 
-- [DrEvalPy](https://github.com/daisybio/drevalpy)
+- [DrEvalPy](https://github.com/daisybio/drevalpy): The pipeline mostly automates the individual steps of the DrEvalPy PyPI package.
 
   > Bernett, J, Iversen, P, Picciani, M, Wilhelm, M, Baum, K, List, M. Will be published soon.
 
-- [SRMF](https://doi.org/10.1186/s12885-017-3500-5)
+- [DIPK](https://doi.org/10.1093/bib/bbae153): Implemented model in the pipeline.
 
-  > Wang L, Li X, Zhang L, Gao Q. Improved anticancer drug response prediction in cell lines using matrix factorization with similarity regularization. BMC cancer. 2017 Dec;17:1-2.
+  > Li P, Jiang Z, Liu T, Liu X, Qiao H, Yao X. Improving drug response prediction via integrating gene relationships with deep learning. Briefings in Bioinformatics. 2024 May;25(3):bbae153.
 
-- [MOLI](https://doi.org/10.1093/bioinformatics/btz318)
+- [MOLI](https://doi.org/10.1093/bioinformatics/btz318): Implemented model in the pipeline.
 
   > Sharifi-Noghabi H, Zolotareva O, Collins CC, Ester M. MOLI: multi-omics late integration with deep neural networks for drug response prediction. Bioinformatics. 2019 Jul;35(14):i501-9.
 
-- [SuperFELT](https://doi.org/10.1186/s12859-021-04146-z)
+- [SRMF](https://doi.org/10.1186/s12885-017-3500-5): Implemented model in the pipeline.
+
+  > Wang L, Li X, Zhang L, Gao Q. Improved anticancer drug response prediction in cell lines using matrix factorization with similarity regularization. BMC cancer. 2017 Dec;17:1-2.
+
+- [SuperFELT](https://doi.org/10.1186/s12859-021-04146-z): Implemented model in the pipeline.
 
   > Park S, Soh J, Lee H. Super. FELT: supervised feature extraction learning using triplet loss for drug response prediction with multi-omics data. BMC bioinformatics. 2021 May 25;22(1):269.
-
-- [DIPK](https://doi.org/10.1093/bib/bbae153)
-
-  > Li P, Jiang Z, Liu T, Liu X, Qiao H, Yao X. Improving drug response prediction via integrating gene relationships with deep learning. Briefings in Bioinformatics. 2024 May;25(3):bbae153.
 
 ## Software packaging/containerisation tools
 
