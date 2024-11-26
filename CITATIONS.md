@@ -1,5 +1,9 @@
 # nf-core/drugresponseeval: Citations
 
+## [DrugResponseEval](https://github.com/nf-core/drugresponseeval/)
+
+> Bernett, J, Iversen, P, Picciani, M, Wilhelm, M, Baum, K, List, M. Will be published soon.
+
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
 > Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.
@@ -10,13 +14,25 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [DrEvalPy](https://github.com/daisybio/drevalpy): The pipeline mostly automates the individual steps of the DrEvalPy PyPI package.
 
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+  > Bernett, J, Iversen, P, Picciani, M, Wilhelm, M, Baum, K, List, M. Will be published soon.
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+- [DIPK](https://doi.org/10.1093/bib/bbae153): Implemented model in the pipeline.
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+  > Li P, Jiang Z, Liu T, Liu X, Qiao H, Yao X. Improving drug response prediction via integrating gene relationships with deep learning. Briefings in Bioinformatics. 2024 May;25(3):bbae153.
+
+- [MOLI](https://doi.org/10.1093/bioinformatics/btz318): Implemented model in the pipeline.
+
+  > Sharifi-Noghabi H, Zolotareva O, Collins CC, Ester M. MOLI: multi-omics late integration with deep neural networks for drug response prediction. Bioinformatics. 2019 Jul;35(14):i501-9.
+
+- [SRMF](https://doi.org/10.1186/s12885-017-3500-5): Implemented model in the pipeline.
+
+  > Wang L, Li X, Zhang L, Gao Q. Improved anticancer drug response prediction in cell lines using matrix factorization with similarity regularization. BMC cancer. 2017 Dec;17:1-2.
+
+- [SuperFELT](https://doi.org/10.1186/s12859-021-04146-z): Implemented model in the pipeline.
+
+  > Park S, Soh J, Lee H. Super. FELT: supervised feature extraction learning using triplet loss for drug response prediction with multi-omics data. BMC bioinformatics. 2021 May 25;22(1):269.
 
 ## Software packaging/containerisation tools
 

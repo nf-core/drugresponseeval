@@ -9,7 +9,15 @@ Initial release of nf-core/drugresponseeval, created with the [nf-core](https://
 
 ### `Added`
 
+- Updated to the new template
+- Added tests that run with docker, singularity, apptainer, and conda
+- Added the docker container and the conda env.yml in the nextflow.config. We just need one container for all
+  processes as this pipeline automates the PyPI package drevalpy.
+- Added usage and output documentation.
+
 ### `Fixed`
+
+- Fixed linting issues
 
 ### `Dependencies`
 

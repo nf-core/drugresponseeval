@@ -60,13 +60,15 @@ workflow DRUGRESPONSEEVAL {
         params.curve_curator,
         params.optim_metric,
         params.n_cv_splits,
-        params.response_transformation
+        params.response_transformation,
+        params.path_data
     )
 
     RUN_CV (
         test_modes,
         models,
-        baselines
+        baselines,
+        PARAMS_CHECK.out.path_data
     )
 
     MODEL_TESTING (
@@ -74,7 +76,8 @@ workflow DRUGRESPONSEEVAL {
         RUN_CV.out.best_hpam_per_split,
         randomizations,
         RUN_CV.out.cross_study_datasets,
-        RUN_CV.out.ch_models
+        RUN_CV.out.ch_models,
+        PARAMS_CHECK.out.path_data
     )
 
     VISUALIZATION (
