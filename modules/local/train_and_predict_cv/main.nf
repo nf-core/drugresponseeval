@@ -5,7 +5,7 @@ process TRAIN_AND_PREDICT_CV {
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
-    path path_data
+    val path_data
     val response_transformation
 
     output:

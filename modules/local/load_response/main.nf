@@ -5,7 +5,7 @@ process LOAD_RESPONSE {
 
     input:
     val dataset_name
-    path path_data
+    val path_data
     val cross_study_datasets
 
     output:

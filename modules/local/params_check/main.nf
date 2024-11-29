@@ -18,7 +18,7 @@ process PARAMS_CHECK {
     val path_data
 
     output:
-    path path_data,     emit: path_data
+    val path_data,     emit: path_data
 
     when:
     task.ext.when == null || task.ext.when

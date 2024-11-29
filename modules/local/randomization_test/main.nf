@@ -6,7 +6,7 @@ process RANDOMIZATION_TEST {
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
-    path(path_data)
+    val(path_data)
     val(randomization_type)
     val(response_transformation)
 
