@@ -39,7 +39,7 @@
                 "dataset_name": {
                     "type": "string",
                     "description": "Name of the dataset.",
-                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'Toy_Data') in which case the datasets with the fitted curves is downloaded, or a custom name, in which case raw viability measurements are expected (the option 'curve_curator_input' is required in this case)."
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'Toy_Data') in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting (see 'curve_curator' option, which is required in this case), or prefit data (not recommended for dataset comparability reasons due to potential differences in fitting procedures)."
                 },
                 "outdir": {
                     "type": "string",
@@ -116,6 +116,12 @@
                     "description": "Path to the data directory.",
                     "help_text": "Path to the data directory."
                 },
+                "measure": {
+                    "type": "string",
+                    "default": "LN_IC50",
+                    "description": "The name of the measure to use. Can be one of ['LN_IC50'], which is the default.",
+                    "help": "The name of the measure to use. This can be one of ['LN_IC50']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'curve_curator' is set, the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'curve_curator' option for details)."
+                },
                 "cross_study_datasets": {
                     "type": "string",
                     "description": "Datasets for cross-study prediction.",
@@ -129,10 +135,10 @@
             "fa_icon": "fas fa-cogs",
             "description": "Additional options for the pipeline.",
             "properties": {
-                "curve_curator_input": {
-                    "type": "string",
-                    "description": "Path to configuration file for CurveCurator.",
-                    "help_text": "This allows specifying the configuration for preprocessing of custom viability data using CurveCurator. If provided, custom viability data specified in the config file will be fitted with custom settings. Please note: The output path in the configuration file must point to '<path_data>/<dataset_name>/'. A default configuration file reflecting the exact settings that were used to preprocess the available datasets (see option dataset_name) is provided in documentation, to allow reproduction or fair comparison."
+                "curve_curator": {
+                    "type": "bool",
+                    "description": "If True, use refit measures instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data.",
+                    "help_text": "This allows using refit measures (see 'measure' option for details) for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), setting this to True expects a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option), which is fitted automatically with the same procedure as the available datasets, to provide fair comparison. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv."
                 },
                 "save_datasets": {
                     "type": "boolean",

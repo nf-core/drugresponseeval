@@ -58,7 +58,7 @@ workflow DRUGRESPONSEEVAL {
         params.n_trials_robustness,
         params.dataset_name,
         params.cross_study_datasets,
-        params.curve_curator_input,
+        params.curve_curator,
         params.optim_metric,
         params.n_cv_splits,
         params.response_transformation,
@@ -70,6 +70,7 @@ workflow DRUGRESPONSEEVAL {
         models,
         baselines,
         PARAMS_CHECK.out.path_data
+        params.measure
     )
 
     MODEL_TESTING (

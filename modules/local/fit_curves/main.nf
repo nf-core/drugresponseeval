@@ -12,15 +12,11 @@ process FIT_CURVES {
     input:
     val dataset_name
     val path_data
-    val curve_curator_input
 
     script:
     """
-    prepost_curvefitting.py \\
-        --input=$curve_curator_input \\
-        --output_dir=$path_data/$dataset_name
-        --cores=50
+    prepost_curvefitting.py --path=$path_data --dataset=$dataset_name --task=preprocess --cores=50
     CurveCurator $path_data/$dataset_name/config.toml --mad
-    prepost_curvefitting.py --output_dir=$path_data/$dataset_name
+    prepost_curvefitting.py --path_=$path_data --dataset=$dataset_name --task=postprocess
     """
 }

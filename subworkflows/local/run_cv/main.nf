@@ -10,18 +10,20 @@ workflow RUN_CV {
     take:
     test_modes                      // LPO,LDO,LCO
     models                          // model names for full testing
-    baselines                        // model names for comparison
-    path_data                      // path to data
+    baselines                       // model names for comparison
+    path_data                       // path to data
+    measure                         // measure name to use 
 
     main:
-    if (params.curve_curator_input)
+    if (params.curve_curator)
         FIT_CURVES (
             params.dataset_name
             path_data,
-            params.curve_curator_input,
         )
+        // manually change this here to call LOAD_RESPONSE without curvecurator option
+        measure = measure + "_curvecurator"  
 
-    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets)
+    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
