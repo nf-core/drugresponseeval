@@ -1,6 +1,6 @@
 process FIT_CURVES {
     //tag "$samplesheet"
-    label 'process_medium'
+    label 'high_cpu_low_mem'
     publishDir "${path_data}", mode: 'copy'
 
 
@@ -13,9 +13,14 @@ process FIT_CURVES {
     val dataset_name
     val path_data
 
+    output:
+    path '${dataset_name}/config.toml'
+    path '${dataset_name}/curves.txt'
+    path '${dataset_name}/${dataset_name}.csv'
+
     script:
     """
-    prepost_curvefitting.py --path=$path_data --dataset=$dataset_name --task=preprocess --cores=50
+    prepost_curvefitting.py --path=$path_data --dataset=$dataset_name --task=preprocess --cores=$task.cpus
     CurveCurator $path_data/$dataset_name/config.toml --mad
     prepost_curvefitting.py --path_=$path_data --dataset=$dataset_name --task=postprocess
     """
