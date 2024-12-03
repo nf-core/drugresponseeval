@@ -136,7 +136,7 @@
             "description": "Additional options for the pipeline.",
             "properties": {
                 "curve_curator": {
-                    "type": "bool",
+                    "type": "boolean",
                     "description": "If True, use refit measures instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data.",
                     "help_text": "This allows using refit measures (see 'measure' option for details) for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), setting this to True expects a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option), which is fitted automatically with the same procedure as the available datasets, to provide fair comparison. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv."
                 },
