@@ -5,7 +5,7 @@ include { CV_SPLIT                          } from '../../../modules/local/cv_sp
 include { HPAM_SPLIT                        } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
 include { EVALUATE_FIND_MAX                 } from '../../../modules/local/evaluate_find_max'
-include { FIT_CURVES                        } from '../../../modulues/local/fit_curves'
+include { FIT_CURVES                        } from '../../../modules/local/fit_curves'
 
 workflow RUN_CV {
     take:
@@ -17,10 +17,7 @@ workflow RUN_CV {
 
     main:
     if (params.curve_curator) {
-        FIT_CURVES (
-            params.dataset_name
-            path_data,
-        )
+        FIT_CURVES(params.dataset_name, path_data)
         // manually change this here to call LOAD_RESPONSE without curvecurator option
         measure = measure + "_curvecurator"  
     }
