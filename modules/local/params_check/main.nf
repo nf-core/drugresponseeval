@@ -41,5 +41,6 @@ process PARAMS_CHECK {
         --n_cv_splits $n_cv_splits \\
         --response_transformation $response_transformation
         --measure $measure
+        --path_data $path_data
     """
 }
