@@ -69,7 +69,7 @@ workflow DRUGRESPONSEEVAL {
         test_modes,
         models,
         baselines,
-        PARAMS_CHECK.out.path_data
+        PARAMS_CHECK.out.path_data,
         params.measure
     )
 

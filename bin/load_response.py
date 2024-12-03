@@ -19,7 +19,8 @@ def get_parser():
         "--measure",
         type=str,
         default="LN_IC50",
-        help="Name of the column in the dataset containing the drug response measures.")
+        help="Name of the column in the dataset containing the drug response measures."
+    )
     return parser
 
 
