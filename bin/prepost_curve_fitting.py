@@ -20,6 +20,7 @@ def main(args):
         preprocess(
             input_file=base_path / f"{args.dataset_name}_raw.csv",
             output_dir=base_path,
+            dataset_name=args.dataset_name,
             cores=args.cores
         )
 
