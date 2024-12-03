@@ -19,7 +19,7 @@ process PARAMS_CHECK {
     val measure
 
     output:
-    path path_data,     emit: path_data
+    val path_data,     emit: path_data
 
     when:
     task.ext.when == null || task.ext.when
@@ -39,8 +39,8 @@ process PARAMS_CHECK {
         ${curve_curator ? '--curve_curator --curve_curator_cores 1' : ''} \\
         --optim_metric $optim_metric \\
         --n_cv_splits $n_cv_splits \\
-        --response_transformation $response_transformation
-        --measure $measure
+        --response_transformation $response_transformation \\
+        --measure $measure \\
         --path_data $path_data
     """
 }

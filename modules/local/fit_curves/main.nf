@@ -20,8 +20,8 @@ process FIT_CURVES {
 
     script:
     """
-    prepost_curvefitting.py --path=$path_data --dataset=$dataset_name --task=preprocess --cores=$task.cpus
+    prepost_curve_fitting.py --path_data=$path_data --dataset_name=$dataset_name --task=preprocess --cores=$task.cpus
     CurveCurator $path_data/$dataset_name/config.toml --mad
-    prepost_curvefitting.py --path_=$path_data --dataset=$dataset_name --task=postprocess
+    prepost_curve_fitting.py --path_data=$path_data --dataset_name=$dataset_name --task=postprocess
     """
 }
