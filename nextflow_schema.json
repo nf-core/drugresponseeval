@@ -119,8 +119,8 @@
                 "measure": {
                     "type": "string",
                     "default": "LN_IC50",
-                    "description": "The name of the measure to use. Can be one of ['LN_IC50'], which is the default.",
-                    "help": "The name of the measure to use. This can be one of ['LN_IC50']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'curve_curator' is set, the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'curve_curator' option for details)."
+                    "description": "The name of the measure to use",
+                    "help": "The name of the measure to use, default 'LN_IC50'. If using one of the available datasets (see 'dataset_name' option), this is restricted to one of ['LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'curve_curator' is set, the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'curve_curator' option for details)."
                 },
                 "cross_study_datasets": {
                     "type": "string",

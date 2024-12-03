@@ -10,7 +10,6 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_drugresponseeval_pipeline'
 
-include { FIT_CURVES } from '../modules/local/fit_curves'
 include { PARAMS_CHECK } from '../modules/local/params_check'
 include { DRAW_VIOLIN } from '../modules/local/draw_violin'
 include { DRAW_HEATMAP } from '../modules/local/draw_heatmap'
@@ -62,7 +61,8 @@ workflow DRUGRESPONSEEVAL {
         params.optim_metric,
         params.n_cv_splits,
         params.response_transformation,
-        params.path_data
+        params.path_data,
+        params.measure
     )
 
     RUN_CV (

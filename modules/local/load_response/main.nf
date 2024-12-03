@@ -7,6 +7,7 @@ process LOAD_RESPONSE {
     val dataset_name
     path path_data
     val cross_study_datasets
+    val measure
 
     output:
     path 'response_dataset.pkl',    emit: response_dataset
@@ -16,7 +17,8 @@ process LOAD_RESPONSE {
     load_response.py \\
         --dataset_name ${dataset_name} \\
         --path_data ${path_data} \\
-        ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''}
+        ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
+        --measure ${measure}
     """
 
 }
