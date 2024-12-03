@@ -11,16 +11,16 @@ def get_parser():
     return parser
 
 
-def main(path_data: str | Path, dataset_name: str | Path, task: str, cores: int = 1):
+def main(args):
     
-    base_path = Path(path_data) / dataset_name
-    if task == 'postprocess':
-        postprocess(output_folder=base_path, dataset_name=dataset_name)
+    base_path = Path(args.path_data) / args.dataset_name
+    if args.task == 'postprocess':
+        postprocess(output_folder=base_path, dataset_name=args.dataset_name)
     else:
         preprocess(
-            input_file=base_path / f"{dataset_name}_raw.csv",
+            input_file=base_path / f"{args.dataset_name}_raw.csv",
             output_dir=base_path,
-            cores=cores
+            cores=args.cores
         )
 
 if __name__ == "__main__":
