@@ -6,6 +6,8 @@ include { HPAM_SPLIT                        } from '../../../modules/local/hpam_
 include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
 include { EVALUATE_FIND_MAX                 } from '../../../modules/local/evaluate_find_max'
 include { FIT_CURVES                        } from '../../../modules/local/fit_curves'
+include { PREPROCESS_RAW_VIABILITY          } from '../../../modules/local/preprocess_raw_viability'
+include { POSTPROCESS_CURVECURATOR_DATA     } from '../../../modules/local/postprocess_curvecurator_output'
 
 workflow RUN_CV {
     take:
@@ -17,9 +19,12 @@ workflow RUN_CV {
 
     main:
     if (params.curve_curator) {
-        FIT_CURVES(params.dataset_name, path_data)
-        // manually change this here to call LOAD_RESPONSE without curvecurator option
-        measure = measure + "_curvecurator"  
+        PREPROCESS_RAW_VIABILITY(params.dataset_name, path_data)
+        FIT_CURVES(params.dataset_name, PREPROCESS_RAW_VIABILITY.out.path_to_processed_raw)
+        POSTPROCESS_CURVECURATOR_DATA(params.dataset_name, FIT_CURVES.out.path_to_curvecurator_out)
+        // manually change this here to call LOAD_RESPONSE without curvecurator option and correct path
+        measure = measure + "_curvecurator"
+        path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
     }
 
     LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)

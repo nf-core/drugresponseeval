@@ -1,6 +1,6 @@
-process FIT_CURVES {
+process POSTPROCESS_CURVECURATOR_DATA {
     //tag "$samplesheet"
-    label 'high_cpu_low_mem'
+    label 'process_low'
     publishDir "${path_data}", mode: 'copy'
 
 
@@ -14,10 +14,10 @@ process FIT_CURVES {
     path path_data
 
     output:
-    path './', emit: path_to_curvecurator_out
+    path './', emit: path_to_dataset
 
     script:
     """
-    CurveCurator ${path_data}/${dataset_name}/config.toml --mad
+    postprocess_curvecurator_output.py --path_data ${path_data} --dataset_name ${dataset_name}
     """
 }

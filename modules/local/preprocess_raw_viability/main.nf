@@ -1,6 +1,6 @@
-process FIT_CURVES {
+process PREPROCESS_RAW_VIABILITY {
     //tag "$samplesheet"
-    label 'high_cpu_low_mem'
+    label 'process_low'
     publishDir "${path_data}", mode: 'copy'
 
 
@@ -11,13 +11,13 @@ process FIT_CURVES {
 
     input:
     val dataset_name
-    path path_data
+    val path_data
 
     output:
-    path './', emit: path_to_curvecurator_out
+    path './', emit: path_to_processed_raw
 
     script:
     """
-    CurveCurator ${path_data}/${dataset_name}/config.toml --mad
+    preprocess_raw_viability.py --path_data ${path_data} --dataset_name ${dataset_name} --cores ${task.cpus}
     """
 }
