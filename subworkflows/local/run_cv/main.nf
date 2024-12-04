@@ -25,9 +25,13 @@ workflow RUN_CV {
         // manually change this here to call LOAD_RESPONSE without curvecurator option and correct path
         measure = measure + "_curvecurator"
         //path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
+        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
+
+    } else {
+        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
+
     }
 
-    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
