@@ -15,7 +15,7 @@ def main(args):
     base_path = Path(args.path_data) / args.dataset_name
     preprocess(
         input_file=base_path / f"{args.dataset_name}_raw.csv",
-        output_dir='./',
+        output_dir=args.dataset_name,
         dataset_name=args.dataset_name,
         cores=args.cores
     )

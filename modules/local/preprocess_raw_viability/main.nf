@@ -14,7 +14,8 @@ process PREPROCESS_RAW_VIABILITY {
     val path_data
 
     output:
-    path './', emit: path_to_processed_raw
+    path "${dataset_name}/config.toml", emit: path_to_toml
+    path "${dataset_name}/curvecurator_input.tsv", emit: curvecurator_input
 
     script:
     """

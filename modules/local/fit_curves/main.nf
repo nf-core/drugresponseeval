@@ -11,13 +11,17 @@ process FIT_CURVES {
 
     input:
     val dataset_name
-    path path_data
+    path toml
+    path curvecurator_input
 
     output:
-    path './', emit: path_to_curvecurator_out
+    path "${dataset_name}/curves.txt", emit: path_to_curvecurator_out
+    path "${dataset_name}/norm.txt"
+    path "${dataset_name}/mad.txt"
+    path "${dataset_name}/dashboard.html"
 
     script:
     """
-    CurveCurator ${path_data}/${dataset_name}/config.toml --mad
+    CurveCurator ${toml} --mad
     """
 }
