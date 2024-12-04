@@ -1,7 +1,7 @@
 process POSTPROCESS_CURVECURATOR_DATA {
     //tag "$samplesheet"
     label 'process_low'
-    publishDir "${path_data}/${dataset_name}/", mode: 'copy'
+    publishDir "${path_data}/${params.dataset_name}/", mode: 'copy'
 
 
     //conda "conda-forge::python=3.8.3"

@@ -24,7 +24,7 @@ workflow RUN_CV {
         POSTPROCESS_CURVECURATOR_DATA(params.dataset_name, FIT_CURVES.out.path_to_curvecurator_out)
         // manually change this here to call LOAD_RESPONSE without curvecurator option and correct path
         measure = measure + "_curvecurator"
-        path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
+        //path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
     }
 
     LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
