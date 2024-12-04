@@ -1,7 +1,7 @@
 process FIT_CURVES {
     //tag "$samplesheet"
     label 'high_cpu_low_mem'
-    publishDir "${path_data}", mode: 'copy'
+    publishDir "${path_data}/${dataset_name}/", mode: 'copy'
 
 
     //conda "conda-forge::python=3.8.3"
@@ -15,10 +15,10 @@ process FIT_CURVES {
     path curvecurator_input
 
     output:
-    path "${dataset_name}/curves.txt", emit: path_to_curvecurator_out
-    path "${dataset_name}/norm.txt"
-    path "${dataset_name}/mad.txt"
-    path "${dataset_name}/dashboard.html"
+    path "curves.txt", emit: path_to_curvecurator_out
+    path "mad.txt"
+    path "dashboard.html"
+    path "curveCurator.log"
 
     script:
     """
