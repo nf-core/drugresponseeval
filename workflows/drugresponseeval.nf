@@ -67,8 +67,8 @@ workflow DRUGRESPONSEEVAL {
     )
 
     PREPROCESS_CUSTOM (
-        PARAMS_CHECK.out.path_data
-        params.dataset_name
+        PARAMS_CHECK.out.path_data,
+        params.dataset_name,
         params.measure
     )
 
