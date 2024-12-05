@@ -15,7 +15,12 @@ workflow PREPROCESS_CUSTOM {
         PREPROCESS_RAW_VIABILITY(dataset_name, path_data)
         FIT_CURVES(dataset_name, PREPROCESS_RAW_VIABILITY.out.path_to_toml, PREPROCESS_RAW_VIABILITY.out.curvecurator_input)
         POSTPROCESS_CURVECURATOR_DATA(dataset_name, FIT_CURVES.out.path_to_curvecurator_out, measure)
+        ch_measure = POSTPROCESS_CURVECURATOR_DATA.out.measure
+    }else if(params.curve_curator){
+        ch_measure = Channel.of("${measure}" + "_curvecurator")
+    }else{
+        ch_measure = measure
     }
     emit:
-    measure = POSTPROCESS_CURVECURATOR_DATA.out.measure
+    measure = ch_measure
 }
