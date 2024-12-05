@@ -1,7 +1,7 @@
 process POSTPROCESS_CURVECURATOR_DATA {
     //tag "$samplesheet"
     label 'process_low'
-    publishDir "${path_data}/${params.dataset_name}/", mode: 'copy'
+    publishDir "${params.path_data}/${params.dataset_name}", mode: 'copy'
 
 
     //conda "conda-forge::python=3.8.3"
@@ -12,9 +12,11 @@ process POSTPROCESS_CURVECURATOR_DATA {
     input:
     val dataset_name
     path curve_data
+    val measure
 
     output:
     path "${dataset_name}.csv", emit: path_to_dataset
+    val "${measure}" + "_curvecurator", emit: measure
 
     script:
     """

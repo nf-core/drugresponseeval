@@ -15,17 +15,15 @@ workflow RUN_CV {
     models                          // model names for full testing
     baselines                       // model names for comparison
     path_data                       // path to data
-    measure                         // measure name to use 
+    measure                         // measure name to use
 
     main:
     if (params.curve_curator) {
         PREPROCESS_RAW_VIABILITY(params.dataset_name, path_data)
         FIT_CURVES(params.dataset_name, PREPROCESS_RAW_VIABILITY.out.path_to_toml, PREPROCESS_RAW_VIABILITY.out.curvecurator_input)
-        POSTPROCESS_CURVECURATOR_DATA(params.dataset_name, FIT_CURVES.out.path_to_curvecurator_out)
-        // manually change this here to call LOAD_RESPONSE without curvecurator option and correct path
-        measure = measure + "_curvecurator"
+        POSTPROCESS_CURVECURATOR_DATA(params.dataset_name, FIT_CURVES.out.path_to_curvecurator_out, measure)
         //path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
-        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
+        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, POSTPROCESS_CURVECURATOR_DATA.out.measure)
 
     } else {
         LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
