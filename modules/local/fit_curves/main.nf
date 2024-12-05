@@ -1,7 +1,7 @@
 process FIT_CURVES {
     //tag "$samplesheet"
     label 'high_cpu_low_mem'
-    publishDir "${params.path_data}/${params.dataset_name}", mode: 'copy'
+    publishDir "${params.path_data}/${dataset_name}", mode: 'copy'
 
 
     //conda "conda-forge::python=3.8.3"

@@ -5,9 +5,6 @@ include { CV_SPLIT                          } from '../../../modules/local/cv_sp
 include { HPAM_SPLIT                        } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
 include { EVALUATE_FIND_MAX                 } from '../../../modules/local/evaluate_find_max'
-include { FIT_CURVES                        } from '../../../modules/local/fit_curves'
-include { PREPROCESS_RAW_VIABILITY          } from '../../../modules/local/preprocess_raw_viability'
-include { POSTPROCESS_CURVECURATOR_DATA     } from '../../../modules/local/postprocess_curvecurator_output'
 
 workflow RUN_CV {
     take:
@@ -17,19 +14,8 @@ workflow RUN_CV {
     path_data                       // path to data
     measure                         // measure name to use
 
-    main:
-    if (params.curve_curator) {
-        PREPROCESS_RAW_VIABILITY(params.dataset_name, path_data)
-        FIT_CURVES(params.dataset_name, PREPROCESS_RAW_VIABILITY.out.path_to_toml, PREPROCESS_RAW_VIABILITY.out.curvecurator_input)
-        POSTPROCESS_CURVECURATOR_DATA(params.dataset_name, FIT_CURVES.out.path_to_curvecurator_out, measure)
-        //path_data = POSTPROCESS_CURVECURATOR_DATA.out.path_to_dataset
-        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, POSTPROCESS_CURVECURATOR_DATA.out.measure)
-
-    } else {
-        LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
-
-    }
-
+    main:    
+    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
