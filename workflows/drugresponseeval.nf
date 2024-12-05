@@ -22,6 +22,7 @@ include { WRITE_INDEX } from '../modules/local/write_index'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 
+include { PREPROCESS_CUSTOM } from '../subworkflows/local/preprocess_custom'
 include { RUN_CV } from '../subworkflows/local/run_cv'
 include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 include { VISUALIZATION } from '../subworkflows/local/visualization'
@@ -65,12 +66,18 @@ workflow DRUGRESPONSEEVAL {
         params.measure
     )
 
+    PREPROCESS_CUSTOM (
+        PARAMS_CHECK.out.path_data,
+        params.dataset_name,
+        params.measure
+    )
+
     RUN_CV (
         test_modes,
         models,
         baselines,
         PARAMS_CHECK.out.path_data,
-        params.measure
+        PREPROCESS_CUSTOM.out.measure
     )
 
     MODEL_TESTING (
