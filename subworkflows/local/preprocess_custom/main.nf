@@ -9,13 +9,13 @@ workflow PREPROCESS_CUSTOM {
     measure
 
     main:
-    File raw_file = new File("${path_data}/${dataset_name}/${dataset_name}_raw.csv")
-    
+    File raw_file = new File("${params.path_data}/${dataset_name}/${dataset_name}_raw.csv")
+
     if (raw_file.exists()){
         PREPROCESS_RAW_VIABILITY(dataset_name, path_data)
         FIT_CURVES(dataset_name, PREPROCESS_RAW_VIABILITY.out.path_to_toml, PREPROCESS_RAW_VIABILITY.out.curvecurator_input)
-        POSTPROCESS_CURVECURATOR_DATA(dataset_name, FIT_CURVES.out.path_to_curvecurator_out)
+        POSTPROCESS_CURVECURATOR_DATA(dataset_name, FIT_CURVES.out.path_to_curvecurator_out, measure)
     }
     emit:
-    measure = params.curve_curator ? measure + "_curvecurator" : measure
+    measure = POSTPROCESS_CURVECURATOR_DATA.out.measure
 }

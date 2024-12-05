@@ -1,13 +1,6 @@
 process POSTPROCESS_CURVECURATOR_DATA {
-    //tag "$samplesheet"
     label 'process_low'
     publishDir "${params.path_data}/${dataset_name}", mode: 'copy'
-
-
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
 
     input:
     val dataset_name
