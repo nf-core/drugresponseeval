@@ -1,20 +1,27 @@
-bump_version: null
-lint: null
-nf_core_version: 3.0.2
-org_path: null
+lint:
+  files_exist:
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
+    - assets/multiqc_config.yml
+  files_unchanged:
+    - .github/CONTRIBUTING.md
+    - assets/sendmail_template.txt
+  multiqc_config: false
+  nextflow_config:
+    - params.input
+nf_core_version: 3.1.0
 repository_type: pipeline
 template:
   author: Judith Bernett
-  description: "This pipeline takes a drug response prediction model architecture
-    as input and evaluates its performance by using custom training, validation, and
-    test sets. It compares it against existing deep learning models and baseline models.
-    Additionally, it tests the model for overfitting, consistency, robustness, and
-    generalization. "
+  description: This pipeline evaluates drug response models in various settings on
+    a variety of datasets.
   force: false
   is_nfcore: true
   name: drugresponseeval
   org: nf-core
   outdir: .
-  skip_features: null
+  skip_features:
+    - igenomes
+    - multiqc
+    - fastqc
   version: 1.0dev
-update: null
