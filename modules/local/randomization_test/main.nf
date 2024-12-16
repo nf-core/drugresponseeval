@@ -9,6 +9,7 @@ process RANDOMIZATION_TEST {
     path(path_data)
     val(randomization_type)
     val(response_transformation)
+    val model_checkpoint_dir
 
     output:
     tuple val(test_mode), val(model_name), path('**randomization*.csv'),     emit: ch_vis
@@ -25,7 +26,8 @@ process RANDOMIZATION_TEST {
         --test_mode $test_mode \\
         --path_data $path_data \\
         --randomization_views_path $randomization_views \\
-        --randomization_type $randomization_type
+        --randomization_type $randomization_type \\
+        --model_checkpoint_dir $model_checkpoint_dir \\
     """
 
 }
