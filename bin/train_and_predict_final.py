@@ -209,7 +209,7 @@ if __name__ == "__main__":
             predictions_path,
             f"predictions_{args.split_id}.csv",
         )
-        test_set.save(prediction_dataset)
+        test_set.to_csv(prediction_dataset)
         for ds in args.cross_study_datasets:
             if ds == "NONE.csv":
                 continue
