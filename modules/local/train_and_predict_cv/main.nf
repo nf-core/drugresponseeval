@@ -9,6 +9,8 @@ process TRAIN_AND_PREDICT_CV {
     // relatively to the work directory and as this path is outside the work directory, it will fail.
     val path_data
     val response_transformation
+    val model_checkpoint_dir
+
 
     output:
     tuple val(model_name), val(test_mode), val(cv_data.baseName), path(hyperparameters), path("prediction_dataset_*.pkl"), emit: pred_data
@@ -21,6 +23,7 @@ process TRAIN_AND_PREDICT_CV {
         --test_mode $test_mode \\
         --hyperparameters $hyperparameters \\
         --cv_data $cv_data \\
-        --response_transformation $response_transformation
+        --response_transformation $response_transformation \\
+        --model_checkpoint_dir $model_checkpoint_dir
     """
 }
