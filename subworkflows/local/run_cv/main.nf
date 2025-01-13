@@ -12,7 +12,6 @@ workflow RUN_CV {
     models                          // model names for full testing
     baselines                        // model names for comparison
     path_data                      // path to data
-    
     main:
     LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets)
 
