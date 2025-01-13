@@ -73,11 +73,8 @@ workflow RUN_CV {
     // [model_name, test_mode, split_X.pkl, hpam_X.yaml]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
 
-    TRAIN_AND_PREDICT_CV (
-        ch_test_combis,
-        path_data,
-        params.response_transformation
-    )
+    TRAIN_AND_PREDICT_CV(ch_test_combis, path_data, params.response_transformation, params.model_checkpoint_dir)
+
     // [model_name, test_mode, split_id,
     // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
     // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
