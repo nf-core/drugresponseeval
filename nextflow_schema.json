@@ -155,6 +155,12 @@
                     "type": "string",
                     "description": "Response transformation",
                     "help_text": "Transformation to apply to the response variable possible values: standard, minmax, robust"
+                },
+                "model_checkpoint_dir": {
+                    "type": "string",
+                    "description": "Model checkpoint directory",
+                    "default": "TEMPORARY",
+                    "help_text": "Directory to save model checkpoints."
                 }
             }
         },
