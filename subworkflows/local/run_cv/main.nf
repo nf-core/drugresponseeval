@@ -14,7 +14,7 @@ workflow RUN_CV {
     path_data                       // path to data
     measure                         // measure name to use
 
-    main:    
+    main:
     LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets, measure)
 
     ch_test_modes = channel.from(test_modes)

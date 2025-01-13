@@ -11,7 +11,7 @@ def get_parser():
 
 
 def main(args):
-    
+
     base_path = Path(args.path_data) / args.dataset_name
     preprocess(
         input_file=base_path / f"{args.dataset_name}_raw.csv",
