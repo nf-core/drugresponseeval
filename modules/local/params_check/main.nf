@@ -18,6 +18,8 @@ process PARAMS_CHECK {
     val path_data
 
     output:
+    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
+    // relatively to the work directory and as this path is outside the work directory, it will fail.
     val path_data,     emit: path_data
 
     when:

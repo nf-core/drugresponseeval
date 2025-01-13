@@ -6,6 +6,8 @@ process ROBUSTNESS_TEST {
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration)
+    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
+    // relatively to the work directory and as this path is outside the work directory, it will fail.
     val(path_data)
     val(randomization_type)
     val(response_transformation)
