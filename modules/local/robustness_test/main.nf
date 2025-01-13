@@ -9,6 +9,7 @@ process ROBUSTNESS_TEST {
     path(path_data)
     val(randomization_type)
     val(response_transformation)
+    val model_checkpoint_dir
 
     output:
     tuple val(test_mode), val(model_name), path('**robustness*.csv'),     emit: ch_vis
@@ -24,7 +25,8 @@ process ROBUSTNESS_TEST {
         --response_transformation $response_transformation \\
         --test_mode $test_mode \\
         --path_data $path_data \\
-        --robustness_trial $robustness_iteration
+        --robustness_trial $robustness_iteration \\
+        --model_checkpoint_dir $model_checkpoint_dir \\
     """
 
 }

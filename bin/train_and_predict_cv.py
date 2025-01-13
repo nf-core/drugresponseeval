@@ -19,6 +19,7 @@ def get_parser():
     parser.add_argument("--hyperparameters", type=str, help="hyperparameters for the model")
     parser.add_argument("--cv_data", type=str, help="path to the cv data split")
     parser.add_argument("--response_transformation", type=str, help="response transformation to apply to the dataset")
+    parser.add_argument("--model_checkpoint_dir", type=str, default="TEMPORARY", help="model checkpoint directory, if not provided: temporary directory is used")
     return parser
 
 
@@ -45,6 +46,7 @@ def main():
         prediction_dataset=validation_dataset,
         early_stopping_dataset=es_dataset,
         response_transformation=response_transform,
+        model_checkpoint_dir=args.model_checkpoint_dir
     )
     with open(f"prediction_dataset_{model_name}_{str(args.cv_data).split('.pkl')[0]}_"
               f"{str(args.hyperparameters).split('.yaml')[0]}.pkl",
