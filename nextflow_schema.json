@@ -134,10 +134,11 @@
                     "description": "Run the curve curator.",
                     "help_text": "Whether to run \" \"CurveCurator \" \"to sort out \" \"non-reactive \" \"curves"
                 },
-                "save_datasets": {
-                    "type": "boolean",
-                    "description": "If this is true, intermediate datasets are saved.",
-                    "help_text": "This includes the pickled response/cross validation datasets, the pickled CV splits, the hyperparameter split yamls, the pickled predictions of each trained model, the best hyperparameters, and the randomization test view yamls. Consider this more of a debug flag."
+                "measure": {
+                    "type": "string",
+                    "description": "Which measure of drug response should be used. Only 'LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response' or their equivalents including the '_curvecurator' suffix are allowed.",
+                    "default": "LN_IC50",
+                    "help_text": "Measure to use for the pipeline. Default is LN_IC50."
                 },
                 "optim_metric": {
                     "type": "string",

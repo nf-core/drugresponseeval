@@ -18,6 +18,7 @@ Initial release of nf-core/drugresponseeval, created with the [nf-core](https://
 ### `Fixed`
 
 - Fixed linting issues
+- Fixed bugs with path_data: can now be handled as absolute and relative paths
 
 ### `Dependencies`
 

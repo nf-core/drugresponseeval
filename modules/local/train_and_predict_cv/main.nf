@@ -4,8 +4,7 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_gpu'
 
     input:
-    tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
-    path path_data
+    tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
     val response_transformation
     val model_checkpoint_dir
 

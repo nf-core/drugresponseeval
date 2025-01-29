@@ -11,9 +11,11 @@ workflow RUN_CV {
     test_modes                      // LPO,LDO,LCO
     models                          // model names for full testing
     baselines                        // model names for comparison
-    path_data                      // path to data
+    work_path                      // path to data
+    useless_count                // how do I make it wait for check params to finish?
     main:
-    LOAD_RESPONSE(params.dataset_name, path_data, params.cross_study_datasets)
+
+    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, params.measure, useless_count)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
@@ -68,10 +70,11 @@ workflow RUN_CV {
     ch_model_cv = ch_models_baselines_expanded
         .combine(ch_cv_splits.transpose())
         .map { model_class, model_name, test_mode, split -> [model_name, test_mode, split] }
-    // [model_name, test_mode, split_X.pkl, hpam_X.yaml]
+    // [model_name, test_mode, split_X.pkl, hpam_X.yaml, path/to/data]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
+    ch_test_combis = ch_test_combis.combine(work_path)
 
-    TRAIN_AND_PREDICT_CV(ch_test_combis, path_data, params.response_transformation, params.model_checkpoint_dir)
+    TRAIN_AND_PREDICT_CV(ch_test_combis, params.response_transformation, params.model_checkpoint_dir)
 
     // [model_name, test_mode, split_id,
     // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
