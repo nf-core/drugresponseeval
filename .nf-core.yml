@@ -9,7 +9,7 @@ lint:
   multiqc_config: false
   nextflow_config:
     - params.input
-nf_core_version: 3.1.1
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
   author: Judith Bernett
