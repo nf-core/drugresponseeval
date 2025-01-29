@@ -5,10 +5,7 @@ process ROBUSTNESS_TEST {
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     input:
-    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration)
-    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
-    // relatively to the work directory and as this path is outside the work directory, it will fail.
-    val(path_data)
+    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration), path(path_data)
     val(randomization_type)
     val(response_transformation)
     val model_checkpoint_dir

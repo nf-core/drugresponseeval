@@ -16,14 +16,10 @@ process PARAMS_CHECK {
     val n_cv_splits
     val response_transformation
     val path_data
+    val measure
 
     output:
-    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
-    // relatively to the work directory and as this path is outside the work directory, it will fail.
-    val path_data,     emit: path_data
-
-    when:
-    task.ext.when == null || task.ext.when
+    val path_data
 
     script:
     """
@@ -38,6 +34,8 @@ process PARAMS_CHECK {
         --dataset_name $dataset_name \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
         ${curve_curator ? '--curve_curator' : ''} \\
+        --path_data $path_data \\
+        --measure $measure \\
         --optim_metric $optim_metric \\
         --n_cv_splits $n_cv_splits \\
         --response_transformation $response_transformation

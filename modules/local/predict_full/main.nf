@@ -5,11 +5,9 @@ process PREDICT_FULL {
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     input:
-    tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi)
+    tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
     val(response_transformation)
-    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
-    // relatively to the work directory and as this path is outside the work directory, it will fail.
-    val(path_data)
+    val(model_checkpoint_dir)
 
     output:
     tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
@@ -27,7 +25,8 @@ process PREDICT_FULL {
         --response_transformation $response_transformation \\
         --test_mode $test_mode \\
         --path_data $path_data \\
-        --cross_study_datasets $cross_study_datasets
+        --cross_study_datasets $cross_study_datasets \\
+        --model_checkpoint_dir $model_checkpoint_dir \\
     """
 
 }

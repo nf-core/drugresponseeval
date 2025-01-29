@@ -4,10 +4,7 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_gpu'
 
     input:
-    tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters)
-    // note: this needs to be a value even though it is a path because otherwise, nextflow will interpret it only
-    // relatively to the work directory and as this path is outside the work directory, it will fail.
-    val path_data
+    tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
     val response_transformation
     val model_checkpoint_dir
 

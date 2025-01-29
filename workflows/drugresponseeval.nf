@@ -69,14 +69,20 @@ workflow DRUGRESPONSEEVAL {
         params.optim_metric,
         params.n_cv_splits,
         params.response_transformation,
-        params.path_data
+        params.path_data,
+        params.measure
     )
+
+    work_path = channel.fromPath(params.path_data)
+    work_path
 
     RUN_CV (
         test_modes,
         models,
         baselines,
-        PARAMS_CHECK.out.path_data
+        work_path,
+        // wait for params_check to finish
+        PARAMS_CHECK.out.count()
     )
 
     MODEL_TESTING (
@@ -85,7 +91,7 @@ workflow DRUGRESPONSEEVAL {
         randomizations,
         RUN_CV.out.cross_study_datasets,
         RUN_CV.out.ch_models,
-        PARAMS_CHECK.out.path_data
+        work_path
     )
 
     VISUALIZATION (

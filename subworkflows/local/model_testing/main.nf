@@ -14,7 +14,7 @@ workflow MODEL_TESTING {
     randomizations              // from input
     cross_study_datasets        // from LOAD_RESPONSE
     ch_models                  // from RUN_CV
-    path_data                  // from input
+    work_path                  // from input
 
     main:
     if (params.cross_study_datasets == '') {
@@ -27,11 +27,13 @@ workflow MODEL_TESTING {
     ch_tmp2 = cross_study_datasets
                             .collect()
                             .map{it -> [it]}
-    ch_predict_final = ch_tmp2.combine(ch_tmp)
+    // [[cross_study_datasets], model, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml, path/to/data]
+    ch_predict_final = ch_tmp2.combine(ch_tmp).combine(work_path)
+
     PREDICT_FULL (
         ch_predict_final,
         params.response_transformation,
-        path_data
+        params.model_checkpoint_dir
     )
     ch_vis = PREDICT_FULL.out.ch_vis
 
@@ -57,12 +59,13 @@ workflow MODEL_TESTING {
         // randomization_views]
         ch_randomization = ch_best_hpams_per_split_rand
                             .combine(ch_rand_views, by: 0)
+                            .combine(work_path)
 
         RANDOMIZATION_TEST (
             ch_randomization,
-            path_data,
             params.randomization_type,
-            params.response_transformation
+            params.response_transformation,
+            params.model_checkpoint_dir
         )
         ch_vis = ch_vis.concat(RANDOMIZATION_TEST.out.ch_vis)
     }
@@ -80,12 +83,12 @@ workflow MODEL_TESTING {
 
         // [model_name, test_mode, split_id, split_dataset, best_hpam_combi_X.yaml,
         // robustness_iteration]
-        ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0)
+        ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0).combine(work_path)
         ROBUSTNESS_TEST (
             ch_robustness,
-            path_data,
             params.randomization_type,
-            params.response_transformation
+            params.response_transformation,
+            params.model_checkpoint_dir
         )
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
