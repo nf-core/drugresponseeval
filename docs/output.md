@@ -75,13 +75,13 @@ It emits the path to the data but mostly so that the other processes wait for `P
 
 #### Load response
 
-The response data is loaded into the pipeline. This step is necessary to provide the pipeline with the response data that will be used to train and evaluate the models.
+The response data is loaded into the pipeline. The downloaded data is exported to `--path_data`
+This step is necessary to provide the pipeline with the response data that will be used to train and evaluate the models.
 
 <details markdown="1">
-<summary>Optional output files if --save_datasets is set</summary>
+<summary>Output files</summary>
 
-- `response_dataset.pkl`: The response data is saved as a pickle file.
-- `cross_study_*.pkl`: The response data for the cross-study datasets is saved as a pickle file.
+- Folder `path_data/dataset_name`: Everything required for the models to run is saved into this folder.
 
 </details>
 
@@ -91,13 +91,6 @@ The response data is split into as many cross-validation folds as specified over
 The data is split into training, validation, and test sets for each fold. For models using early stopping, the early
 stopping dataset is split from the validation set. This ensures that all models are trained and evaluated on the
 same dataset.
-
-<details markdown="1">
-<summary>Optional output file if --save_datasets is set</summary>
-
-- `split*.pkl`: The response data belonging to each fold is saved as a pickle file.
-
-</details>
 
 #### Make model channel
 
