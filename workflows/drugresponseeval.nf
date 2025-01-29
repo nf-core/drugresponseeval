@@ -74,7 +74,6 @@ workflow DRUGRESPONSEEVAL {
     )
 
     work_path = channel.fromPath(params.path_data)
-    work_path
 
     RUN_CV (
         test_modes,
