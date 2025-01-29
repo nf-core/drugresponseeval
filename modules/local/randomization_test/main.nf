@@ -5,8 +5,7 @@ process RANDOMIZATION_TEST {
     publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
 
     input:
-    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views)
-    path(path_data)
+    tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views), path(path_data)
     val(randomization_type)
     val(response_transformation)
     val model_checkpoint_dir

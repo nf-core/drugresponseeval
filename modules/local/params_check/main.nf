@@ -16,14 +16,13 @@ process PARAMS_CHECK {
     val n_cv_splits
     val response_transformation
     val path_data
+    val measure
 
     output:
-    path path_data,     emit: path_data
-
-    when:
-    task.ext.when == null || task.ext.when
+    val path_data
 
     script:
+    def work_path = new File("${path_data}").absolutePath
     """
     check_params.py \\
         --run_id $run_id \\
@@ -36,6 +35,8 @@ process PARAMS_CHECK {
         --dataset_name $dataset_name \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
         ${curve_curator ? '--curve_curator' : ''} \\
+        --path_data $work_path \\
+        --measure $measure \\
         --optim_metric $optim_metric \\
         --n_cv_splits $n_cv_splits \\
         --response_transformation $response_transformation
