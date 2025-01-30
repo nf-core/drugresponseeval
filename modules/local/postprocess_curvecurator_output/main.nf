@@ -4,7 +4,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
 
     input:
     val dataset_name
-    path curve_data
+    path(curve_data, stageAs: "?/*")
     val measure
 
     output:

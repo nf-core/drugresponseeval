@@ -38,7 +38,6 @@ def randomizations = params.randomization_mode.split(",")
 workflow DRUGRESPONSEEVAL {
 
     main:
-
     ch_versions = Channel.empty()
 
     //
@@ -74,20 +73,21 @@ workflow DRUGRESPONSEEVAL {
         params.measure
     )
 
-    PREPROCESS_CUSTOM (
-        PARAMS_CHECK.out.path_data,
-        params.dataset_name,
-        params.measure
-    )
-
     work_path = channel.fromPath(params.path_data)
+
+    PREPROCESS_CUSTOM (
+        work_path,
+        params.dataset_name,
+        params.measure,
+        PARAMS_CHECK.out.count()
+    )
 
     RUN_CV (
         test_modes,
         models,
         baselines,
         work_path,
-        PREPROCESS_CUSTOM.out.measure
+        PREPROCESS_CUSTOM.out.measure,
         PARAMS_CHECK.out.count()
     )
 

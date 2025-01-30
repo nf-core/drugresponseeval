@@ -2,6 +2,7 @@
 from drevalpy.datasets.curvecurator import preprocess
 from pathlib import Path
 import argparse
+
 def get_parser():
     parser = argparse.ArgumentParser(description="Pre/postprocess CurveCurator viability data.")
     parser.add_argument("--path_data", type=str, default="", help="Path to base folder containing datasets.")
@@ -11,10 +12,9 @@ def get_parser():
 
 
 def main(args):
-
-    base_path = Path(args.path_data) / args.dataset_name
+    input_file = Path(args.path_data) / args.dataset_name / f"{args.dataset_name}_raw.csv"
     preprocess(
-        input_file=base_path / f"{args.dataset_name}_raw.csv",
+        input_file=input_file,
         output_dir=args.dataset_name,
         dataset_name=args.dataset_name,
         cores=args.cores

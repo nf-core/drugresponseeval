@@ -17,7 +17,7 @@ process LOAD_RESPONSE {
     """
     load_response.py \\
         --dataset_name ${dataset_name} \\
-        --path_data ${path_data} \\
+        --path_data ${work_path} \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
         --measure ${measure}
     """
