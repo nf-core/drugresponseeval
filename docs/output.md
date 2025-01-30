@@ -13,7 +13,11 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 1. [Parameter check](#parameter-check): Several parameters are validated to ensure that the pipeline can run
    successfully.
-2. `RUN_CV` subworkflow: Finds the optimal hyperparameters for each model in a cross-validation setting.
+2. `PREPROCESS_CUSTOM` subworkflow: This subworkflow is only triggered if there is a custom dataset and if in the corresponding folder, there is a file named `[dataset_name]_raw.csv`. If this is the case, CurveCurator is run on the raw data.
+   - [Preprocess raw viability](#preprocess-raw-viability): The raw viability data is put in a format suitable for CurveCurator.
+   - [Fit curves](#fit-curves): Curves are fitted using CurveCurator.
+   - [Postprocess CurveCurator data](#postprocess-curvecurator-data): The individual curves.tsv files are collected and one output file is written.
+3. `RUN_CV` subworkflow: Finds the optimal hyperparameters for each model in a cross-validation setting.
    - [Load response](#load-response): The response data is loaded.
    - [CV split](#cv-split): The response data is split into cross-validation folds.
    - [Make model channel](#make-model-channel): From the input baseline and model names, channels are created. This
@@ -23,7 +27,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Train and predict CV](#train-and-predict-cv): All models are trained and evaluated in a cross-validation setting.
    - [Evaluate and find max](#evaluate-and-find-max): For each CV split, the best hyperparameters are determined
      using a grid search per model
-3. `MODEL_TESTING` subworkflow: The best hyperparameters are used to train the models on the full training set
+4. `MODEL_TESTING` subworkflow: The best hyperparameters are used to train the models on the full training set
    and predict the test set. Optionally, randomization and robustness testes are performed.
    - [Predict full](#predict-full): The model is trained on the full training set (train & validation) with the best
      hyperparameters to predict the test set.
@@ -37,7 +41,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Evaluate final](#evaluate-final): The performance of the models is calculated on the test set results.
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
-4. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
+5. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
    - [Critical difference plot](#critical-difference): A critical difference plot is created to compare the performance
      of the models.
    - [Violin plot](#violin-plot): A violin plot is created to compare the performance of the models over the CV folds.
@@ -49,7 +53,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Save tables](#save-tables): Saves the performance metrics of the models in a table.
    - [Write html](#write-html): Writes the plots to an HTML file per setting (LPO/LCO/LDO).
    - [Write index](#write-index): Writes an index.html file that links to all the HTML files.
-5. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+6. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### Parameter check
 
@@ -57,6 +61,7 @@ The process `PARAMS_CHECK` performs the following checks:
 
 - `--models` / `--baselines`: Check if the model and baseline names are valid (for valid names, see the [usage](usage.md) page).
 - `--test_mode`: Check whether the test mode is LPO, LCO, LDO or a combination of these.
+- `--path_data`: Check if the path to the data is valid.
 - `--dataset_name`: Check if the dataset name is valid, i.e., GDSC1, GDSC2, or CCLE.
 - `--cross_study_datasets`: If supplied, check if the datasets are valid, i.e., GDSC1, GDSC2, or CCLE or a
   combination of these.
@@ -68,14 +73,55 @@ The process `PARAMS_CHECK` performs the following checks:
   Partial_Correlation.
 - `--response_transformation`: If supplied, checks whether the response transformation is either standard,
   minmax, or robust.
+- `--measure`: Which measure of drug response should be used for the file. Available options are "LN_IC50", "EC50", "IC50", "pEC50", "AUC", "response". Default: "LN_IC50".
+- `--curve_curator`: Whether to run CurveCurator on a custom dataset. Default: false. This requires raw viability data to be located at "<path_data>/<dataset_name>/<dataset_name>\_raw.csv".
 
 It emits the path to the data but mostly so that the other processes wait for `PARAMS_CHECK` to finish before starting.
+
+### Subworkflow `PREPROCESS_CUSTOM`
+
+This process is only triggered if there is a custom dataset and if in the corresponding folder, there is a file named `[dataset_name]_raw.csv`.
+
+#### Preprocess raw viability
+
+The file is processed to be in a format suitable for CurveCurator. One process will be started per dosage.
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- "${dataset_name}/\*/config.toml": Configuration files for CurveCurator. Each subdirectory corresponds to a different dosage.
+- "${dataset_name}/\*/curvecurator_input.tsv": Input file for CurveCurator. Each subdirectory corresponds to a different dosage.
+
+</details>
+
+#### Fit curves
+
+CurveCurator is run on the input files to fit the curves.
+
+<details markdown="1">
+<summary>Output files</summary>
+- "curves.tsv": The fitted curves. These will be collected and postprocessed in the next step.
+- "mad.txt": Other output - Median absolute deviation analysis is performed to detect problematic experiments, the results are stored in this file.
+- "dashboard.html" - A dashboard with an overview of the fitted curves.
+- "curveCurator.log" - Log file of the CurveCurator run.
+</details>
+
+#### Postprocess CurveCurator data
+
+The individual curves.tsv files are collected and one output file is written to `path_data/dataset_name/dataset_name.csv`.
+This file contains the new adjusted measures; available are pEC50 and AUC (now internally renamed as pEC50_curvecurator, AUC_curvecurator).
+
+<details markdown="1">
+<summary>Output files</summary>
+- "dataset_name.csv": The postprocessed data; exported to the path_data folder.
+</details>
 
 ### Subworkflow `RUN_CV`
 
 #### Load response
 
-The response data is loaded into the pipeline. The downloaded data is exported to `--path_data`
+The response data is loaded into the pipeline. If the data does not lie in `--path_data` it is downloaded and exported to
+`--path_data`.
 This step is necessary to provide the pipeline with the response data that will be used to train and evaluate the models.
 
 <details markdown="1">

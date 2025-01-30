@@ -12,10 +12,12 @@ workflow RUN_CV {
     models                          // model names for full testing
     baselines                        // model names for comparison
     work_path                      // path to data
+    measure
     useless_count                // how do I make it wait for check params to finish?
+
     main:
 
-    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, params.measure, useless_count)
+    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure, useless_count)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)

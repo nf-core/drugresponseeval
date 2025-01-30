@@ -18,6 +18,10 @@
 
   > Bernett, J, Iversen, P, Picciani, M, Wilhelm, M, Baum, K, List, M. Will be published soon.
 
+- [CurveCurator](https://www.nature.com/articles/s41467-023-43696-z): For custom curve fitting on custom datasets. We also used it to re-process the response curves of GDSC1, GDSC2, CCLE, and CTRP.
+
+  > Bayer, F.P., Gander, M., Kuster, B., The, M. CurveCurator: a recalibrated F-statistic to assess, classify, and explore significance of dose–response curves. Nature Communications. 2023 Nov;14(7902).
+
 - [DIPK](https://doi.org/10.1093/bib/bbae153): Implemented model in the pipeline.
 
   > Li P, Jiang Z, Liu T, Liu X, Qiao H, Yao X. Improving drug response prediction via integrating gene relationships with deep learning. Briefings in Bioinformatics. 2024 May;25(3):bbae153.

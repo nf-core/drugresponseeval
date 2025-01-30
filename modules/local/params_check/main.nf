@@ -34,11 +34,11 @@ process PARAMS_CHECK {
         --n_trials_robustness $n_trials_robustness \\
         --dataset_name $dataset_name \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
-        ${curve_curator ? '--curve_curator' : ''} \\
+        ${curve_curator ? '--curve_curator --curve_curator_cores 1' : ''} \\
         --path_data $work_path \\
         --measure $measure \\
         --optim_metric $optim_metric \\
         --n_cv_splits $n_cv_splits \\
-        --response_transformation $response_transformation
+        --response_transformation $response_transformation \\
     """
 }

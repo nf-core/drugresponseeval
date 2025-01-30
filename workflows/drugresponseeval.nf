@@ -19,6 +19,7 @@ include { WRITE_INDEX } from '../modules/local/write_index'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 
+include { PREPROCESS_CUSTOM } from '../subworkflows/local/preprocess_custom'
 include { RUN_CV } from '../subworkflows/local/run_cv'
 include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 include { VISUALIZATION } from '../subworkflows/local/visualization'
@@ -37,7 +38,6 @@ def randomizations = params.randomization_mode.split(",")
 workflow DRUGRESPONSEEVAL {
 
     main:
-
     ch_versions = Channel.empty()
 
     //
@@ -75,12 +75,19 @@ workflow DRUGRESPONSEEVAL {
 
     work_path = channel.fromPath(params.path_data)
 
+    PREPROCESS_CUSTOM (
+        work_path,
+        params.dataset_name,
+        params.measure,
+        PARAMS_CHECK.out.count()
+    )
+
     RUN_CV (
         test_modes,
         models,
         baselines,
         work_path,
-        // wait for params_check to finish
+        PREPROCESS_CUSTOM.out.measure,
         PARAMS_CHECK.out.count()
     )
 

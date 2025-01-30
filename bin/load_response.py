@@ -15,12 +15,18 @@ def get_parser():
         help="List of datasets to use to evaluate predictions across studies. "
         "Default is empty list which means no cross-study datasets are used.",
     )
+    parser.add_argument(
+        "--measure",
+        type=str,
+        default="LN_IC50",
+        help="Name of the column in the dataset containing the drug response measures."
+    )
     return parser
 
 
 def main(args):
-    response_data = load_dataset(dataset_name=args.dataset_name, path_data=args.path_data)
-    cross_study_datasets = [load_dataset(dataset_name=ds, path_data=args.path_data) for ds in args.cross_study_datasets]
+    response_data = load_dataset(dataset_name=args.dataset_name, path_data=args.path_data, measure=args.measure)
+    cross_study_datasets = [load_dataset(dataset_name=ds, path_data=args.path_data, measure=args.measure) for ds in args.cross_study_datasets]
 
     # Pickle the object to a file
     with open("response_dataset.pkl", "wb") as f:
