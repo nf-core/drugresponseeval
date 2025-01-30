@@ -1,5 +1,5 @@
 process POSTPROCESS_CURVECURATOR_DATA {
-    label 'process_low'
+    label 'process_single'
     publishDir "${params.path_data}/${dataset_name}", mode: 'copy'
 
     input:

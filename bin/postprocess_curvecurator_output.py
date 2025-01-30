@@ -4,7 +4,7 @@ import argparse
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description="Pre/postprocess CurveCurator viability data.")
+    parser = argparse.ArgumentParser(description="Postprocess CurveCurator viability data.")
     parser.add_argument("--dataset_name", type=str, required=True, help="Dataset name.")
     return parser
 
