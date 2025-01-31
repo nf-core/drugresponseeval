@@ -1,11 +1,5 @@
 process PARAMS_CHECK {
-    //tag "$samplesheet"
     label 'process_single'
-
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
 
     input:
     val run_id
@@ -21,14 +15,14 @@ process PARAMS_CHECK {
     val optim_metric
     val n_cv_splits
     val response_transformation
+    val path_data
+    val measure
 
     output:
-
-
-    when:
-    task.ext.when == null || task.ext.when
+    val path_data
 
     script:
+    def work_path = new File("${path_data}").absolutePath
     """
     check_params.py \\
         --run_id $run_id \\
@@ -40,9 +34,11 @@ process PARAMS_CHECK {
         --n_trials_robustness $n_trials_robustness \\
         --dataset_name $dataset_name \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
-        ${curve_curator ? '--curve_curator' : ''} \\
+        ${curve_curator ? '--curve_curator --curve_curator_cores 1' : ''} \\
+        --path_data $work_path \\
+        --measure $measure \\
         --optim_metric $optim_metric \\
         --n_cv_splits $n_cv_splits \\
-        --response_transformation $response_transformation
+        --response_transformation $response_transformation \\
     """
 }

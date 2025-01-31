@@ -42,6 +42,8 @@ def get_parser():
     )
     parser.add_argument("--robustness_trial", type=int, help="Robustness trial index.")
     parser.add_argument("--cross_study_datasets", nargs="+", help="Path to cross study datasets.")
+    parser.add_argument("--model_checkpoint_dir", type=str, default="TEMPORARY", help="model checkpoint directory, if not provided: temporary directory is used")
+
     return parser
 
 
@@ -82,7 +84,8 @@ def compute_randomization(
     split_id: str,
     randomization_type: str = "permutation",
     response_transformation=Optional[TransformerMixin],
-    randomization_test_path: str = ""
+    randomization_test_path: str = "",
+    model_checkpoint_dir: str = "TEMPORARY",
 ):
     randomization_test_file = os.path.join(
         randomization_test_path,
@@ -99,7 +102,8 @@ def compute_randomization(
         train_dataset=train_dataset,
         test_dataset=test_dataset,
         early_stopping_dataset=early_stopping_dataset,
-        response_transformation=response_transformation
+        response_transformation=response_transformation,
+        model_checkpoint_dir=model_checkpoint_dir
     )
 
 
@@ -113,7 +117,8 @@ def compute_robustness(
     split_id: str,
     trial: int,
     response_transformation=Optional[TransformerMixin],
-    rob_path: str = ""
+    rob_path: str = "",
+    model_checkpoint_dir: str = "TEMPORARY",
 ):
     robustness_test_file = os.path.join(
         rob_path,
@@ -129,6 +134,7 @@ def compute_robustness(
         hpam_set=hpam_set,
         path_data=path_data,
         response_transformation=response_transformation,
+        model_checkpoint_dir=model_checkpoint_dir
     )
 
 
@@ -169,13 +175,13 @@ if __name__ == "__main__":
 
     if args.mode == "full":
         predictions_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='predictions',
         )
         hpam_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='best_hpams',
@@ -197,12 +203,13 @@ if __name__ == "__main__":
             prediction_dataset=test_set,
             early_stopping_dataset=es_set,
             response_transformation=transformation,
+            model_checkpoint_dir=args.model_checkpoint_dir
         )
         prediction_dataset = os.path.join(
             predictions_path,
             f"predictions_{args.split_id}.csv",
         )
-        test_set.save(prediction_dataset)
+        test_set.to_csv(prediction_dataset)
         for ds in args.cross_study_datasets:
             if ds == "NONE.csv":
                 continue
@@ -221,7 +228,7 @@ if __name__ == "__main__":
         with open(args.randomization_views_path, "r") as f:
             rand_test_view = yaml.safe_load(f)
         rand_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='randomization',
@@ -238,10 +245,12 @@ if __name__ == "__main__":
             randomization_type=args.randomization_type,
             response_transformation=transformation,
             randomization_test_path=rand_path,
+            model_checkpoint_dir=args.model_checkpoint_dir
+
         )
     elif args.mode == "robustness":
         rob_path = generate_data_saving_path(
-            model_name=selected_model.model_name,
+            model_name=selected_model.get_model_name(),
             drug_id=drug_id,
             result_path='',
             suffix='robustness',
@@ -256,7 +265,8 @@ if __name__ == "__main__":
             split_id=args.split_id,
             trial=args.robustness_trial,
             response_transformation=transformation,
-            rob_path=rob_path
+            rob_path=rob_path,
+            model_checkpoint_dir=args.model_checkpoint_dir
         )
     else:
         raise ValueError(f"Invalid mode: {args.mode}. Choose full, randomization, or robustness.")

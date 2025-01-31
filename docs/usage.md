@@ -6,76 +6,84 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+DrugResponseEval is a workflow designed to ensure that drug response prediction models are evaluated in a consistent and
+reproducible manner. We offer three settings:
 
-## Samplesheet input
+- **Leave-Pair-Out (LPO)**: Random pairs of cell lines and drugs are left out for testing but both the drug and the
+  cell line might already be present in the training set. This is the **easiest setting** for your model but also the
+  most uninformative one. The only application scenario for this setting is when you want to test whether your model
+  can **complete the missing values in the training set**.
+- **Leave-Cell-Line-Out (LCO)**: Random cell lines are left out for testing but the drugs might already be present in
+  the training set. This setting is **more challenging** than LPO but still relatively easy. The application scenario
+  for this setting is when you want to test whether your model can **predict the response of a new cell line**. This
+  is very relevant for **personalized medicine or drug repurposing**.
+- **Leave-Drug-Out (LDO)**: Random drugs are left out for testing but the cell lines might already be present in the
+  training set. This setting is the **most challenging** one. The application scenario for this setting is when you
+  want to test whether your model can **predict the response of a new drug**. This is very relevant for **drug
+  development**.
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+An underlying issue is that drugs have a rather unique IC50 range. That means that by just predicting the mean IC50
+that a drug has in the training set (aggregated over all cell lines), you can already achieve a rather good
+prediction. This is why we also offer the possibility to compare your model to a **NaivePredictor** that predicts
+the mean IC50 of all drugs in the training set. We also offer two more advanced naive predictors:
+**NaiveCellLineMeanPredictor** and **NaiveDrugMeanPredictor**. The former predicts the mean IC50 of a cell line in
+the training set and the latter predicts the mean IC50 of a drug in the training set.
 
-```bash
---input '[path to samplesheet file]'
-```
+Furthermore, we offer a variety of more advanced **baseline models** and some **state-of-the-art models** to compare
+your model against. Similarly, we provide commonly used datasets to evaluate your model on (GDSC1, GDSC2, CCLE,
+CTRPv2). You can also provide your **own dataset or your own model by contributing to our PyPI package
+[drevalpy](https://github.com/daisybio/drevalpy.git)** Before contributing, you can pull our respective repositories.
+More information can be found in the [drevalpy readthedocs](https://drevalpy.readthedocs.io/en/latest/).
 
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+We first identify the best hyperparameters for all models and baselines in a cross-validation setting. Then, we
+train the models on the whole training set and evaluate them on the test set. Furthermore, we offer randomization
+and robustness tests.
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/drugresponseeval --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run nf-core/drugresponseeval \
+   -profile <docker/singularity/.../institute> \
+   --run_id myRun \
+   --test_mode <LPO/LCO/LDO> \
+   --models <model1,model2,...> \
+   --baselines <baseline1,baseline2,...> \
+   --dataset_name <dataset_name> \
+   --path_data <path_data>
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline with the `docker/singularity/.../institute` configuration profile. See below for more information about profiles.
+
+In your `outdir`, a folder named `myRun` will be created containing the results of the pipeline run.
+
+The `test_mode` parameter specifies the evaluation setting, e.g., `--test_mode LCO`.
+
+The `models` and `baselines` parameters are lists of models and baselines to be evaluated, e.g.,
+`--models ElasticNet,RandomForest --baselines NaivePredictor,NaiveCellLineMeanPredictor,NaiveDrugMeanPredictor`.
+
+The `dataset_name` parameter specifies the dataset to be used for evaluation, e.g., `--dataset_name GDSC2`.
+
+If you do not want to re-download the data every time you run the pipeline, you can specify the path to the data with
+the `path_data` parameter, e.g., `--path_data /path/to/data`.
 
 Note that the pipeline will create the following files in your working directory:
 
 ```bash
 work                # Directory containing the nextflow working files
-<OUTDIR>            # Finished results in specified location (defined with --outdir)
+<OUTDIR>            # Finished results in specified location (defined with --outdir), defaults to 'results'
 .nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command, you can specify these in a params file.
+If you wish to repeatedly use the same parameters for multiple runs, rather than specifying each flag in the command,
+you can specify these in a params file.
 
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
-> ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
+> [!WARNING]
+> Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
 The above pipeline run specified with a params file in yaml format:
 
@@ -83,16 +91,113 @@ The above pipeline run specified with a params file in yaml format:
 nextflow run nf-core/drugresponseeval -profile docker -params-file params.yaml
 ```
 
-with `params.yaml` containing:
+with:
 
-```yaml
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
+```yaml title="params.yaml"
+models: 'ElasticNet'
+baselines: 'NaivePredictor,NaiveCellLineMeanPredictor,NaiveDrugMeanPredictor'
+dataset_name: 'GDSC2'
+path_data: '/path/to/data'
 <...>
 ```
 
 You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+
+### Available Models
+
+**Single-Drug Models** fit one model for each drug in the training set. They also cannot generalize to new drugs,
+hence those models cannot be used in the LDO setting. **Multi-Drug Models** fit one model for all drugs in the training
+set. They can be used in all three settings.
+
+The following models are available:
+
+| Model Name                 | Baseline / Published Model | Multi-Drug Model / Single-Drug Model | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| -------------------------- | -------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| NaivePredictor             | Baseline Method            | Multi-Drug Model                     | Most simple method. Predicts the mean response of all drugs in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| NaiveCellLineMeanPredictor | Baseline Method            | Multi-Drug Model                     | Predicts the mean response of a cell line in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| NaiveDrugMeanPredictor     | Baseline Method            | Multi-Drug Model                     | Predicts the mean response of a drug in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ElasticNet                 | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Elastic Net](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html), [Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html), or [Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html) model on gene expression data and drug fingerprints (concatenated input matrix).                                                                                                                                                                                         |
+| GradientBoosting           | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Gradient Boosting Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html) gene expression data and drug fingerprints.                                                                                                                                                                                                                                                                                                                                                                                              |
+| RandomForest               | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) on gene expression data and drug fingerprints.                                                                                                                                                                                                                                                                                                                                                                                                   |
+| MultiOmicsRandomForest     | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) on gene expression, methylation, mutation, copy number variation data, and drug fingerprints (concatenated matrix). The dimensionality of the methylation data is reduced with a PCA to the first 100 components before it is fed to the model.                                                                                                                                                                                                  |
+| SingleDrugRandomForest     | Baseline Method            | Single-Drug Model                    | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) on gene expression data for each drug separately.                                                                                                                                                                                                                                                                                                                                                                                                |
+| SVR                        | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Support Vector Regressor](https://scikit-learn.org/1.5/modules/generated/sklearn.svm.SVR.html) gene expression data and drug fingerprints.                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| SimpleNeuralNetwork        | Baseline Method            | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on gene expression and drug fingerprints (concatenated input) with 3 layers of varying dimensions and Dropout layers.                                                                                                                                                                                                                                                                                                                                          |
+| MultiOmicsNeuralNetwork    | Baseline Method            | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on gene expression, methylation, mutation, copy number variation data, and drug fingerprints (concatenated input) with 3 layers of varying dimensions and Dropout layers. The dimensionality of the methylation data is reduced with a PCA to the first 100 components before it is fed to the model.                                                                                                                                                          |
+| SRMF                       | Published Model            | Multi-Drug Model                     | [Similarity Regularization Matrix Factorization](https://doi.org/10.1186/s12885-017-3500-5) model by Wang et al. on gene expression data and drug fingerprints. Re-implemented Matlab code into Python. The basic idea is represent each drug and each cell line by their respective similarities to all other drugs/cell lines. Those similarities are mapped into a shared latent low-dimensional space from which responses are predicted.                                                                                                                                             |
+| MOLIR                      | Published Model            | Single-Drug Model                    | Regression extension of [MOLI: multi-omics late integration deep neural network.](https://doi.org/10.1093/bioinformatics/btz318) by Sharifi-Noghabi et al. Takes somatic mutation, copy number variation and gene expression data as input. MOLI reduces the dimensionality of each omics type with a hidden layer, concatenates them into one representation and optimizes this representation via a combined cost function consisting of a triplet loss and a binary cross-entropy loss. We implemented a regression adaption with MSE loss and an adapted triplet loss for regression. |
+| SuperFELTR                 | Published Model            | Single-Drug Model                    | Regression extension of [SuperFELT: supervised feature extraction learning using triplet loss for drug response](https://doi.org/10.1186/s12859-021-04146-z) by Park et al. Very similar to MOLI(R). In MOLI(R), encoders and the classifier were trained jointly. Super.FELT(R) trains them independently. MOLI(R) was trained without feature selection (except for the Variance Threshold on the gene expression). Super.FELT(R) uses feature selection for all omics data.                                                                                                            |
+| DIPK                       | Published Model            | Multi-Drug Model                     | [Deep neural network Integrating Prior Knowledge](https://doi.org/10.1093/bib/bbae153) from Li et al. Uses gene interaction relationships (encoded by a graph auto-encoder), gene expression profiles (encoded by a denoising auto-encoder), and molecular topologies (encoded by MolGNet). Those features are integrated using multi-head attention layers.                                                                                                                                                                                                                              |
+
+### Available Datasets
+
+The following datasets are available and can be supplied via `--dataset_name`:
+
+| Dataset Name | Number of drugs | Number of Cell Lines | Description                                                                                                          |
+| ------------ | --------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| GDSC1        | 345             | 987                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                 |
+| GDSC2        | 192             | 809                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                 |
+| CCLE         | 18              | 471                  | The Cancer Cell Line Encyclopedia (CCLE) dataset. The response data will soon be replaced with the data from CTRPv2. |
+
+Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
+others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
+
+The drug response measure that you want to use as the target variable can be specified via the `--measure` parameter.
+Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”]`.
+
+We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
+well. If you want to use those measures, enable the `--curve_curator` flag.
+
+#### Custom datasets
+
+You can also provide your own custom dataset via the `--dataset_name` parameter by specifying a name that is not in the list of the available datasets.
+This can be prefit data (not recommended for comparability reasons) or raw viability data that is automatically fit
+with the exact same procedure that was used to refit the available datasets in the previous section.
+
+<i>Raw viability data</i>
+
+We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>_raw.csv`
+(corresponding to the `--path_data` and `--dataset_name` options), which contains the raw viability data in long format
+with the columns `[“dose”, “response”, “sample”, “drug”]` and an optional “replicate” column.
+If replicates are provided, the procedure will fit one curve per sample / drug pair using all replicates.
+
+The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
+For individual results, look in the work directories.
+
+<i>Prefit viability data</i>
+
+We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>.csv`
+(corresponding to the `--path_data` and `--dataset_name` options), with at least the columns `[“cell_line_id”, “drug_id”, <measure>”]`
+where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, “IC50”]`).
+It is required that you use measure names that are also working with the available datasets if you use the `--cross_study_datasets` option.
+
+### Available Randomization Tests
+
+We have several randomization modes and types available.
+
+The modes are supplied via `--randomization_mode` and the types via `--randomization_type`.:
+
+- **SVCC: Single View Constant for Cell Lines:** A single cell line view (e.g., gene expression) is held unperturbed
+  while the others are randomized.
+- **SVCD: Single View Constant for Drugs:** A single drug view (e.g., drug fingerprints) is held unperturbed while the
+  others are randomized.
+- **SVRC: Single View Random for Cell Lines:** A single cell line view (e.g., gene expression) is randomized while the
+  others are held unperturbed.
+- **SVRD: Single View Random for Drugs:** A single drug view (e.g., drug fingerprints) is randomized while the others
+  are held unperturbed.
+
+Currently, we support two ways of randomizing the data. The default is permututation.
+
+- **Permutation**: Permutes the features over the instances, keeping the distribution of the features the same but
+  dissolving the relationship to the target.
+- **Invariant**: The randomization is done in a way that a key characteristic of the feature is preserved. In case
+  of matrices, this is the mean and standard deviation of the feature view for this instance, for networks it is the
+  degree distribution.
+
+### Robustness Tests
+
+The robustness test is a test where the model is trained with varying seeds. This is done multiple times to see how
+stable the model is. Via `--n_trials_robustness`, you can specify the number of trials for the robustness tests.
 
 ### Updating the pipeline
 
@@ -104,19 +209,21 @@ nextflow pull nf-core/drugresponseeval
 
 ### Reproducibility
 
-It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
+It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
 First, go to the [nf-core/drugresponseeval releases page](https://github.com/nf-core/drugresponseeval/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
-This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
+This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
-To further assist in reproducbility, you can use share and re-use [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
+To further assist in reproducibility, you can use share and reuse [parameter files](#running-the-pipeline) to repeat pipeline runs with the same settings without having to write out a command with every single parameter.
 
-> 💡 If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
+> [!TIP]
+> If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
+> [!NOTE]
+> These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen)
 
 ### `-profile`
 
@@ -124,14 +231,15 @@ Use this parameter to choose a configuration profile. Profiles can give configur
 
 Several generic profiles are bundled with the pipeline which instruct the pipeline to use software packaged using different methods (Docker, Singularity, Podman, Shifter, Charliecloud, Apptainer, Conda) - see below.
 
+> [!IMPORTANT]
 > We highly recommend the use of Docker or Singularity containers for full pipeline reproducibility, however when this is not possible, Conda is also supported.
 
-The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to see if your system is available in these configs please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
+The pipeline also dynamically loads configurations from [https://github.com/nf-core/configs](https://github.com/nf-core/configs) when it runs, making multiple config profiles for various institutional clusters available at run time. For more information and to check if your system is supported, please see the [nf-core/configs documentation](https://github.com/nf-core/configs#documentation).
 
 Note that multiple profiles can be loaded, for example: `-profile test,docker` - the order of arguments is important!
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
-If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
+If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer environment.
 
 - `test`
   - A profile with a complete configuration for automated testing
@@ -148,6 +256,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
@@ -165,13 +275,13 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 
 ### Resource requests
 
-Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
+Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the pipeline steps, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher resources request (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
 To change the resource requests, please see the [max resources](https://nf-co.re/docs/usage/configuration#max-resources) and [tuning workflow resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources) section of the nf-core website.
 
 ### Custom Containers
 
-In some cases you may wish to change which container or conda environment a step of the pipeline uses for a particular tool. By default nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However in some cases the pipeline specified version maybe out of date.
+In some cases, you may wish to change the container or conda environment used by a pipeline steps for a particular tool. By default, nf-core pipelines use containers and software from the [biocontainers](https://biocontainers.pro/) or [bioconda](https://bioconda.github.io/) projects. However, in some cases the pipeline specified version maybe out of date.
 
 To use a different container from the default container or conda environment specified in a pipeline, please see the [updating tool versions](https://nf-co.re/docs/usage/configuration#updating-tool-versions) section of the nf-core website.
 
@@ -188,14 +298,6 @@ In most cases, you will only need to create a custom config as a one-off but if 
 See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config.html) for more information about creating your own configuration files.
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
-
-## Azure Resource Requests
-
-To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
-
-Note that the choice of VM size depends on your quota and the overall workload during the analysis.
-For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
 ## Running in the background
 

@@ -1,12 +1,7 @@
 process SAVE_TABLES {
     tag "${lpo_lco_ldo}_${eval_results}"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/html_tables"
-
-    //conda "conda-forge::python=3.8.3"
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-    //    'biocontainers/python:3.8.3' }"
+    publishDir "${params.outdir}/${params.run_id}/html_tables", mode: 'copy'
 
     input:
     tuple val(lpo_lco_ldo), path(eval_results)

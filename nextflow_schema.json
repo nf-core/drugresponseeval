@@ -1,14 +1,14 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/drugresponseeval/master/nextflow_schema.json",
     "title": "nf-core/drugresponseeval pipeline parameters",
-    "description": "This pipeline takes a drug response prediction model architecture as input and evaluates its performance by using custom training, validation, and test sets. It compares it against existing deep learning models and baseline models. Additionally, it tests the model for overfitting, consistency, robustness, and generalization. ",
+    "description": "This pipeline evaluates drug response models in various settings on a variety of datasets.",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "model_options": {
             "title": "Model options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-laptop-code",
             "description": "Define the models and baselines to be tested.",
             "required": ["models", "baselines"],
             "properties": {
@@ -39,7 +39,7 @@
                 "dataset_name": {
                     "type": "string",
                     "description": "Name of the dataset.",
-                    "help_text": "Name of the dataset used for the pipeline. Allowed values are GDSC1, GDSC2, and Custom."
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'Toy_Data') in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting (see 'curve_curator' option, which is required in this case), or prefit data (not recommended for dataset comparability reasons due to potential differences in fitting procedures)."
                 },
                 "outdir": {
                     "type": "string",
@@ -57,15 +57,15 @@
             }
         },
         "mode_options": {
-            "title": "Mode options",
+            "title": "Mode options (LPO/LCO/LDO)",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-table-cells-column-lock",
             "description": "Define the mode in which the pipeline will be run.",
             "required": ["test_mode"],
             "properties": {
                 "test_mode": {
                     "type": "string",
-                    "description": "Run the pipeline in test mode LPO, LCO, or LDO.",
+                    "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), or LDO (Leave-Drug-Out).",
                     "default": "LPO",
                     "help_text": "Which tests to run (LPO=Leave-random-Pairs-Out, LCO=Leave-Cell-line-Out, LDO=Leave-Drug-Out). Can be a list of test runs e.g. 'LPO LCO LDO' to run all tests. Default is LPO."
                 }
@@ -74,7 +74,7 @@
         "randomization_options": {
             "title": "Randomization options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-dice",
             "description": "Options for randomization.",
             "properties": {
                 "randomization_mode": {
@@ -93,7 +93,7 @@
         "robustness_options": {
             "title": "Robustness options",
             "type": "object",
-            "fa_icon": "fas fa-cogs",
+            "fa_icon": "fa-solid fa-repeat",
             "description": "Options for robustness.",
             "properties": {
                 "n_trials_robustness": {
@@ -101,6 +101,31 @@
                     "default": 0,
                     "description": "Number of trials to run for the robustness test",
                     "help_text": "Number of trials to run for the robustness test. Default is 0, which means no robustness test is run. The robustness test is a test where the model is trained with varying seeds. This is done multiple times to see how stable the model is."
+                }
+            }
+        },
+        "data_options": {
+            "title": "Data options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-database",
+            "description": "Options for data input.",
+            "properties": {
+                "path_data": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Path to the data directory.",
+                    "help_text": "Path to the data directory."
+                },
+                "measure": {
+                    "type": "string",
+                    "default": "LN_IC50",
+                    "description": "The name of the measure to use",
+                    "help": "The name of the measure to use, default 'LN_IC50'. If using one of the available datasets (see 'dataset_name' option), this is restricted to one of ['LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'curve_curator' is set, the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'curve_curator' option for details)."
+                },
+                "cross_study_datasets": {
+                    "type": "string",
+                    "description": "Datasets for cross-study prediction.",
+                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
                 }
             }
         },
@@ -112,13 +137,8 @@
             "properties": {
                 "curve_curator": {
                     "type": "boolean",
-                    "description": "Run the curve curator.",
-                    "help_text": "Whether to run \" \"CurveCurator \" \"to sort out \" \"non-reactive \" \"curves"
-                },
-                "overwrite": {
-                    "type": "boolean",
-                    "description": "Overwrite existing results.",
-                    "help_text": "Whether to overwrite existing results."
+                    "description": "If True, use refit measures instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data.",
+                    "help_text": "This allows using refit measures (see 'measure' option for details) for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), setting this to True expects a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option), which is fitted automatically with the same procedure as the available datasets, to provide fair comparison. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv."
                 },
                 "optim_metric": {
                     "type": "string",
@@ -128,7 +148,7 @@
                 },
                 "n_cv_splits": {
                     "type": "integer",
-                    "default": 5,
+                    "default": 10,
                     "description": "Number of cross-validation splits.",
                     "help_text": "Number of cross-validation splits. Default is 5."
                 },
@@ -137,16 +157,11 @@
                     "description": "Response transformation",
                     "help_text": "Transformation to apply to the response variable possible values: standard, minmax, robust"
                 },
-                "path_data": {
+                "model_checkpoint_dir": {
                     "type": "string",
-                    "format": "directory-path",
-                    "description": "Path to the data directory.",
-                    "help_text": "Path to the data directory."
-                },
-                "cross_study_datasets": {
-                    "type": "string",
-                    "description": "Datasets for cross-study prediction.",
-                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
+                    "description": "Model checkpoint directory",
+                    "default": "TEMPORARY",
+                    "help_text": "Directory to save model checkpoints."
                 }
             }
         },
@@ -198,41 +213,6 @@
                 }
             }
         },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
         "generic_options": {
             "title": "Generic options",
             "type": "object",
@@ -240,12 +220,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -295,57 +269,49 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "validationShowHiddenParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "validationFailUnrecognisedParams": {
-                    "type": "boolean",
+                "pipelines_testdata_base_path": {
+                    "type": "string",
                     "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "hidden": true,
-                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
                 },
-                "validationLenientMode": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters in lenient more.",
-                    "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/definitions/model_options"
+            "$ref": "#/$defs/model_options"
         },
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/mode_options"
+            "$ref": "#/$defs/mode_options"
         },
         {
-            "$ref": "#/definitions/randomization_options"
+            "$ref": "#/$defs/randomization_options"
         },
         {
-            "$ref": "#/definitions/robustness_options"
+            "$ref": "#/$defs/data_options"
         },
         {
-            "$ref": "#/definitions/additional_options"
+            "$ref": "#/$defs/robustness_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/additional_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }
