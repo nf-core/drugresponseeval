@@ -142,6 +142,35 @@ The following datasets are available and can be supplied via `--dataset_name`:
 Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
 
+The drug response measure that you want to use as the target variable can be specified via the `--measure` parameter.
+Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”]`.
+
+We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
+well. If you want to use those measures, enable the `--curve_curator` flag.
+
+#### Custom datasets
+
+You can also provide your own custom dataset via the `--dataset_name` parameter by specifying a name that is not in the list of the available datasets.
+This can be prefit data (not recommended for comparability reasons) or raw viability data that is automatically fit
+with the exact same procedure that was used to refit the available datasets in the previous section.
+
+<i>Raw viability data</i>
+
+We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>_raw.csv`
+(corresponding to the `--path_data` and `--dataset_name` options), which contains the raw viability data in long format
+with the columns `[“dose”, “response”, “sample”, “drug”]` and an optional “replicate” column.
+If replicates are provided, the procedure will fit one curve per sample / drug pair using all replicates.
+
+The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
+For individual results, look in the work directories.
+
+<i>Prefit viability data</i>
+
+We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>.csv`
+(corresponding to the `--path_data` and `--dataset_name` options), with at least the columns `[“cell_line_id”, “drug_id”, <measure>”]`
+where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, “IC50”]`).
+It is required that you use measure names that are also working with the available datasets if you use the `--cross_study_datasets` option.
+
 ### Available Randomization Tests
 
 We have several randomization modes and types available.

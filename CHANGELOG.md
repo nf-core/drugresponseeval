@@ -14,10 +14,12 @@ Initial release of nf-core/drugresponseeval, created with the [nf-core](https://
 - Added the docker container and the conda env.yml in the nextflow.config. We just need one container for all
   processes as this pipeline automates the PyPI package drevalpy.
 - Added usage and output documentation.
+- Added CurveCurator to preprocess curves of custom datasets
 
 ### `Fixed`
 
 - Fixed linting issues
+- Fixed bugs with path_data: can now be handled as absolute and relative paths
 
 ### `Dependencies`
 
