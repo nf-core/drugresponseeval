@@ -18,14 +18,11 @@ def main(args):
     model = model_class()
 
     randomization_test_views = get_randomization_test_views(model=model, randomization_mode=[args.randomization_mode])
-
-    key = list(randomization_test_views.keys())[0]
-    # create as many dicts as there are elements in the value list of the key
-    randomization_test_view_dicts = [{"test_name": key, "view": value} for value in randomization_test_views[key]]
-
-    for rand_dict in randomization_test_view_dicts:
-        with open(f'randomization_test_view_{rand_dict["test_name"]}.yaml', "w") as f:
-            yaml.dump(rand_dict, f)
+    for test_name, views in randomization_test_views.items():
+        for view in views:
+            rand_dict = {"test_name": test_name, "view": view}
+            with open(f'randomization_test_view_{test_name}.yaml', "w") as f:
+                yaml.dump(rand_dict, f)
 
 
 if __name__ == "__main__":
