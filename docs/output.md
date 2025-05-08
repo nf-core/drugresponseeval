@@ -42,17 +42,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
 5. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
-   - [Critical difference plot](#critical-difference): A critical difference plot is created to compare the performance
-     of the models.
-   - [Violin plot](#violin-plot): A violin plot is created to compare the performance of the models over the CV folds.
-   - [Heatmap](#heatmap): A heatmap is created to compare the average performance of the models over the CV folds.
-   - [Correlation comparison](#correlation-comparison): Renders a plot in which the per-drug/per-cell line
-     correlations between y_true and y_predicted are compared between different models.
-   - [Regression plots](#regression-plots): Plots in which the y_true and y_predicted values are compared between
-     different models.
-   - [Save tables](#save-tables): Saves the performance metrics of the models in a table.
-   - [Write html](#write-html): Writes the plots to an HTML file per setting (LPO/LCO/LDO).
-   - [Write index](#write-index): Writes an index.html file that links to all the HTML files.
 6. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
 
 ### Parameter check
@@ -255,97 +244,24 @@ csv`, `evaluation_results_per_cell_line.csv`, and `true_vs_pred.csv`.
 
 ### Subworkflow `VISUALIZATION`
 
-#### Critical difference
-
-The critical difference plot measures whether a model is significantly better than another model measured over its
-average rank over all CV folds.
+All plots are created in the `visualization` subworkflow. They are saved in the results/report directory.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `critical_difference*.svg`: SVG file with the critical difference plot.
-
-</details>
-
-#### Violin plot
-
-The violin shows the distribution of the performance metrics over the CV folds. This plot is rendered overall for
-all real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `violin*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Heatmap
-
-The heatmap shows the average performance of the models over the CV folds. This plot is rendered overall for all
-real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `heatmap*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Correlation comparison
-
-Renders a plot in which the per-drug/per-cell line correlations between y_true and y_predicted are compared between
-different models.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `corr_comp_scatter*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Regression plots
-
-Plots in which the y_true and y_predicted values are compared between different models.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `regression_lines*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Save tables
-
-Saves the performance metrics of the models in an html table.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `table*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Write html
-
-Creates a summary HTML file per setting (LPO/LCO/LDO) that contains all the plots and tables.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `{LPO,LCO,LPO}.html`: HTML file with the violin plot.
-
-</details>
-
-#### Write index
-
-Writes an index.html file that links to all the HTML files.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `index.html`: HTML file with the violin plot.
+- `critical_difference*.svg`: The critical difference plot measures whether a model is significantly better than another model measured over its
+  average rank over all CV folds.
+- `critical_difference*.html`: The corresponding p-values in a table.
+- `violin*.html`: The violin shows the distribution of the performance metrics over the CV folds. This plot is rendered overall for
+  all real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
+- `heatmap*.html`: The heatmap shows the average performance of the models over the CV folds.
+- `comp_scatter*.html`: Renders a plot in which the per-drug/per-cell line performances between y_true and y_predicted are compared between
+  different models.
+- `regression_lines*.html`: Plots in which the y_true and y_predicted values are compared between different models (not rendered for Naive Predictors).
+- `table*.html`: Saves the cross-study performance metrics of the models in an html table.
+- `{LPO,LCO,LTO,LPO}.html`: Creates a summary HTML file per setting (LPO/LCO/LTO/LDO) that contains all the plots and tables.
+- `index.html`: HTML file that links to all the HTML files.
 - `*.png`: Some png files for the logo, etc.
-
 </details>
 
 ### Pipeline information
