@@ -35,7 +35,7 @@ workflow MODEL_TESTING {
         params.response_transformation,
         params.model_checkpoint_dir
     )
-    ch_vis = PREDICT_FULL.out.ch_vis
+    ch_vis = PREDICT_FULL.out.ch_vis.concat(PREDICT_FULL.out.ch_cross)
 
     if (params.randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
@@ -48,7 +48,7 @@ workflow MODEL_TESTING {
             ch_models_rand
         )
         ch_rand_views = ch_models
-                        .combine(RANDOMIZATION_SPLIT.out.randomization_test_views, by: 0)
+                        .combine(RANDOMIZATION_SPLIT.out.randomization_test_views.transpose(), by: 0)
                         .map{ model_class, model_name, rand_file -> [model_name, rand_file] }
 
         ch_best_hpams_per_split_rand = best_hpam_per_split.map {
@@ -118,7 +118,8 @@ workflow MODEL_TESTING {
     ch_collapse = EVALUATE_FINAL.out.ch_individual_results.collect()
 
     COLLECT_RESULTS (
-        ch_collapse
+        ch_collapse,
+        work_path
     )
 
     emit:

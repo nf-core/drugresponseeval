@@ -4,6 +4,7 @@ process COLLECT_RESULTS {
 
     input:
     path(outfiles)
+    val(path_data)
 
     output:
     path('evaluation_results.csv'), emit: evaluation_results
@@ -14,7 +15,8 @@ process COLLECT_RESULTS {
     script:
     """
     collect_results.py \\
-        --outfiles $outfiles
+        --outfiles $outfiles \\
+        --path_data $path_data
     """
 
 }

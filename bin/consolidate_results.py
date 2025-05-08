@@ -31,7 +31,10 @@ def main():
         args.run_id,
         args.test_mode,
     )
-    randomizations = args.randomization_modes.split('[')[1].split(']')[0].split(', ')
+    if args.randomization_modes == "[None]":
+        randomizations = None
+    else:
+        randomizations = args.randomization_modes.split('[')[1].split(']')[0].split(', ')
     model = MODEL_FACTORY[args.model_name]
     if args.cross_study_datasets is None:
         args.cross_study_datasets = []
