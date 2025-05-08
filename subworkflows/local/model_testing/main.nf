@@ -35,7 +35,7 @@ workflow MODEL_TESTING {
         params.response_transformation,
         params.model_checkpoint_dir
     )
-    ch_vis = PREDICT_FULL.out.ch_vis
+    ch_vis = PREDICT_FULL.out.ch_vis.concat(PREDICT_FULL.out.ch_cross)
 
     if (params.randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
@@ -118,7 +118,8 @@ workflow MODEL_TESTING {
     ch_collapse = EVALUATE_FINAL.out.ch_individual_results.collect()
 
     COLLECT_RESULTS (
-        ch_collapse
+        ch_collapse,
+        work_path
     )
 
     emit:

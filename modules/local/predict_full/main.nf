@@ -11,7 +11,7 @@ process PREDICT_FULL {
 
     output:
     tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
+    tuple val(test_mode), val(model_name), path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
     path('**best_hpams*.json'),             emit: ch_hpams
 
     script:
