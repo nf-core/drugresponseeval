@@ -8,13 +8,6 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_drugresponseeval_pipeline'
 
 include { PARAMS_CHECK } from '../modules/local/params_check'
-include { DRAW_VIOLIN } from '../modules/local/draw_violin'
-include { DRAW_HEATMAP } from '../modules/local/draw_heatmap'
-include { DRAW_CORR_COMP } from '../modules/local/draw_corr_comp'
-include { DRAW_REGRESSION } from '../modules/local/draw_regression'
-include { SAVE_TABLES } from '../modules/local/save_tables'
-include { WRITE_HTML } from '../modules/local/write_html'
-include { WRITE_INDEX } from '../modules/local/write_index'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -33,6 +26,10 @@ include { VISUALIZATION } from '../subworkflows/local/visualization'
 def test_modes = params.test_mode.split(",")
 def models = params.models.split(",")
 def baselines = params.baselines.split(",")
+// if NaiveMeanEffectsPredictor is not in baselines, add it
+if (!baselines.contains("NaiveMeanEffectsPredictor")) {
+    baselines = baselines + "NaiveMeanEffectsPredictor"
+}
 def randomizations = params.randomization_mode.split(",")
 
 workflow DRUGRESPONSEEVAL {
@@ -101,13 +98,11 @@ workflow DRUGRESPONSEEVAL {
     )
 
     VISUALIZATION (
-        test_modes,
-        models,
-        baselines,
         MODEL_TESTING.out.evaluation_results,
         MODEL_TESTING.out.evaluation_results_per_drug,
         MODEL_TESTING.out.evaluation_results_per_cl,
-        MODEL_TESTING.out.true_vs_predicted
+        MODEL_TESTING.out.true_vs_predicted,
+        work_path
     )
 
     emit:

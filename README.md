@@ -20,7 +20,7 @@
 [![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
-# ![drevalpy_summary](assets/drevalpy-2-qr.svg)
+# ![drevalpy_summary](assets/dreval_summary.svg)
 
 ## Introduction
 
@@ -32,8 +32,6 @@ standardized evaluation protocols and preprocessing workflows. With DrEval, hype
 tuning is fair and consistent. With its flexible model interface, DrEval supports any model type,
 ranging from statistical models to complex neural networks. By contributing your model to the
 DrEval catalog, you can increase your work's exposure, reusability, and transferability.
-
-# ![Pipeline diagram showing the major steps of nf-core/drugresponseeval](assets/drugresponseeval_pipeline_simplified.png)
 
 1. The response data is loaded
 2. All models are trained and evaluated in a cross-validation setting
