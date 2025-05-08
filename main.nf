@@ -29,17 +29,12 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 //
 workflow NFCORE_DRUGRESPONSEEVAL {
 
-    take:
-    samplesheet // channel: samplesheet read in from --input
-
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    DRUGRESPONSEEVAL (
-        samplesheet
-    )
+    DRUGRESPONSEEVAL ()
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -58,16 +53,14 @@ workflow {
         params.validate_params,
         params.monochrome_logs,
         args,
-        params.outdir,
-        params.input
+        params.outdir//,
+        //params.input
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_DRUGRESPONSEEVAL (
-        PIPELINE_INITIALISATION.out.samplesheet
-    )
+    NFCORE_DRUGRESPONSEEVAL ()
     //
     // SUBWORKFLOW: Run completion tasks
     //
