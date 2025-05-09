@@ -8,8 +8,8 @@ process COLLECT_RESULTS {
 
     output:
     path('evaluation_results.csv'), emit: evaluation_results
-    path('evaluation_results_per_drug.csv'), emit: evaluation_results_per_drug
-    path('evaluation_results_per_cl.csv'), emit: evaluation_results_per_cl
+    path('evaluation_results_per_drug.csv'), emit: evaluation_results_per_drug, optional: true
+    path('evaluation_results_per_cl.csv'), emit: evaluation_results_per_cl, optional: true
     path('true_vs_pred.csv'), emit: true_vs_pred
 
     script:

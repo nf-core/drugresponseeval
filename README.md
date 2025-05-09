@@ -6,7 +6,7 @@
 </h1>
 
 [![GitHub Actions CI Status](https://github.com/nf-core/drugresponseeval/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/drugresponseeval/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/drugresponseeval/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.14779984-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.14779984)
 
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
@@ -94,10 +94,11 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.14779984](https://doi.org/10.5281/zenodo.14779984)
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+The underlying data is available at doi: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
+
+The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone.
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
