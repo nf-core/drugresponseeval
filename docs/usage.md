@@ -149,7 +149,9 @@ If you want to use your own model, you must contribute it to drevalpy. Please fo
 
 1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
 2. Create a mamba environment: `mamba create -n drevalpy python=3.12`
-3. Install the dependencies: `pip install poetry` `poetry  install`
+3. Install the dependencies:
+   - Run: `pip install poetry`
+   - Then run: `poetry install`
 4. Implement your model (for more information on that, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html))
 5. Test your model with the tests in `tests/`. Also implement your own tests.
 6. (You can then open a PR to the main repository for contributing your model)
