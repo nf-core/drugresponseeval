@@ -10,6 +10,9 @@ workflow VISUALIZATION {
     work_path                           // from input
 
     main:
+    // evaluation_results_per_cl and evaluation_results_per_drug are optional
+    evaluation_results_per_drug = evaluation_results_per_drug.ifEmpty(file("NONE_drug.csv"))
+    evaluation_results_per_cl = evaluation_results_per_cl.ifEmpty(file("NONE_cl.csv"))
     ch_input_vis = evaluation_results.concat(
         evaluation_results_per_drug,
         evaluation_results_per_cl,
