@@ -20,9 +20,11 @@
 [![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
-# ![drevalpy_summary](assets/dreval_summary.svg)
+
 
 ## Introduction
+
+# ![drevalpy_summary](assets/dreval_summary.svg)
 
 **DrEval** is a bioinformatics framework which includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
