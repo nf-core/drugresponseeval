@@ -1,5 +1,5 @@
 process COLLECT_RESULTS {
-    label 'process_single'
+    label 'process_medium'
     publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
 
     input:
