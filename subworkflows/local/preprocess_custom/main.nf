@@ -26,10 +26,10 @@ workflow PREPROCESS_CUSTOM {
         ch_curves = FIT_CURVES.out.path_to_curvecurator_out.collect()
         POSTPROCESS_CURVECURATOR_DATA(dataset_name, ch_curves, measure)
         ch_measure = POSTPROCESS_CURVECURATOR_DATA.out.measure
-    }else if(params.curve_curator){
-        ch_measure = Channel.of("${measure}" + "_curvecurator")
-    }else{
+    }else if(params.no_refitting){
         ch_measure = measure
+    }else{
+        ch_measure = Channel.of("${measure}" + "_curvecurator")
     }
     emit:
     measure = ch_measure

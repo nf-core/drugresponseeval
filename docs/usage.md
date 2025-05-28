@@ -178,7 +178,7 @@ The drug response measure that you want to use as the target variable can be spe
 Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”]`.
 
 We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
-well. By default, we use those measures. If you do not want to use those measures, disable the `--curve_curator` flag.
+well. By default, we use those measures. If you do not want to use those measures, enable the `--no_refitting` flag.
 
 #### Custom datasets
 

@@ -11,7 +11,7 @@ process PARAMS_CHECK {
     val n_trials_robustness
     val dataset_name
     val cross_study_datasets
-    val curve_curator
+    val no_refitting
     val optim_metric
     val n_cv_splits
     val response_transformation
@@ -34,7 +34,7 @@ process PARAMS_CHECK {
         --n_trials_robustness $n_trials_robustness \\
         --dataset_name $dataset_name \\
         ${cross_study_datasets != '' ? '--cross_study_datasets ' + cross_study_datasets.replace(',', ' ') : ''} \\
-        ${curve_curator ? '--curve_curator --curve_curator_cores 1' : ''} \\
+        ${no_refitting ? '--no_refitting' : '--curve_curator_cores 1'} \\
         --path_data $work_path \\
         --measure $measure \\
         --optim_metric $optim_metric \\

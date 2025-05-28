@@ -62,7 +62,7 @@ workflow DRUGRESPONSEEVAL {
         params.n_trials_robustness,
         params.dataset_name,
         params.cross_study_datasets,
-        params.curve_curator,
+        params.no_refitting,
         params.optim_metric,
         params.n_cv_splits,
         params.response_transformation,

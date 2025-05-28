@@ -63,7 +63,7 @@ The process `PARAMS_CHECK` performs the following checks:
 - `--response_transformation`: If supplied, checks whether the response transformation is either standard,
   minmax, or robust.
 - `--measure`: Which measure of drug response should be used for the file. Available options are "LN_IC50", "EC50", "IC50", "pEC50", "AUC", "response". Default: "LN_IC50".
-- `--curve_curator`: Whether to run CurveCurator on a custom dataset. Default: false. This requires raw viability data to be located at "<path_data>/<dataset_name>/<dataset_name>\_raw.csv".
+- `--no_refitting`: If CurveCurator should not be run on a custom dataset. Default: false (CurveCurator is run). Running CurveCurator on your custom data requires raw viability data to be located at "<path_data>/<dataset_name>/<dataset_name>\_raw.csv".
 
 It emits the path to the data but mostly so that the other processes wait for `PARAMS_CHECK` to finish before starting.
 
