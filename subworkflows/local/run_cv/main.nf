@@ -8,16 +8,15 @@ include { EVALUATE_FIND_MAX                 } from '../../../modules/local/evalu
 
 workflow RUN_CV {
     take:
-    test_modes                      // LPO,LDO,LCO
-    models                          // model names for full testing
-    baselines                        // model names for comparison
+    test_modes                      // LPO,LDO,LCO, LTO
+    ch_models                      // channel of model names for full testing
+    ch_baselines                   // channel of model names for comparison
     work_path                      // path to data
     measure
-    useless_count                // how do I make it wait for check params to finish?
 
     main:
 
-    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure, useless_count)
+    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
@@ -29,8 +28,6 @@ workflow RUN_CV {
     // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
-    ch_models = channel.from(models)
-    ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)
     ch_input_models = ch_models
                         .collect()

@@ -7,7 +7,6 @@ process LOAD_RESPONSE {
     path work_path
     val cross_study_datasets
     val measure
-    val useless_count
 
     output:
     path 'response_dataset.pkl',    emit: response_dataset

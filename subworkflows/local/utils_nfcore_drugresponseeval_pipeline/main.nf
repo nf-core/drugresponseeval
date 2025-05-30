@@ -26,12 +26,15 @@ include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipelin
 workflow PIPELINE_INITIALISATION {
 
     take:
-    version           // boolean: Display version and exit
-    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args //   array: List of positional nextflow CLI args
-    outdir            //  string: The output directory where the results will be saved
-    //input             //  string: Path to input samplesheet
+    version                 // boolean: Display version and exit
+    validate_params         // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs         // boolean: Do not use coloured log outputs
+    nextflow_cli_args       //   array: List of positional nextflow CLI args
+    outdir                  //  string: The output directory where the results will be saved
+    // pipeline-specific input
+    models                  //  string: Comma-separated list of models to run
+    baselines               //  string: Comma-separated list of baseline models to run
+    path_data              //  string: Path to the data directory containing the input data
 
     main:
 
@@ -64,32 +67,59 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Custom tests
     //
-    /*
-    Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-                }
-        }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
-        }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
-        }
-        .set { ch_samplesheet }
-    */
+
+    // it is possible to supply a custom model name, but write a warning
+    valid_model_names = [
+                        'NaivePredictor',
+                        'NaiveDrugMeanPredictor',
+                        'NaiveCellLineMeanPredictor',
+                        'NaiveMeanEffectsPredictor',
+                        'NaiveTissueMeanPredictor',
+                        'ElasticNet',
+                        'RandomForest',
+                        'SVR',
+                        'SimpleNeuralNetwork',
+                        'MultiOmicsNeuralNetwork',
+                        'MultiOmicsRandomForest',
+                        'GradientBoosting',
+                        'SRMF',
+                        'DIPK',
+                        'ProteomicsRandomForest',
+                        'SingleDrugRandomForest',
+                        'MOLIR',
+                        'SuperFELTR',
+                        'SingleDrugElasticNet',
+                        'SingleDrugProteomicsElasticNet']
+    ch_models = channel.from(models.split(',').collect { it.trim() })
+    def baseline_list = baselines.split(",")
+    // if NaiveMeanEffectsPredictor is not in baselines, add it
+    if (!baseline_list.contains("NaiveMeanEffectsPredictor")) {
+        baseline_list = baseline_list + "NaiveMeanEffectsPredictor"
+        log.warn "NaiveMeanEffectsPredictor baseline model was not specified, adding it to the list of baselines."
+    }
+    ch_baselines = channel
+                    .from(baselines)
+                    .map { baseline ->
+                        if(!valid_model_names.contains(baseline)){
+                            error("Invalid baseline model specified: ${baseline}. If you use a custom model, please specify it under --models. For baselines, please use one of the following: ${valid_model_names.join(', ')}")
+                        } else {
+                            baseline
+                        }
+                    }
+
+    new_models = ch_models
+                .filter { model -> !valid_model_names.contains(model) }
+    new_models.view { model -> log.warn "You have specified a model not pre-implemented by us: ${model}. If it is your own model in your own fork of drevalpy and you are working in a custom environment, all good :) If not, here is the list of pre-implemented models: ${valid_model_names.join(', ')}" }
+
+    work_path = channel.fromPath(path_data)
+
     emit:
-    //samplesheet = ch_samplesheet
-    versions    = ch_versions
+    models              = ch_models
+    baselines           = ch_baselines
+    work_path           = work_path
+    versions            = ch_versions
 }
 
 /*

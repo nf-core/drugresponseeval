@@ -4,7 +4,6 @@ process PREPROCESS_RAW_VIABILITY {
     input:
     val(dataset_name)
     path(work_path)
-    val useless_count
 
     output:
     path "${dataset_name}/*/config.toml", emit: path_to_toml
