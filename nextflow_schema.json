@@ -141,6 +141,13 @@
                     "help_text": "List of datasets to use to evaluate predictions across studies. Can be a combination like 'CTRPv1,CCLE'. Default is empty string which means no cross-study datasets are used.",
                     "default": "",
                     "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12])(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]))*)$"
+                },
+                "zenodo_link": {
+                    "type": "string",
+                    "description": "Link to the latest Zenodo version of the dataset.",
+                    "default": "https://zenodo.org/records/15533857/files/",
+                    "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
+                    "pattern": "^https://zenodo.org/records/[0-9]+/files/$"
                 }
             }
         },
