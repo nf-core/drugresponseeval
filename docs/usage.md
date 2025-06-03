@@ -143,6 +143,22 @@ The following models are available:
 | SuperFELTR                     | Published Model            | Single-Drug Model                    | Regression extension of [SuperFELT: supervised feature extraction learning using triplet loss for drug response](https://doi.org/10.1186/s12859-021-04146-z) by Park et al. Very similar to MOLI(R). In MOLI(R), encoders and the classifier were trained jointly. Super.FELT(R) trains them independently. MOLI(R) was trained without feature selection (except for the Variance Threshold on the gene expression). Super.FELT(R) uses feature selection for all omics data.                                                                                                            |
 | DIPK                           | Published Model            | Multi-Drug Model                     | [Deep neural network Integrating Prior Knowledge](https://doi.org/10.1093/bib/bbae153) from Li et al. Uses gene interaction relationships (encoded by a graph auto-encoder), gene expression profiles (encoded by a denoising auto-encoder), and molecular topologies (encoded by MolGNet). Those features are integrated using multi-head attention layers.                                                                                                                                                                                                                              |
 
+#### Custom models
+
+If you want to use your own model, you must contribute it to drevalpy. Please follow the following steps:
+
+1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
+2. Create a mamba environment: `mamba create -n drevalpy python=3.12`
+3. Install the dependencies:
+   - Run: `pip install poetry`
+   - Then run: `poetry install`
+4. Implement your model (for more information on that, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html))
+5. Test your model with the tests in `tests/`. Also implement your own tests.
+6. (You can then open a PR to the main repository for contributing your model)
+7. Install drevalpy into your environment: `pip install -e .`
+8. From your environment, try to run the pipeline: `nextflow run nf-core/drugresponseeval -r dev -profile test`
+9. If everything works, try running your model: `nextflow run nf-core/drugresponseeval -r dev --models <your_model> --dataset_name <dataset_name>`
+
 ### Available Datasets
 
 The following datasets are available and can be supplied via `--dataset_name`:

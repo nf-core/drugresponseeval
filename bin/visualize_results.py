@@ -26,8 +26,14 @@ if __name__ == "__main__":
     test_modes = args.test_modes
 
     ev_res = pd.read_csv(args.eval_results, index_col=0)
-    ev_res_per_drug = pd.read_csv(args.eval_results_per_drug, index_col=0)
-    ev_res_per_cl = pd.read_csv(args.eval_results_per_cl, index_col=0)
+    if args.eval_results_per_drug == "NONE_drug.csv":
+        ev_res_per_drug = None
+    else:
+        ev_res_per_drug = pd.read_csv(args.eval_results_per_drug, index_col=0)
+    if args.eval_results_per_cl == "NONE_cl.csv":
+        ev_res_per_cl = None
+    else:
+        ev_res_per_cl = pd.read_csv(args.eval_results_per_cl, index_col=0)
     t_vs_p = pd.read_csv(args.true_vs_predicted, index_col=0)
 
     for test_mode in test_modes:
