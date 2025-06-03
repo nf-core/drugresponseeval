@@ -4,7 +4,7 @@ process COLLECT_RESULTS {
 
     input:
     path(outfiles)
-    val(path_data)
+    path(path_data)
 
     output:
     path('evaluation_results.csv'), emit: evaluation_results
