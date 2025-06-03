@@ -5,28 +5,46 @@
     "description": "This pipeline evaluates drug response models in various settings on a variety of datasets.",
     "type": "object",
     "$defs": {
+        "model_options": {
+            "title": "Model options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-laptop-code",
+            "description": "Define the models and baselines to be tested.",
+            "required": ["models", "baselines"],
+            "properties": {
+                "models": {
+                    "type": "string",
+                    "description": "Model to be tested.",
+                    "help_text": "Model to be tested."
+                },
+                "baselines": {
+                    "type": "string",
+                    "description": "Baselines to be tested.",
+                    "help_text": "Baselines to be tested. NaiveMeanEffectsPredictor will always be included."
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input", "outdir"],
+            "required": ["run_id", "dataset_name", "outdir"],
             "properties": {
-                "input": {
+                "run_id": {
                     "type": "string",
-                    "format": "file-path",
-                    "exists": true,
-                    "schema": "assets/schema_input.json",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/drugresponseeval/usage#samplesheet-input).",
-                    "fa_icon": "fas fa-file-csv"
+                    "description": "Run ID for the pipeline.",
+                    "help_text": "You will need to set a run identifier for the pipeline. This is used to create a unique output directory for each run."
+                },
+                "dataset_name": {
+                    "type": "string",
+                    "description": "Name of the dataset.",
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'TOYv1', 'TOYv2) in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting (see 'curve_curator' option, which is required in this case), or prefit data (not recommended for dataset comparability reasons due to potential differences in fitting procedures)."
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "description": "The output directory where the results will be saved. Default is results/",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "email": {
@@ -35,6 +53,115 @@
                     "fa_icon": "fas fa-envelope",
                     "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                }
+            }
+        },
+        "mode_options": {
+            "title": "Mode options (LPO/LCO/LTO/LDO)",
+            "type": "object",
+            "fa_icon": "fa-solid fa-table-cells-column-lock",
+            "description": "Define the mode in which the pipeline will be run.",
+            "required": ["test_mode"],
+            "properties": {
+                "test_mode": {
+                    "type": "string",
+                    "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), or LDO (Leave-Drug-Out).",
+                    "default": "LPO",
+                    "help_text": "Which tests to run (LPO=Leave-random-Pairs-Out, LCO=Leave-Cell-line-Out, LTO=Leave-Tissue-Out, LDO=Leave-Drug-Out). Can be a list of test runs e.g. 'LPO,LCO,LTO,LDO' to run all tests. Default is LPO."
+                }
+            }
+        },
+        "randomization_options": {
+            "title": "Randomization options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-dice",
+            "description": "Options for randomization.",
+            "properties": {
+                "randomization_mode": {
+                    "type": "string",
+                    "description": "Randomization mode for the pipeline.",
+                    "help_text": "Which randomization tests to run, additionally to the normal run. Default is None which means no randomization tests are run. Modes: SVCC, SVRC, SVCD, SVRD. Can be a list of randomization tests e.g. 'SCVC,SCVD' to run two tests. Default is None. SVCC: Single View Constant for Cell Lines: in this mode, one experiment is done for every cell line view the model uses (e.g. gene expression, mutation, ..). For each experiment one cell line view is held constant while the others are randomized. SVRC Single View Random for Cell Lines: in this mode, one experiment is done for every cell line view the model uses (e.g. gene expression, mutation, ..)."
+                },
+                "randomization_type": {
+                    "type": "string",
+                    "default": "permutation",
+                    "description": "Randomization type for the pipeline.",
+                    "help_text": "type of randomization to use. Choose from \"permutation\", \"invariant\". Default is \"permutation"
+                }
+            }
+        },
+        "robustness_options": {
+            "title": "Robustness options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-repeat",
+            "description": "Options for robustness.",
+            "properties": {
+                "n_trials_robustness": {
+                    "type": "integer",
+                    "default": 0,
+                    "description": "Number of trials to run for the robustness test",
+                    "help_text": "Number of trials to run for the robustness test. Default is 0, which means no robustness test is run. The robustness test is a test where the model is trained with varying seeds. This is done multiple times to see how stable the model is."
+                }
+            }
+        },
+        "data_options": {
+            "title": "Data options",
+            "type": "object",
+            "fa_icon": "fa-solid fa-database",
+            "description": "Options for data input.",
+            "properties": {
+                "path_data": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "Path to the data directory.",
+                    "help_text": "Path to the data directory."
+                },
+                "measure": {
+                    "type": "string",
+                    "default": "LN_IC50",
+                    "description": "The name of the measure to use",
+                    "help": "The name of the measure to use, default 'LN_IC50'. If using one of the available datasets (see 'dataset_name' option), this is restricted to one of ['LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'curve_curator' is set (true by default), the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'curve_curator' option for details)."
+                },
+                "cross_study_datasets": {
+                    "type": "string",
+                    "description": "Datasets for cross-study prediction.",
+                    "help_text": "List of datasets to use to evaluate predictions across studies. Default is empty string which means no cross-study datasets are used."
+                }
+            }
+        },
+        "additional_options": {
+            "title": "Additional options",
+            "type": "object",
+            "fa_icon": "fas fa-cogs",
+            "description": "Additional options for the pipeline.",
+            "properties": {
+                "curve_curator": {
+                    "type": "boolean",
+                    "description": "True by default. Use refit measures instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data.",
+                    "help_text": "This allows using refit measures (see 'measure' option for details) for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), setting this to True expects a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option), which is fitted automatically with the same procedure as the available datasets, to provide fair comparison. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv."
+                },
+                "optim_metric": {
+                    "type": "string",
+                    "description": "Optimization metric for the pipeline.",
+                    "default": "RMSE",
+                    "help_text": "Optimization metric for the pipeline. Default is RMSE."
+                },
+                "n_cv_splits": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Number of cross-validation splits.",
+                    "help_text": "Number of cross-validation splits. Default is 5."
+                },
+                "response_transformation": {
+                    "type": "string",
+                    "description": "Response transformation",
+                    "help_text": "Transformation to apply to the response variable possible values: standard, minmax, robust"
+                },
+                "model_checkpoint_dir": {
+                    "type": "string",
+                    "description": "Model checkpoint directory",
+                    "default": "TEMPORARY",
+                    "help_text": "Directory to save model checkpoints."
                 }
             }
         },
@@ -160,7 +287,25 @@
     },
     "allOf": [
         {
+            "$ref": "#/$defs/model_options"
+        },
+        {
             "$ref": "#/$defs/input_output_options"
+        },
+        {
+            "$ref": "#/$defs/mode_options"
+        },
+        {
+            "$ref": "#/$defs/randomization_options"
+        },
+        {
+            "$ref": "#/$defs/data_options"
+        },
+        {
+            "$ref": "#/$defs/robustness_options"
+        },
+        {
+            "$ref": "#/$defs/additional_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"

@@ -31,7 +31,7 @@ workflow PIPELINE_INITIALISATION {
     monochrome_logs   // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    //input             //  string: Path to input samplesheet
 
     main:
 
@@ -66,7 +66,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-
+    /*
     Channel
         .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
         .map {
@@ -86,9 +86,9 @@ workflow PIPELINE_INITIALISATION {
                 return [ meta, fastqs.flatten() ]
         }
         .set { ch_samplesheet }
-
+    */
     emit:
-    samplesheet = ch_samplesheet
+    //samplesheet = ch_samplesheet
     versions    = ch_versions
 }
 
