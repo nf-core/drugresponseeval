@@ -11,8 +11,8 @@ workflow VISUALIZATION {
 
     main:
     // evaluation_results_per_cl and evaluation_results_per_drug are optional
-    evaluation_results_per_drug = evaluation_results_per_drug.ifEmpty(file("NONE_drug.csv"))
-    evaluation_results_per_cl = evaluation_results_per_cl.ifEmpty(file("NONE_cl.csv"))
+    evaluation_results_per_drug = evaluation_results_per_drug.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
+    evaluation_results_per_cl = evaluation_results_per_cl.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
     ch_input_vis = evaluation_results.concat(
         evaluation_results_per_drug,
         evaluation_results_per_cl,
