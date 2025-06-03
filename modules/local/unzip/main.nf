@@ -11,7 +11,7 @@ process UNZIP {
     tuple val(dataset_name), path(file)
 
     output:
-    tuple val(dataset_name), path("${file.baseName}/"),  emit: unzipped_archive
+    tuple val(dataset_name), path("${file.baseName}/"), path("${file.baseName}/${file.baseName}.csv"),  emit: unzipped_archive
 
     script:
     """
