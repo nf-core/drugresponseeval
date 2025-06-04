@@ -78,6 +78,7 @@ workflow DRUGRESPONSEEVAL {
         params.measure,
         PARAMS_CHECK.out.count()
     )
+    ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
 
     RUN_CV (
         test_modes,
@@ -87,6 +88,7 @@ workflow DRUGRESPONSEEVAL {
         PREPROCESS_CUSTOM.out.measure,
         PARAMS_CHECK.out.count()
     )
+    ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
     MODEL_TESTING (
         ch_models_baselines,
@@ -96,14 +98,7 @@ workflow DRUGRESPONSEEVAL {
         RUN_CV.out.ch_models,
         work_path
     )
-
-    VISUALIZATION (
-        MODEL_TESTING.out.evaluation_results,
-        MODEL_TESTING.out.evaluation_results_per_drug,
-        MODEL_TESTING.out.evaluation_results_per_cl,
-        MODEL_TESTING.out.true_vs_predicted,
-        work_path
-    )
+    ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]

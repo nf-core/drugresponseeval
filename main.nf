@@ -34,7 +34,12 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     //
     // WORKFLOW: Run pipeline
     //
+    ch_versions = Channel.empty()
     DRUGRESPONSEEVAL ()
+    ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
+
+    emit:
+    versions = ch_versions
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

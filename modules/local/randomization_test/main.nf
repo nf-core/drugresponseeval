@@ -12,6 +12,7 @@ process RANDOMIZATION_TEST {
 
     output:
     tuple val(test_mode), val(model_name), path('**randomization*.csv'),     emit: ch_vis
+    path("versions.yml"),                       emit: versions
 
     script:
     """
@@ -27,6 +28,18 @@ process RANDOMIZATION_TEST {
         --randomization_views_path $randomization_views \\
         --randomization_type $randomization_type \\
         --model_checkpoint_dir $model_checkpoint_dir \\
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
+        numpy: \$(python -c "import numpy; print(numpy.__version__)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
+        pytorch_lightning: \$(python -c "import pytorch_lightning; print(pytorch_lightning.__version__)")
+        torch: \$(python -c "import torch; print(torch.__version__)")
+        platform: \$(python -c "import platform; print(platform.__version__)")
+    END_VERSIONS
     """
 
 }

@@ -10,6 +10,7 @@ process CONSOLIDATE_RESULTS {
 
     output:
     tuple val(test_mode), val(model_name), path('**split*.csv'), emit: ch_vis, optional: true
+    path("versions.yml"),                       emit: versions
 
     script:
     def outdirPath = new File(params.outdir).getAbsolutePath()
@@ -25,5 +26,11 @@ process CONSOLIDATE_RESULTS {
         --randomization_modes ${rand_modes}\\
         --n_trials_robustness ${params.n_trials_robustness}
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
+    END_VERSIONS
     """
 }

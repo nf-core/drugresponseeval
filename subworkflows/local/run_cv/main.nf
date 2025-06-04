@@ -16,8 +16,9 @@ workflow RUN_CV {
     useless_count                // how do I make it wait for check params to finish?
 
     main:
-
+    ch_versions = Channel.empty()
     LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure, useless_count)
+    ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
@@ -26,6 +27,7 @@ workflow RUN_CV {
         ch_data,
         params.n_cv_splits
     )
+    ch_versions = ch_versions.mix(CV_SPLIT.out.versions)
     // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
@@ -45,11 +47,13 @@ workflow RUN_CV {
         ch_input_models,
         "models"
     )
+    ch_versions = ch_versions.mix(MAKE_MODELS.out.versions)
 
     MAKE_BASELINES (
         ch_input_baselines,
         "baselines"
     )
+    ch_versions = ch_versions.mix(MAKE_BASELINES.out.versions)
 
     ch_models_expanded = MAKE_MODELS.out.all_models
                         .splitCsv(strip: true)
@@ -60,6 +64,7 @@ workflow RUN_CV {
     HPAM_SPLIT (
         ch_models_baselines
     )
+    ch_versions = ch_versions.mix(HPAM_SPLIT.out.versions)
     // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
     ch_hpam_combis = ch_models_baselines_expanded
         .combine(HPAM_SPLIT.out.hpam_combi, by: 0)
@@ -77,6 +82,7 @@ workflow RUN_CV {
     ch_test_combis = ch_test_combis.combine(work_path)
 
     TRAIN_AND_PREDICT_CV(ch_test_combis, params.response_transformation, params.model_checkpoint_dir)
+    ch_versions = ch_versions.mix(TRAIN_AND_PREDICT_CV.out.versions)
 
     // [model_name, test_mode, split_id,
     // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
@@ -87,6 +93,7 @@ workflow RUN_CV {
         ch_combined_hpams,
         params.optim_metric
     )
+    ch_versions = ch_versions.mix(EVALUATE_FIND_MAX.out.versions)
 
     // [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     ch_best_hpams_per_split = ch_cv_splits
@@ -98,4 +105,5 @@ workflow RUN_CV {
     best_hpam_per_split = ch_best_hpams_per_split
     cross_study_datasets = LOAD_RESPONSE.out.cross_study_datasets
     ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
+    versions = ch_versions
 }
