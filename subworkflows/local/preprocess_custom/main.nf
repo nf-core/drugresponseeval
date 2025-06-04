@@ -7,14 +7,13 @@ workflow PREPROCESS_CUSTOM {
     work_path
     dataset_name
     measure
-    useless_count
 
     main:
     ch_versions = Channel.empty()
     File raw_file = new File("${params.path_data}/${dataset_name}/${dataset_name}_raw.csv")
 
     if (raw_file.exists()){
-        PREPROCESS_RAW_VIABILITY(dataset_name, work_path, useless_count)
+        PREPROCESS_RAW_VIABILITY(dataset_name, work_path)
         ch_versions = ch_versions.mix(PREPROCESS_RAW_VIABILITY.out.versions)
         ch_toml_files = PREPROCESS_RAW_VIABILITY.out.path_to_toml
                         .flatten()

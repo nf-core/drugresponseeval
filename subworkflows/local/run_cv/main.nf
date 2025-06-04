@@ -13,11 +13,10 @@ workflow RUN_CV {
     baselines                        // model names for comparison
     work_path                      // path to data
     measure
-    useless_count                // how do I make it wait for check params to finish?
 
     main:
     ch_versions = Channel.empty()
-    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure, useless_count)
+    LOAD_RESPONSE(params.dataset_name, work_path, params.cross_study_datasets, measure)
     ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
 
     ch_test_modes = channel.from(test_modes)
@@ -87,7 +86,7 @@ workflow RUN_CV {
     // [model_name, test_mode, split_id,
     // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
     // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
-    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
+    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.pred_data.groupTuple(by: [0,1,2])
 
     EVALUATE_FIND_MAX (
         ch_combined_hpams,

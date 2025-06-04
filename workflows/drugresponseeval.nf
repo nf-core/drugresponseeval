@@ -6,8 +6,6 @@
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_drugresponseeval_pipeline'
-
-include { PARAMS_CHECK } from '../modules/local/params_check'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -15,7 +13,6 @@ include { PARAMS_CHECK } from '../modules/local/params_check'
 include { PREPROCESS_CUSTOM } from '../subworkflows/local/preprocess_custom'
 include { RUN_CV } from '../subworkflows/local/run_cv'
 include { MODEL_TESTING } from '../subworkflows/local/model_testing'
-include { VISUALIZATION } from '../subworkflows/local/visualization'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,31 +49,12 @@ workflow DRUGRESPONSEEVAL {
     ch_baselines = channel.from(baselines)
     ch_models_baselines = ch_models.concat(ch_baselines)
 
-    PARAMS_CHECK (
-        params.run_id,
-        params.models,
-        params.baselines,
-        params.test_mode,
-        params.randomization_mode,
-        params.randomization_type,
-        params.n_trials_robustness,
-        params.dataset_name,
-        params.cross_study_datasets,
-        params.curve_curator,
-        params.optim_metric,
-        params.n_cv_splits,
-        params.response_transformation,
-        params.path_data,
-        params.measure
-    )
-
     work_path = channel.fromPath(params.path_data)
 
     PREPROCESS_CUSTOM (
         work_path,
         params.dataset_name,
-        params.measure,
-        PARAMS_CHECK.out.count()
+        params.measure
     )
     ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
 
@@ -85,8 +63,7 @@ workflow DRUGRESPONSEEVAL {
         models,
         baselines,
         work_path,
-        PREPROCESS_CUSTOM.out.measure,
-        PARAMS_CHECK.out.count()
+        PREPROCESS_CUSTOM.out.measure
     )
     ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
