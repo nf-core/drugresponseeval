@@ -1,22 +1,30 @@
 process COLLECT_RESULTS {
-    label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
+    label 'process_medium'
+    publishDir "${params.outdir}/${params.run_id}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     path(outfiles)
-    val(path_data)
+    path(path_data)
 
     output:
     path('evaluation_results.csv'), emit: evaluation_results
     path('evaluation_results_per_drug.csv'), emit: evaluation_results_per_drug, optional: true
     path('evaluation_results_per_cl.csv'), emit: evaluation_results_per_cl, optional: true
     path('true_vs_pred.csv'), emit: true_vs_pred
+    path("versions.yml"),                       emit: versions
 
     script:
     """
     collect_results.py \\
         --outfiles $outfiles \\
         --path_data $path_data
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
+    END_VERSIONS
     """
 
 }

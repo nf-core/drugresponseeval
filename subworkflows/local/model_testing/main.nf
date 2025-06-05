@@ -5,6 +5,7 @@ include { ROBUSTNESS_TEST               } from '../../../modules/local/robustnes
 include { CONSOLIDATE_RESULTS           } from '../../../modules/local/consolidate_results'
 include { EVALUATE_FINAL                } from '../../../modules/local/evaluate_final'
 include { COLLECT_RESULTS               } from '../../../modules/local/collect_results'
+include { VISUALIZE_RESULTS               } from '../../../modules/local/visualize_results'
 
 
 workflow MODEL_TESTING {
@@ -17,6 +18,7 @@ workflow MODEL_TESTING {
     work_path                  // from input
 
     main:
+    ch_versions = Channel.empty()
     if (params.cross_study_datasets == '') {
         cross_study_datasets = channel.fromPath(['./NONE.csv'])
     }
@@ -35,6 +37,7 @@ workflow MODEL_TESTING {
         params.response_transformation,
         params.model_checkpoint_dir
     )
+    ch_versions = ch_versions.mix(PREDICT_FULL.out.versions)
     ch_vis = PREDICT_FULL.out.ch_vis.concat(PREDICT_FULL.out.ch_cross)
 
     if (params.randomization_mode != 'None') {
@@ -47,6 +50,7 @@ workflow MODEL_TESTING {
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
+        ch_versions = ch_versions.mix(RANDOMIZATION_SPLIT.out.versions)
         ch_rand_views = ch_models
                         .combine(RANDOMIZATION_SPLIT.out.randomization_test_views.transpose(), by: 0)
                         .map{ model_class, model_name, rand_file -> [model_name, rand_file] }
@@ -67,6 +71,7 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
         )
+        ch_versions = ch_versions.mix(RANDOMIZATION_TEST.out.versions)
         ch_vis = ch_vis.concat(RANDOMIZATION_TEST.out.ch_vis)
     }
 
@@ -90,6 +95,7 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
         )
+        ch_versions = ch_versions.mix(ROBUSTNESS_TEST.out.versions)
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
 
@@ -102,11 +108,12 @@ workflow MODEL_TESTING {
         randomizations,
         ch_vis.count() // wait for ch_vis to finish
     )
-    CONSOLIDATE_RESULTS.out.ch_vis.transpose()
-
+    ch_versions = ch_versions.mix(CONSOLIDATE_RESULTS.out.versions)
+    ch_consolidate = CONSOLIDATE_RESULTS.out.ch_vis.transpose()
     // filter out SingleDrugModels that have been consolidated
     ch_vis = ch_vis
-                .concat(CONSOLIDATE_RESULTS.out.ch_vis.transpose())
+                .concat(ch_consolidate)
+                .transpose()
                 .map{ test_mode, model, pred_file -> [model, test_mode, pred_file] }
                 .combine(ch_models_baselines, by: 0)
                 .map{ model, test_mode, pred_file -> [test_mode, model, pred_file] }
@@ -114,6 +121,7 @@ workflow MODEL_TESTING {
     EVALUATE_FINAL (
         ch_vis
     )
+    ch_versions = ch_versions.mix(EVALUATE_FINAL.out.versions)
 
     ch_collapse = EVALUATE_FINAL.out.ch_individual_results.collect()
 
@@ -121,10 +129,23 @@ workflow MODEL_TESTING {
         ch_collapse,
         work_path
     )
+    ch_versions = ch_versions.mix(COLLECT_RESULTS.out.versions)
+
+    // evaluation_results_per_cl and evaluation_results_per_drug are optional
+    evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
+    evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
+    ch_input_vis = COLLECT_RESULTS.out.evaluation_results.concat(
+        evaluation_results_per_drug,
+        evaluation_results_per_cl,
+        COLLECT_RESULTS.out.true_vs_pred
+    ).collect()
+
+    VISUALIZE_RESULTS(
+        ch_input_vis,
+        work_path
+    )
+    ch_versions = ch_versions.mix(VISUALIZE_RESULTS.out.versions)
 
     emit:
-    evaluation_results = COLLECT_RESULTS.out.evaluation_results
-    evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug
-    evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl
-    true_vs_predicted = COLLECT_RESULTS.out.true_vs_pred
+    versions = ch_versions
 }

@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.1.0 - [date]
 
+- Added support for AWS: changed the structure of load response and parameter check to conform more to Nextflow
+  best practices.
 - Simplified visualization: multiple short processes were creating overhang -> more efficient in one process.
 - Fixed errors that arose from the latest drevalpy version.
 
