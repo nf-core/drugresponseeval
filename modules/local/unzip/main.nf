@@ -12,10 +12,17 @@ process UNZIP {
 
     output:
     tuple val(dataset_name), path("${file.baseName}/"), path("${file.baseName}/${file.baseName}.csv"),  emit: unzipped_archive
+    path("versions.yml"),                       emit: versions
 
     script:
     """
     unzip ${file}
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        unzip: \$(unzip --version 2>&1 | sed -E -n 's/^UnZip ([0-9.]+).*/\1/p')
+    END_VERSIONS
     """
 
 }
