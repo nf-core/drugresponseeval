@@ -133,8 +133,8 @@ workflow MODEL_TESTING {
     ch_versions = ch_versions.mix(COLLECT_RESULTS.out.versions)
 
     // evaluation_results_per_cl and evaluation_results_per_drug are optional
-    evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug.ifEmpty(file("NONE_drug.csv"))
-    evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl.ifEmpty(file("NONE_cl.csv"))
+    evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
+    evaluation_results_per_cl = COLLECT_RESULTS.out.evaluation_results_per_cl.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
     ch_input_vis = COLLECT_RESULTS.out.evaluation_results.concat(
         evaluation_results_per_drug,
         evaluation_results_per_cl,
