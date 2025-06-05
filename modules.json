@@ -3,15 +3,6 @@
     "homePage": "https://github.com/nf-core/drugresponseeval",
     "repos": {
         "https://github.com/nf-core/modules.git": {
-            "modules": {
-                "nf-core": {
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
-                    }
-                }
-            },
             "subworkflows": {
                 "nf-core": {
                     "utils_nextflow_pipeline": {
