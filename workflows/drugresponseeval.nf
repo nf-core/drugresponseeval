@@ -14,7 +14,6 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_drug
 include { PREPROCESS_CUSTOM } from '../subworkflows/local/preprocess_custom'
 include { RUN_CV } from '../subworkflows/local/run_cv'
 include { MODEL_TESTING } from '../subworkflows/local/model_testing'
-include { VISUALIZATION } from '../subworkflows/local/visualization'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,17 +34,6 @@ workflow DRUGRESPONSEEVAL {
     main:
     ch_versions = Channel.empty()
 
-    //
-    // Collate and save software versions
-    //
-    //softwareVersionsToYAML(ch_versions)
-    //    .collectFile(
-    //        storeDir: "${params.outdir}/pipeline_info",
-    //        name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
-    //        sort: true,
-    //        newLine: true
-    //    ).set { ch_collated_versions }
-
     ch_models_baselines = models.concat(baselines)
 
     PREPROCESS_CUSTOM (
@@ -53,6 +41,7 @@ workflow DRUGRESPONSEEVAL {
         params.dataset_name,
         params.measure
     )
+    ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
 
     RUN_CV (
         test_modes,
@@ -61,6 +50,7 @@ workflow DRUGRESPONSEEVAL {
         work_path,
         PREPROCESS_CUSTOM.out.measure
     )
+    ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
     MODEL_TESTING (
         ch_models_baselines,
@@ -70,14 +60,18 @@ workflow DRUGRESPONSEEVAL {
         RUN_CV.out.ch_models,
         work_path
     )
+    ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 
-    VISUALIZATION (
-        MODEL_TESTING.out.evaluation_results,
-        MODEL_TESTING.out.evaluation_results_per_drug,
-        MODEL_TESTING.out.evaluation_results_per_cl,
-        MODEL_TESTING.out.true_vs_predicted,
-        work_path
-    )
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]

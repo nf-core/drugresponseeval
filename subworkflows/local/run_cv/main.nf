@@ -18,7 +18,7 @@ workflow RUN_CV {
     measure
 
     main:
-
+    ch_versions = Channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
     if (!response_path.exists()) {
         log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
@@ -26,6 +26,7 @@ workflow RUN_CV {
                         .fromPath("${params.zenodo_link}${params.dataset_name}.zip")
                         .map { file -> [params.dataset_name, file] }
         UNZIP_RESPONSE(ch_unzip)
+        ch_versions = ch_versions.mix(UNZIP_RESPONSE.out.versions)
         ch_response = UNZIP_RESPONSE.out.unzipped_archive
                         .map { dataset_name, path_to_dir, response_file ->
                             file(response_file, checkIfExists: true)
@@ -58,6 +59,7 @@ workflow RUN_CV {
                                     [dataset_name, "${params.zenodo_link}${dataset_path.baseName}.zip"]
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
+        ch_versions = ch_versions.mix(UNZIP_CS_RESPONSE.out.versions)
         ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_archive
                         .map { dataset_name, path_to_dir, response_file ->
                             file(response_file, checkIfExists: true)
@@ -69,7 +71,9 @@ workflow RUN_CV {
     ch_response = measure.combine(ch_response)
     ch_cross_study_datasets = measure.combine(ch_cross_study_datasets)
     LOAD_RESPONSE(ch_response, params.no_refitting, false)
+    ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
     LOAD_CS_RESPONSE(ch_cross_study_datasets, params.no_refitting, true)
+    ch_versions = ch_versions.mix(LOAD_CS_RESPONSE.out.versions)
 
 
     ch_test_modes = channel.from(test_modes)
@@ -79,6 +83,7 @@ workflow RUN_CV {
         ch_data,
         params.n_cv_splits
     )
+    ch_versions = ch_versions.mix(CV_SPLIT.out.versions)
     // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
@@ -96,11 +101,13 @@ workflow RUN_CV {
         ch_input_models,
         "models"
     )
+    ch_versions = ch_versions.mix(MAKE_MODELS.out.versions)
 
     MAKE_BASELINES (
         ch_input_baselines,
         "baselines"
     )
+    ch_versions = ch_versions.mix(MAKE_BASELINES.out.versions)
 
     ch_models_expanded = MAKE_MODELS.out.all_models
                         .splitCsv(strip: true)
@@ -111,6 +118,7 @@ workflow RUN_CV {
     HPAM_SPLIT (
         ch_models_baselines
     )
+    ch_versions = ch_versions.mix(HPAM_SPLIT.out.versions)
     // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
     ch_hpam_combis = ch_models_baselines_expanded
         .combine(HPAM_SPLIT.out.hpam_combi, by: 0)
@@ -128,16 +136,18 @@ workflow RUN_CV {
     ch_test_combis = ch_test_combis.combine(work_path)
 
     TRAIN_AND_PREDICT_CV(ch_test_combis, params.response_transformation, params.model_checkpoint_dir)
+    ch_versions = ch_versions.mix(TRAIN_AND_PREDICT_CV.out.versions)
 
     // [model_name, test_mode, split_id,
     // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
     // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
-    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.groupTuple(by: [0,1,2])
+    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.pred_data.groupTuple(by: [0,1,2])
 
     EVALUATE_FIND_MAX (
         ch_combined_hpams,
         params.optim_metric
     )
+    ch_versions = ch_versions.mix(EVALUATE_FIND_MAX.out.versions)
 
     // [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     ch_best_hpams_per_split = ch_cv_splits
@@ -149,4 +159,5 @@ workflow RUN_CV {
     best_hpam_per_split = ch_best_hpams_per_split
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
     ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
+    versions = ch_versions
 }
