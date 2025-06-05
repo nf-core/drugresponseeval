@@ -34,17 +34,6 @@ workflow DRUGRESPONSEEVAL {
     main:
     ch_versions = Channel.empty()
 
-    //
-    // Collate and save software versions
-    //
-    //softwareVersionsToYAML(ch_versions)
-    //    .collectFile(
-    //        storeDir: "${params.outdir}/pipeline_info",
-    //        name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
-    //        sort: true,
-    //        newLine: true
-    //    ).set { ch_collated_versions }
-
     ch_models_baselines = models.concat(baselines)
 
     PREPROCESS_CUSTOM (
@@ -72,6 +61,17 @@ workflow DRUGRESPONSEEVAL {
         work_path
     )
     ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
+
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
