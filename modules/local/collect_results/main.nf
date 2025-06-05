@@ -1,10 +1,10 @@
 process COLLECT_RESULTS {
-    label 'process_single'
+    label 'process_medium'
     publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
 
     input:
     path(outfiles)
-    val(path_data)
+    path(path_data)
 
     output:
     path('evaluation_results.csv'),             emit: evaluation_results

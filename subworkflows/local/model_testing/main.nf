@@ -109,11 +109,12 @@ workflow MODEL_TESTING {
         ch_vis.count() // wait for ch_vis to finish
     )
     ch_versions = ch_versions.mix(CONSOLIDATE_RESULTS.out.versions)
-    CONSOLIDATE_RESULTS.out.ch_vis.transpose()
 
+    ch_consolidate = CONSOLIDATE_RESULTS.out.ch_vis.transpose()
     // filter out SingleDrugModels that have been consolidated
     ch_vis = ch_vis
-                .concat(CONSOLIDATE_RESULTS.out.ch_vis.transpose())
+                .concat(ch_consolidate)
+                .transpose()
                 .map{ test_mode, model, pred_file -> [model, test_mode, pred_file] }
                 .combine(ch_models_baselines, by: 0)
                 .map{ model, test_mode, pred_file -> [test_mode, model, pred_file] }

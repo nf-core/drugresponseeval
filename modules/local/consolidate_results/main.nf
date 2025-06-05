@@ -23,7 +23,7 @@ process CONSOLIDATE_RESULTS {
         --n_cv_splits ${params.n_cv_splits} \\
         ${params.cross_study_datasets != '' ? '--cross_study_datasets ' + params
         .cross_study_datasets.replace(',', ' ') : ''} \\
-        --randomization_modes ${rand_modes}\\
+        --randomization_modes "${rand_modes}"\\
         --n_trials_robustness ${params.n_trials_robustness}
 
     cat <<-END_VERSIONS > versions.yml

@@ -6,6 +6,7 @@
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_drugresponseeval_pipeline'
+
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
@@ -21,15 +22,14 @@ include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 */
 
 def test_modes = params.test_mode.split(",")
-def models = params.models.split(",")
-def baselines = params.baselines.split(",")
-// if NaiveMeanEffectsPredictor is not in baselines, add it
-if (!baselines.contains("NaiveMeanEffectsPredictor")) {
-    baselines = baselines + "NaiveMeanEffectsPredictor"
-}
 def randomizations = params.randomization_mode.split(",")
 
 workflow DRUGRESPONSEEVAL {
+
+    take:
+    models          // channel: [ string(models) ]
+    baselines       // channel: [ string(baselines) ]
+    work_path       // channel: path to the data channel.fromPath(params.path_data)
 
     main:
     ch_versions = Channel.empty()
@@ -45,11 +45,7 @@ workflow DRUGRESPONSEEVAL {
     //        newLine: true
     //    ).set { ch_collated_versions }
 
-    ch_models = channel.from(models)
-    ch_baselines = channel.from(baselines)
-    ch_models_baselines = ch_models.concat(ch_baselines)
-
-    work_path = channel.fromPath(params.path_data)
+    ch_models_baselines = models.concat(baselines)
 
     PREPROCESS_CUSTOM (
         work_path,
