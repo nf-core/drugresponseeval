@@ -44,6 +44,7 @@ workflow NFCORE_DRUGRESPONSEEVAL {
         baselines,
         work_path
     )
+
     ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
 
     emit:

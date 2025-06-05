@@ -109,7 +109,6 @@ workflow MODEL_TESTING {
         ch_vis.count() // wait for ch_vis to finish
     )
     ch_versions = ch_versions.mix(CONSOLIDATE_RESULTS.out.versions)
-
     ch_consolidate = CONSOLIDATE_RESULTS.out.ch_vis.transpose()
     // filter out SingleDrugModels that have been consolidated
     ch_vis = ch_vis
@@ -149,5 +148,4 @@ workflow MODEL_TESTING {
 
     emit:
     versions = ch_versions
-
 }

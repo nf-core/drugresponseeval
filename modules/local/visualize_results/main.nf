@@ -1,6 +1,6 @@
 process VISUALIZE_RESULTS {
     label 'process_medium'
-    publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
+    publishDir "${params.outdir}/${params.run_id}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     tuple path(eval_results), path(eval_results_per_drug), path(eval_results_per_cl), path(true_vs_predicted)
@@ -9,6 +9,7 @@ process VISUALIZE_RESULTS {
     output:
     path('report/*'), emit: html_out
     path("versions.yml"),                       emit: versions
+
 
     script:
     """

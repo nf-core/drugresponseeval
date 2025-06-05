@@ -9,6 +9,7 @@ process EVALUATE_FINAL {
     path('*.csv'), emit: ch_individual_results, optional: true
     path("versions.yml"),                       emit: versions
 
+
     script:
     """
     evaluate_final.py \\

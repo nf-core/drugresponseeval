@@ -1,16 +1,16 @@
 process COLLECT_RESULTS {
     label 'process_medium'
-    publishDir "${params.outdir}/${params.run_id}", mode: 'copy'
+    publishDir "${params.outdir}/${params.run_id}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     path(outfiles)
     path(path_data)
 
     output:
-    path('evaluation_results.csv'),             emit: evaluation_results
-    path('evaluation_results_per_drug.csv'),    emit: evaluation_results_per_drug, optional: true
-    path('evaluation_results_per_cl.csv'),      emit: evaluation_results_per_cl, optional: true
-    path('true_vs_pred.csv'),                   emit: true_vs_pred
+    path('evaluation_results.csv'), emit: evaluation_results
+    path('evaluation_results_per_drug.csv'), emit: evaluation_results_per_drug, optional: true
+    path('evaluation_results_per_cl.csv'), emit: evaluation_results_per_cl, optional: true
+    path('true_vs_pred.csv'), emit: true_vs_pred
     path("versions.yml"),                       emit: versions
 
     script:

@@ -1,7 +1,7 @@
 process CONSOLIDATE_RESULTS {
     tag "$model_name"
     label 'process_single'
-    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
+    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     tuple val(test_mode), val(model_name)
