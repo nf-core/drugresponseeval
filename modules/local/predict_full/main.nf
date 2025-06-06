@@ -15,8 +15,6 @@ process PREDICT_FULL {
     path('**best_hpams*.json'),             emit: ch_hpams
     path("versions.yml"),                       emit: versions
 
-    path("versions.yml"),                       emit: versions
-
     script:
     """
     train_and_predict_final.py \\
