@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   best practices.
 - Simplified visualization: multiple short processes were creating overhang -> more efficient in one process.
 - Fixed errors that arose from the latest drevalpy version.
+- Added authors and licenses to the python scripts.
+- Moved all publishDir directives to modules.config.
 
 ## v1.0.0 - [date]
 
