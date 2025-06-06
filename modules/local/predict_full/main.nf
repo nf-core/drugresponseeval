@@ -2,7 +2,6 @@ process PREDICT_FULL {
     tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
-    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import os
 import argparse
 from drevalpy.models import MODEL_FACTORY
