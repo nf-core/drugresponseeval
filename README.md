@@ -96,6 +96,12 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.14779984](https://doi.org/10.5281/zenodo.14779984)
 
+> Our corresponding publication is at doi [10.1101/2025.05.26.655288](doi.org/10.1101/2025.05.26.655288)
+>
+> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval.**
+>
+> _bioRxiv_, 2025-05.
+
 The underlying data is available at doi: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
 
 The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone.
