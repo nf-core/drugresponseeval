@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import argparse
 import pickle
 
 from drevalpy.experiment import make_model_list
 from drevalpy.models import MODEL_FACTORY
+
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Split data into CV splits")

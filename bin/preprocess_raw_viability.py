@@ -1,7 +1,11 @@
 #!/usr/bin/env python
+
+# Written by Mario Picciani with subsequent reworking by Judith Bernett. Released under the MIT License.
+
 from drevalpy.datasets.curvecurator import preprocess
 from pathlib import Path
 import argparse
+
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Preprocess CurveCurator viability data.")
@@ -19,6 +23,7 @@ def main(args):
         dataset_name=args.dataset_name,
         cores=args.cores
     )
+
 
 if __name__ == "__main__":
     arg_parser = get_parser()

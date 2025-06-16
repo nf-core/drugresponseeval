@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import argparse
 import pickle
 import yaml
 
 from drevalpy.evaluation import evaluate, MAXIMIZATION_METRICS, MINIMIZATION_METRICS
+
 
 def get_parser():
     parser = argparse.ArgumentParser(

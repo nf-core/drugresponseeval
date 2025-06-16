@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Written by Judith Bernett and released under the MIT License.
+
 import os
 import json
 import sys
