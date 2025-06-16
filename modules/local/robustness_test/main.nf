@@ -2,7 +2,6 @@ process ROBUSTNESS_TEST {
     tag { "${model_name}_${robustness_iteration}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
-    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy', saveAs: { filename -> filename.equals('versions.yml') ? null : filename }
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration), path(path_data)

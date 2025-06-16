@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Written by Mario Picciani and released under the MIT License.
+
 from drevalpy.datasets.curvecurator import postprocess
 import argparse
 

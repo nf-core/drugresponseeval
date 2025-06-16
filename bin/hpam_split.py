@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import argparse
 import yaml
 from drevalpy.models import MODEL_FACTORY, MULTI_DRUG_MODEL_FACTORY, SINGLE_DRUG_MODEL_FACTORY
