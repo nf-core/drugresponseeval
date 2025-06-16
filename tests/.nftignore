@@ -1,0 +1,13 @@
+.DS_Store
+pipeline_info/*.{html,json,txt,yml}
+test_run/evaluation*.{csv}
+test_run/true_vs_pred.csv
+test_run/LCO/NaiveDrugMeanPredictor/predictions/predictions_split*.csv
+test_run/LCO/NaiveMeanEffectsPredictor/predictions/predictions_split*.csv
+test_run/LCO/NaiveDrugMeanPredictor/cross_study/cross_study_TOYv2_split*.csv
+test_run/LCO/NaiveMeanEffectsPredictor/cross_study/cross_study_TOYv2_split*.csv
+test_run/report/comp_scatter/*.html
+test_run/report/heatmaps/*.html
+test_run/report/html_tables/*.html
+test_run/report/violin_plots/*.html
+test_run/report/heatmaps/*.html
