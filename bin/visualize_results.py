@@ -85,4 +85,3 @@ if __name__ == "__main__":
         test_modes=test_modes,
         prefix_results=f"{result_path}/{outdir_name}",
     )
-
