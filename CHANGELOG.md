@@ -5,13 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.1.0 - [date]
 
+- Preprint is out now! Linking it in the documentation.
 - Added support for AWS: changed the structure of load response and parameter check to conform more to Nextflow
   best practices.
 - Simplified visualization: multiple short processes were creating overhang → more efficient in one process.
 - Fixed errors that arose from the latest drevalpy version.
 - Added authors and licenses to the python scripts.
 - Moved all publishDir directives to modules.config.
-- Fixed drevalpy versions in conda and docker to 1.3.3.
+- Fixed drevalpy versions in conda and docker to 1.3.3: now supporting Python 3.13
 
 ## v1.0.0 - [date]
 
