@@ -49,8 +49,13 @@ def main(args):
                             dataset_name=dataset_name,
                         )
     else:
+        tissue_column = TISSUE_IDENTIFIER
+        # check whether the input file has a TISSUE_IDENTIFIER column, if not, set tissue_column to None
+        if TISSUE_IDENTIFIER not in pd.read_csv(input_file, nrows=1).columns:
+            tissue_column = None
+
         response_data = DrugResponseDataset.from_csv(
-            input_file=input_file, measure=args.measure, tissue_column=TISSUE_IDENTIFIER
+            input_file=input_file, dataset_name=dataset_name, measure=args.measure, tissue_column=tissue_column
         )
     outfile = f"cross_study_{dataset_name}.pkl" if args.cross_study_dataset else "response_dataset.pkl"
     # Pickle the object to a file
