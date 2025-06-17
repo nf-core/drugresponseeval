@@ -189,6 +189,12 @@
                     "description": "Model checkpoint directory",
                     "default": "TEMPORARY",
                     "help_text": "Directory to save model checkpoints."
+                },
+                "no_hyperparameter_tuning": {
+                    "type": "boolean",
+                    "description": "Disable hyperparameter tuning.",
+                    "default": false,
+                    "help_text": "Set this flag to disable hyperparameter tuning. If set, the pipeline will not perform hyperparameter tuning and will use the default parameters for the models (more meant for quick runs or debugging)."
                 }
             }
         },

@@ -116,7 +116,8 @@ workflow RUN_CV {
     ch_models_baselines_expanded = ch_models_expanded.concat(ch_baselines_expanded)
 
     HPAM_SPLIT (
-        ch_models_baselines
+        ch_models_baselines,
+        params.no_hyperparameter_tuning
     )
     ch_versions = ch_versions.mix(HPAM_SPLIT.out.versions)
     // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added authors and licenses to the python scripts.
 - Moved all publishDir directives to modules.config.
 - Fixed drevalpy versions in conda and docker to 1.3.3: now supporting Python 3.13
+- Added no_hyperparameter_tuning option for quick runs without hyperparameter tuning.
 
 ## v1.0.0 - [date]
 
