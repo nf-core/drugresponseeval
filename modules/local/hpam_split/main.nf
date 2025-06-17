@@ -2,6 +2,8 @@ process HPAM_SPLIT {
     tag "$model_name"
     label 'process_single'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     val model_name
 

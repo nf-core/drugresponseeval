@@ -3,6 +3,8 @@ process PREDICT_FULL {
     label 'process_high'
     label 'process_gpu'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
     val(response_transformation)

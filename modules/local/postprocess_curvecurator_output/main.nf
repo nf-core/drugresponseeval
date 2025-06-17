@@ -1,6 +1,8 @@
 process POSTPROCESS_CURVECURATOR_DATA {
     label 'process_single'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     val dataset_name
     path(curve_data, stageAs: "?/*")

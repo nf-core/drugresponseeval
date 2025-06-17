@@ -3,6 +3,8 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_high'
     label 'process_gpu'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
     val response_transformation
