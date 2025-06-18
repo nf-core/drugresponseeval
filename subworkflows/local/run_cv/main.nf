@@ -158,6 +158,7 @@ workflow RUN_CV {
 
     emit:
     best_hpam_per_split = ch_best_hpams_per_split
+    response_dataset = LOAD_RESPONSE.out.response_dataset.collect()
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
     ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
     versions = ch_versions

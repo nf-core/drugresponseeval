@@ -195,6 +195,12 @@
                     "description": "Disable hyperparameter tuning.",
                     "default": false,
                     "help_text": "Set this flag to disable hyperparameter tuning. If set, the pipeline will not perform hyperparameter tuning and will use the default parameters for the models (more meant for quick runs or debugging)."
+                },
+                "final_model_on_full_data": {
+                    "type": "boolean",
+                    "description": "Train final model on full data.",
+                    "default": false,
+                    "help_text": "If True, saves a final model, trained/tuned on the union of all folds after CV. This is useful if you want to use the model for predictions on new data after running the pipeline."
                 }
             }
         },

@@ -2,6 +2,7 @@ include { PREDICT_FULL                  } from '../../../modules/local/predict_f
 include { RANDOMIZATION_SPLIT           } from '../../../modules/local/randomization_split'
 include { RANDOMIZATION_TEST            } from '../../../modules/local/randomization_test'
 include { ROBUSTNESS_TEST               } from '../../../modules/local/robustness_test'
+include { TRAIN_FINAL_MODEL             } from '../../../modules/local/train_final_model'
 include { CONSOLIDATE_RESULTS           } from '../../../modules/local/consolidate_results'
 include { EVALUATE_FINAL                } from '../../../modules/local/evaluate_final'
 include { COLLECT_RESULTS               } from '../../../modules/local/collect_results'
@@ -10,12 +11,14 @@ include { VISUALIZE_RESULTS               } from '../../../modules/local/visuali
 
 workflow MODEL_TESTING {
     take:
-    ch_models_baselines         // from input
+    ch_models_baselines         // from input [model_class, model_name]
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
+    response_dataset            // from LOAD_RESPONSE
     cross_study_datasets        // from LOAD_RESPONSE
-    ch_models                  // from RUN_CV
+    ch_models                  // from RUN_CV [model_class, model_name]
     work_path                  // from input
+    test_modes                 // e.g., ['LPO', 'LCO']
 
     main:
     ch_versions = Channel.empty()
@@ -97,6 +100,24 @@ workflow MODEL_TESTING {
         )
         ch_versions = ch_versions.mix(ROBUSTNESS_TEST.out.versions)
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
+    }
+
+    if (params.final_model_on_full_data) {
+        // we only do this for models, not for baselines
+        ch_test_modes = channel.from(test_modes)
+        ch_final_model = ch_models
+                            .map{it -> it[1]}
+                            .combine(response_dataset)
+                            .combine(ch_test_modes)
+                            .combine(work_path)
+        TRAIN_FINAL_MODEL (
+            ch_final_model,
+            params.response_transformation,
+            params.model_checkpoint_dir,
+            params.optim_metric,
+            params.no_hyperparameter_tuning
+       )
+       ch_versions = ch_versions.mix(TRAIN_FINAL_MODEL.out.versions)
     }
 
     ch_consolidate = ch_vis

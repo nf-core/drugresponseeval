@@ -56,9 +56,11 @@ workflow DRUGRESPONSEEVAL {
         ch_models_baselines,
         RUN_CV.out.best_hpam_per_split,
         randomizations,
+        RUN_CV.out.response_dataset,
         RUN_CV.out.cross_study_datasets,
         RUN_CV.out.ch_models,
-        work_path
+        work_path,
+        test_modes
     )
     ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 
