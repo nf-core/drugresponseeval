@@ -1,7 +1,6 @@
 process FINAL_SPLIT {
     tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
-    label 'process_high'
-    label 'process_gpu'
+    label 'process_single'
 
     conda "${moduleDir}/env.yml"
 
