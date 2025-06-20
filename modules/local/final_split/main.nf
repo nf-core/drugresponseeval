@@ -1,4 +1,4 @@
-process TRAIN_FINAL_MODEL {
+process FINAL_SPLIT {
     tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
@@ -6,24 +6,20 @@ process TRAIN_FINAL_MODEL {
     conda "${moduleDir}/env.yml"
 
     input:
-    tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
-    val model_checkpoint_dir
+    tuple val(model_name), path(response), val(test_mode), path(path_data)
 
 
     output:
-    path("**final_model/*"),                      emit: final_model
-    path("versions.yml"),                       emit: versions
+    tuple val(model_name), path("training_dataset.pkl"), path("validation_dataset.pkl"), path("early_stopping_dataset.pkl"),    emit: final_datasets
+    path("versions.yml"),                                                                                                       emit: versions
 
     script:
     """
-    train_final_model.py \\
-        --train_data $train_data \\
-        --val_data $val_data \\
-        --early_stop_data $early_stop_data \\
+    final_split.py \\
+        --response $response \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
-        --model_checkpoint_dir $model_checkpoint_dir \\
-        --best_hpam_combi $best_hpam_combi
+        --test_mode $test_mode
 
 
     cat <<-END_VERSIONS > versions.yml

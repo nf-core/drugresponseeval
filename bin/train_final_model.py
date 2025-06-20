@@ -4,25 +4,25 @@
 
 import argparse
 import pickle
+import yaml
+import os
 
-from drevalpy.experiment import generate_data_saving_path, get_model_name_and_drug_id, train_final_model
+from drevalpy.experiment import generate_data_saving_path, get_model_name_and_drug_id
 from drevalpy.models import MODEL_FACTORY
-from drevalpy.utils import get_response_transformation
 
 
 def get_parser():
     parser = argparse.ArgumentParser(
         description="Train a final model on the full dataset for future predictions."
     )
-    parser.add_argument("--response", type=str, required=True, help="Drug response data, pickled (output of load_response).")
+    parser.add_argument("--train_data", type=str, required=True, help="Train data, pickled (output of final split).")
+    parser.add_argument("--val_data", type=str, required=True, help="Validation data, pickled (output of final split).")
+    parser.add_argument("--early_stop_data", type=str, required=True,
+                        help="Early stopping data, pickled (output of final split).")
     parser.add_argument("--model_name", type=str, required=True, help="Model name.")
-    parser.add_argument("--response_transformation", type=str, default="None", help="Response transformation.")
     parser.add_argument("--path_data", type=str, required=True, help="Path to data.")
     parser.add_argument("--model_checkpoint_dir", type=str, default="TEMPORARY", help="model checkpoint directory, if not provided: temporary directory is used")
-    parser.add_argument("--metric", type=str, required=True, help="Optimization , default: RMSE.")
-    parser.add_argument("--test_mode", type=str, default="LPO", help="Test mode (LPO, LCO, LTO, LDO).")
-    parser.add_argument("--no_hyperparameter_tuning", action="store_true", default=False,
-                        help="If set, no hyperparameter tuning is performed, only the first combination is used.")
+    parser.add_argument("--best_hpam_combi", type=str, required=True, help="Best hyperparameter combination file, yaml format.")
     return parser
 
 
@@ -39,22 +39,23 @@ if __name__ == "__main__":
         suffix="final_model"
     )
 
-    model_class = MODEL_FACTORY[model_name]
+    train_dataset = pickle.load(open(args.train_data, "rb"))
+    validation_dataset = pickle.load(open(args.val_data, "rb"))
+    es_dataset = pickle.load(open(args.early_stop_data, "rb"))
+    train_dataset.add_rows(validation_dataset)
+    train_dataset.shuffle(random_state=42)
 
-    response_data = pickle.load(open(args.response, "rb"))
-    response_data.remove_nan_responses()
-
-    response_transform = get_response_transformation(args.response_transformation)
-
-    train_final_model(
-        model_class=model_class,
-        full_dataset=response_data,
-        response_transformation=response_transform,
-        path_data=args.path_data,
+    best_hpam_combi = yaml.load(open(args.best_hpam_combi, "r"), Loader=yaml.FullLoader)[f'{model_name}_final']['best_hpam_combi']
+    model = MODEL_FACTORY[model_name]()
+    cl_features = model.load_cell_line_features(data_path=args.path_data, dataset_name=train_dataset.dataset_name)
+    drug_features = model.load_drug_features(data_path=args.path_data, dataset_name=train_dataset.dataset_name)
+    model.build_model(hyperparameters=best_hpam_combi)
+    model.train(
+        output=train_dataset,
+        output_earlystopping=es_dataset,
+        cell_line_input=cl_features,
+        drug_input=drug_features,
         model_checkpoint_dir=args.model_checkpoint_dir,
-        metric=args.metric,
-        result_path=final_model_path,
-        test_mode=args.test_mode,
-        val_ratio=0.1,
-        hyperparameter_tuning=not args.no_hyperparameter_tuning
     )
+    os.makedirs(final_model_path, exist_ok=True)
+    model.save(final_model_path)

@@ -1,4 +1,4 @@
-process TRAIN_FINAL_MODEL {
+process TUNE_FINAL_MODEL {
     tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
@@ -6,24 +6,27 @@ process TRAIN_FINAL_MODEL {
     conda "${moduleDir}/env.yml"
 
     input:
-    tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
+    tuple val(model_name), path(train_ds), path(val_ds), path(early_stop_ds), val(test_mode), path(path_data), path(hpam_combi)
+    val response_transformation
     val model_checkpoint_dir
+    val metric
 
 
     output:
-    path("**final_model/*"),                      emit: final_model
-    path("versions.yml"),                       emit: versions
+    tuple val(model_name), val(test_mode), val("final"), path(hpam_combi), path("final_prediction_dataset_*.pkl"),  emit: final_prediction
+    path("versions.yml"),                                                                                           emit: versions
 
     script:
     """
-    train_final_model.py \\
-        --train_data $train_data \\
-        --val_data $val_data \\
-        --early_stop_data $early_stop_data \\
+    tune_final_model.py \\
+        --train_data $train_ds \\
+        --val_data $val_ds \\
+        --early_stopping_data $early_stop_ds \\
         --model_name "${model_name}" \\
+        --hpam_combi $hpam_combi \\
+        --response_transformation $response_transformation \\
         --path_data $path_data \\
-        --model_checkpoint_dir $model_checkpoint_dir \\
-        --best_hpam_combi $best_hpam_combi
+        --model_checkpoint_dir $model_checkpoint_dir
 
 
     cat <<-END_VERSIONS > versions.yml

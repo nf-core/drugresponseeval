@@ -161,5 +161,6 @@ workflow RUN_CV {
     response_dataset = LOAD_RESPONSE.out.response_dataset.collect()
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
     ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
+    ch_hpam_combis = ch_hpam_combis
     versions = ch_versions
 }

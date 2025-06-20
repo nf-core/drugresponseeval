@@ -60,7 +60,8 @@ workflow DRUGRESPONSEEVAL {
         RUN_CV.out.cross_study_datasets,
         RUN_CV.out.ch_models,
         work_path,
-        test_modes
+        test_modes,
+        RUN_CV.out.ch_hpam_combis
     )
     ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 

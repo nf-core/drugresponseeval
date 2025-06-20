@@ -35,6 +35,8 @@ def collapse_file(files):
             out_df = pd.read_csv(file, index_col=0)
         else:
             out_df = pd.concat([out_df, pd.read_csv(file, index_col=0)])
+    if out_df is not None and "drug" in out_df.columns:
+        out_df["drug"] = out_df["drug"].astype(str)
     return out_df
 
 
