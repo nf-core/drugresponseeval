@@ -145,21 +145,65 @@ The following models are available:
 | SuperFELTR                       | Published Model            | Single-Drug Model                    | Regression extension of [SuperFELT: supervised feature extraction learning using triplet loss for drug response](https://doi.org/10.1186/s12859-021-04146-z) by Park et al. Very similar to MOLI(R). In MOLI(R), encoders and the classifier were trained jointly. Super.FELT(R) trains them independently. MOLI(R) was trained without feature selection (except for the Variance Threshold on the gene expression). Super.FELT(R) uses feature selection for all omics data.                                                                                                            |
 | DIPK                             | Published Model            | Multi-Drug Model                     | [Deep neural network Integrating Prior Knowledge](https://doi.org/10.1093/bib/bbae153) from Li et al. Uses gene interaction relationships (encoded by a graph auto-encoder), gene expression profiles (encoded by a denoising auto-encoder), and molecular topologies (encoded by MolGNet). Those features are integrated using multi-head attention layers.                                                                                                                                                                                                                              |
 
-#### Custom models
+### Custom models
 
 If you want to use your own model, you must contribute it to drevalpy. Please follow the following steps:
 
 1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
-2. Create a mamba environment: `mamba create -n drevalpy python=3.12`
+2. Create a mamba environment: `mamba create -n drevalpy python=3.13`
 3. Install the dependencies:
    - Run: `pip install poetry`
    - Then run: `poetry install`
 4. Implement your model (for more information on that, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html))
-5. Test your model with the tests in `tests/`. Also implement your own tests.
+5. Test your model with the tests in `tests/`. Also, implement your own tests.
 6. (You can then open a PR to the main repository for contributing your model)
 7. Install drevalpy into your environment: `pip install -e .`
 8. From your environment, try to run the pipeline: `nextflow run nf-core/drugresponseeval -r dev -profile test`
 9. If everything works, try running your model: `nextflow run nf-core/drugresponseeval -r dev --models <your_model> --dataset_name <dataset_name>`
+
+### Saving a production model
+
+If you want to save a production model, you can set the `--final_model_on_full_data` flag. This will save the model trained on the full dataset in the results directory.
+The model can later be loaded using the implemented load functions of the drevalpy models.
+Here is an example of how to load a GradientBoosting model that was saved in the `results` directory:
+
+```python
+from drevalpy.models import MODEL_FACTORY
+
+model_class = MODEL_FACTORY["GradientBoosting"]
+# provide the path to the final_model directory
+gb_model = model_class.load('results/test_run/LCO/GradientBoosting/final_model/')
+```
+
+You can then investigate the sklearn HistGradientBoostingRegressor model saved in `gb_model.model`.
+You can then either use `drevalpy` functions to predict responses for new data or use the model directly with `sklearn` functions.
+
+With `drevalpy`:
+
+```python
+from drevalpy.datasets.dataset import DrugResponseDataset
+# first load the new data which must have the 'measure' column and the cell line and drug identifiers ('cell_line_name', 'pubchem_id').
+# The tissue column is optional.
+new_dataset = DrugResponseDataset.from_csv(input_file='path/to/new_data.csv', dataset_name='my_new_data',
+                                           measure='LN_IC50', tissue_column='tissue')
+# In the path_to_features directory, we expect a directory called like the dataset_name (here my_new_data), which contains the cell line and drug features.
+path_to_features = 'path/to/cell_line_and_drug_features/'
+cl_features = gb_model.load_cell_line_features(data_path=path_to_features, dataset_name='my_new_data')
+drug_features = gb_model.load_drug_features(data_path=path_to_features, dataset_name='my_new_data')
+# Now we have to filter the dataset to only contain the cell lines and drugs that are in the features.
+cell_lines_to_keep = cl_features.identifiers if cl_features is not None else None
+drugs_to_keep = drug_features.identifiers if drug_features is not None else None
+new_dataset.reduce_to(cell_line_ids=cell_lines_to_keep, drug_ids=drugs_to_keep)
+# Now we can predict the responses for the new data.
+new_dataset._predictions = gb_model.predict(
+  cell_line_ids=new_dataset.cell_line_ids,
+  drug_ids=new_dataset.drug_ids,
+  cell_line_input=cl_features,
+  drug_input=drug_features,
+)
+# This will create a csv with 'cell_line_name', 'pubchem_id', 'response', 'predictions', 'tissue' (if provided) columns.
+new_dataset.to_csv('path/to/predictions.csv')
+```
 
 ### Available Datasets
 
