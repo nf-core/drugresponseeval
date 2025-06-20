@@ -9,6 +9,7 @@ import os
 
 from drevalpy.experiment import generate_data_saving_path, get_model_name_and_drug_id
 from drevalpy.models import MODEL_FACTORY
+from drevalpy.utils import get_response_transformation
 
 
 def get_parser():
@@ -19,6 +20,7 @@ def get_parser():
     parser.add_argument("--val_data", type=str, required=True, help="Validation data, pickled (output of final split).")
     parser.add_argument("--early_stop_data", type=str, required=True,
                         help="Early stopping data, pickled (output of final split).")
+    parser.add_argument("--response_transformation", type=str, default="None", help="Response transformation.")
     parser.add_argument("--model_name", type=str, required=True, help="Model name.")
     parser.add_argument("--path_data", type=str, required=True, help="Path to data.")
     parser.add_argument("--model_checkpoint_dir", type=str, default="TEMPORARY", help="model checkpoint directory, if not provided: temporary directory is used")
@@ -38,12 +40,16 @@ if __name__ == "__main__":
         result_path="",
         suffix="final_model"
     )
-
+    response_transform = get_response_transformation(args.response_transformation)
     train_dataset = pickle.load(open(args.train_data, "rb"))
     validation_dataset = pickle.load(open(args.val_data, "rb"))
     es_dataset = pickle.load(open(args.early_stop_data, "rb"))
     train_dataset.add_rows(validation_dataset)
     train_dataset.shuffle(random_state=42)
+    if response_transform:
+        train_dataset.fit_transform(response_transform)
+        if es_dataset is not None:
+            es_dataset.transform(response_transform)
 
     best_hpam_combi = yaml.load(open(args.best_hpam_combi, "r"), Loader=yaml.FullLoader)[f'{model_name}_final']['best_hpam_combi']
     model = MODEL_FACTORY[model_name]()

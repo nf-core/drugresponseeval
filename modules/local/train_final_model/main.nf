@@ -7,6 +7,7 @@ process TRAIN_FINAL_MODEL {
 
     input:
     tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
+    val response_transformation
     val model_checkpoint_dir
 
 
@@ -20,6 +21,7 @@ process TRAIN_FINAL_MODEL {
         --train_data $train_data \\
         --val_data $val_data \\
         --early_stop_data $early_stop_data \\
+        --response_transformation "${response_transformation}" \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
         --model_checkpoint_dir $model_checkpoint_dir \\

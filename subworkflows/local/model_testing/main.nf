@@ -150,6 +150,7 @@ workflow MODEL_TESTING {
                             .combine(work_path)
         TRAIN_FINAL_MODEL (
             ch_final_model,
+            params.response_transformation,
             params.model_checkpoint_dir
        )
        ch_versions = ch_versions.mix(TRAIN_FINAL_MODEL.out.versions)
