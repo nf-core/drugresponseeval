@@ -1,34 +1,32 @@
-process PREDICT_FULL {
-    tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
+process TRAIN_FINAL_MODEL {
+    tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
 
     conda "${moduleDir}/env.yml"
 
     input:
-    tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
-    val(response_transformation)
-    val(model_checkpoint_dir)
+    tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
+    val response_transformation
+    val model_checkpoint_dir
+
 
     output:
-    tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    tuple val(test_mode), val(model_name), path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
-    path('**best_hpams*.json'),             emit: ch_hpams
+    path("**final_model/*"),                      emit: final_model
     path("versions.yml"),                       emit: versions
 
     script:
     """
-    train_and_predict_final.py \\
-        --mode full \\
+    train_final_model.py \\
+        --train_data $train_data \\
+        --val_data $val_data \\
+        --early_stop_data $early_stop_data \\
+        --response_transformation "${response_transformation}" \\
         --model_name "${model_name}" \\
-        --split_id $split_id \\
-        --split_dataset_path $split_dataset \\
-        --hyperparameters_path $hpam_combi \\
-        --response_transformation $response_transformation \\
-        --test_mode $test_mode \\
         --path_data $path_data \\
-        --cross_study_datasets $cross_study_datasets \\
         --model_checkpoint_dir $model_checkpoint_dir \\
+        --best_hpam_combi $best_hpam_combi
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -42,5 +40,4 @@ process PREDICT_FULL {
         platform: \$(python -c "import platform; print(platform.__version__)")
     END_VERSIONS
     """
-
 }

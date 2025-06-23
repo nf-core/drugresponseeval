@@ -2,8 +2,11 @@ process HPAM_SPLIT {
     tag "$model_name"
     label 'process_single'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     val model_name
+    val no_hyperparameter_tuning
 
     output:
     tuple val(model_name), path("*.yaml")    , emit: hpam_combi
@@ -13,7 +16,8 @@ process HPAM_SPLIT {
     script:
     """
     hpam_split.py \\
-        --model_name "${model_name}"
+        --model_name "${model_name}" \\
+        ${no_hyperparameter_tuning ? '' : '--hyperparameter_tuning'}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

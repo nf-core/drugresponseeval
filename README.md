@@ -23,7 +23,7 @@
 
 # ![drevalpy_summary](assets/dreval_summary.svg)
 
-**DrEval** is a bioinformatics framework which includes a PyPI package (drevalpy) and a Nextflow
+**DrEval** is a bioinformatics framework that includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
 meaningful, and reproducible. DrEval simplifies the implementation of drug response prediction
 models, allowing researchers to focus on advancing their modeling innovations by automating
@@ -102,7 +102,7 @@ If you use nf-core/drugresponseeval for your analysis, please cite it using the 
 
 The underlying data is available at doi: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
 
-The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone.
+The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone, for which we also have an extensive [ReadTheDocs Documentation](https://drevalpy.readthedocs.io/en/latest/).
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

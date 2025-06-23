@@ -87,11 +87,14 @@ workflow PIPELINE_INITIALISATION {
                         'SRMF',
                         'DIPK',
                         'ProteomicsRandomForest',
+                        'ProteomicsElasticNet',
                         'SingleDrugRandomForest',
                         'MOLIR',
                         'SuperFELTR',
                         'SingleDrugElasticNet',
-                        'SingleDrugProteomicsElasticNet']
+                        'SingleDrugProteomicsElasticNet',
+                        'SingleDrugProteomicsRandomForest',
+                        ]
     ch_models = channel.from(models.split(',').collect { it.trim() })
     def baseline_list = baselines.split(",")
     // if NaiveMeanEffectsPredictor is not in baselines, add it

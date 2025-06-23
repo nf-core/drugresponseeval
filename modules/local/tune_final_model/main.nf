@@ -1,34 +1,33 @@
-process PREDICT_FULL {
-    tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
+process TUNE_FINAL_MODEL {
+    tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
 
     conda "${moduleDir}/env.yml"
 
     input:
-    tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
-    val(response_transformation)
-    val(model_checkpoint_dir)
+    tuple val(model_name), path(train_ds), path(val_ds), path(early_stop_ds), val(test_mode), path(path_data), path(hpam_combi)
+    val response_transformation
+    val model_checkpoint_dir
+    val metric
+
 
     output:
-    tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    tuple val(test_mode), val(model_name), path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
-    path('**best_hpams*.json'),             emit: ch_hpams
-    path("versions.yml"),                       emit: versions
+    tuple val(model_name), val(test_mode), val("final"), path(hpam_combi), path("final_prediction_dataset_*.pkl"),  emit: final_prediction
+    path("versions.yml"),                                                                                           emit: versions
 
     script:
     """
-    train_and_predict_final.py \\
-        --mode full \\
+    tune_final_model.py \\
+        --train_data $train_ds \\
+        --val_data $val_ds \\
+        --early_stopping_data $early_stop_ds \\
         --model_name "${model_name}" \\
-        --split_id $split_id \\
-        --split_dataset_path $split_dataset \\
-        --hyperparameters_path $hpam_combi \\
+        --hpam_combi $hpam_combi \\
         --response_transformation $response_transformation \\
-        --test_mode $test_mode \\
         --path_data $path_data \\
-        --cross_study_datasets $cross_study_datasets \\
-        --model_checkpoint_dir $model_checkpoint_dir \\
+        --model_checkpoint_dir $model_checkpoint_dir
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -42,5 +41,4 @@ process PREDICT_FULL {
         platform: \$(python -c "import platform; print(platform.__version__)")
     END_VERSIONS
     """
-
 }

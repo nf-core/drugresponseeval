@@ -116,7 +116,8 @@ workflow RUN_CV {
     ch_models_baselines_expanded = ch_models_expanded.concat(ch_baselines_expanded)
 
     HPAM_SPLIT (
-        ch_models_baselines
+        ch_models_baselines,
+        params.no_hyperparameter_tuning
     )
     ch_versions = ch_versions.mix(HPAM_SPLIT.out.versions)
     // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
@@ -157,7 +158,9 @@ workflow RUN_CV {
 
     emit:
     best_hpam_per_split = ch_best_hpams_per_split
+    response_dataset = LOAD_RESPONSE.out.response_dataset.collect()
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
     ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
+    ch_hpam_combis = ch_hpam_combis
     versions = ch_versions
 }

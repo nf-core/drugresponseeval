@@ -34,13 +34,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
      training set with the best hyperparameters to predict the randomized test set.
    - [Robustness test](#robustness-test): If robustness tests are enabled, the model is trained N times on the full
      training set with the best hyperparameters
+   - If `--final_model_on_full_data` is set: the model is trained on the full dataset to produce a production model. If `--no_hyperparameter_tuning` is **not** set, the model will be tuned on the full dataset, too. The model will be saved in the results directory.
+     - [FINAL_SPLIT](#final-split): For each model class, the full dataset is split into training, validation, and potentially early stopping sets. This is done to ensure per model and not overall to retain the maximum amount of data for training (because the data is filtered according to cell line / drug feature availability).
+     - [TUNE_FINAL_MODEL](#tune-final-model): The final model is tuned on the full dataset.
+     - [EVALUATE_FIND_MAX_FINAL](#evaluate-and-find-max-final): The best hyperparameters for the final model are determined on the validation dataset.
+     - [TRAIN_FINAL_MODEL](#train-final-model): The final model is trained on the full dataset (train+validation) with the best hyperparameters. The model is saved in the results directory.
    - [Consolidate results](#consolidate-results): The results of the model testing are consolidated into a single
      table for each model.
    - [Evaluate final](#evaluate-final): The performance of the models is calculated on the test set results.
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
 4. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
-5. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
+5. [Pipeline information](#pipeline-information): Report metrics generated during the workflow execution
 
 ### Subworkflow `PREPROCESS_CUSTOM`
 
@@ -252,4 +257,4 @@ All plots are created in the `visualization` subworkflow. They are saved in the 
 
 </details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times, and resource usage.
