@@ -24,9 +24,3 @@ Learn more about contributing: [CONTRIBUTING.md](https://github.com/nf-core/drug
 - [ ] Output Documentation in `docs/output.md` is updated.
 - [ ] `CHANGELOG.md` is updated.
 - [ ] `README.md` is updated (including new tool citations and authors/contributors).
-
-## Checklist if the drevalpy version was updated
-
-- [ ] Update all `env.yml` files with the new version in the module files.
-- [ ] Update the `process.container` in the nextflow.config file.
-- [ ] Delete tests/default.nf.test.snap and run `./nf-test test tests/ --profile=+<docker,conda> --verbose`
