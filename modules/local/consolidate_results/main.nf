@@ -2,6 +2,8 @@ process CONSOLIDATE_RESULTS {
     tag "$model_name"
     label 'process_single'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple val(test_mode), val(model_name)
     val(rand_modes)

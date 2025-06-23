@@ -1,21 +1,28 @@
-include { PREDICT_FULL                  } from '../../../modules/local/predict_full'
-include { RANDOMIZATION_SPLIT           } from '../../../modules/local/randomization_split'
-include { RANDOMIZATION_TEST            } from '../../../modules/local/randomization_test'
-include { ROBUSTNESS_TEST               } from '../../../modules/local/robustness_test'
-include { CONSOLIDATE_RESULTS           } from '../../../modules/local/consolidate_results'
-include { EVALUATE_FINAL                } from '../../../modules/local/evaluate_final'
-include { COLLECT_RESULTS               } from '../../../modules/local/collect_results'
-include { VISUALIZE_RESULTS               } from '../../../modules/local/visualize_results'
+include { PREDICT_FULL                                  } from '../../../modules/local/predict_full'
+include { RANDOMIZATION_SPLIT                           } from '../../../modules/local/randomization_split'
+include { RANDOMIZATION_TEST                            } from '../../../modules/local/randomization_test'
+include { ROBUSTNESS_TEST                               } from '../../../modules/local/robustness_test'
+include { FINAL_SPLIT                                   } from '../../../modules/local/final_split'
+include { TUNE_FINAL_MODEL                              } from '../../../modules/local/tune_final_model'
+include { EVALUATE_FIND_MAX as EVALUATE_FIND_MAX_FINAL  } from '../../../modules/local/evaluate_find_max'
+include { TRAIN_FINAL_MODEL                             } from '../../../modules/local/train_final_model'
+include { CONSOLIDATE_RESULTS                           } from '../../../modules/local/consolidate_results'
+include { EVALUATE_FINAL                                } from '../../../modules/local/evaluate_final'
+include { COLLECT_RESULTS                               } from '../../../modules/local/collect_results'
+include { VISUALIZE_RESULTS                             } from '../../../modules/local/visualize_results'
 
 
 workflow MODEL_TESTING {
     take:
-    ch_models_baselines         // from input
+    ch_models_baselines         // from input [model_class, model_name]
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
+    response_dataset            // from LOAD_RESPONSE
     cross_study_datasets        // from LOAD_RESPONSE
-    ch_models                  // from RUN_CV
+    ch_models                  // from RUN_CV [model_class, model_name]
     work_path                  // from input
+    test_modes                 // e.g., ['LPO', 'LCO']
+    ch_hpam_combis              // from RUN_CV [model_name, hpam_X.yaml]
 
     main:
     ch_versions = Channel.empty()
@@ -97,6 +104,56 @@ workflow MODEL_TESTING {
         )
         ch_versions = ch_versions.mix(ROBUSTNESS_TEST.out.versions)
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
+    }
+
+    if (params.final_model_on_full_data) {
+        // we only do this for models, not for baselines
+        ch_test_modes = channel.from(test_modes)
+        ch_final_split = ch_models
+                            .map{it -> it[0]}
+                            .unique()
+                            .combine(response_dataset)
+                            .combine(ch_test_modes)
+                            .combine(work_path)
+
+        FINAL_SPLIT(
+            ch_final_split
+        )
+        ch_versions = ch_versions.mix(FINAL_SPLIT.out.versions)
+
+        ch_tune_final_model = ch_models
+                            .combine(FINAL_SPLIT.out.final_datasets, by: 0)
+                            .map { model_class, model_name, train_ds, val_ds, es_ds ->
+                                [model_name, train_ds, val_ds, es_ds] }
+                            .combine(ch_test_modes)
+                            .combine(work_path)
+                            .combine(ch_hpam_combis, by: 0)
+
+        TUNE_FINAL_MODEL(
+            ch_tune_final_model,
+            params.response_transformation,
+            params.model_checkpoint_dir,
+            params.optim_metric
+        )
+        ch_versions = ch_versions.mix(TUNE_FINAL_MODEL.out.versions)
+        ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])
+
+        EVALUATE_FIND_MAX_FINAL(
+            ch_combined_hpams,
+            params.optim_metric
+        )
+        ch_versions = ch_versions.mix(EVALUATE_FIND_MAX_FINAL.out.versions)
+        ch_final_model = EVALUATE_FIND_MAX_FINAL.out.best_combis
+                            .map{ model_name, final_constant, test_mode, best_hpam_combi ->
+                                [model_name, test_mode, best_hpam_combi] }
+                            .combine(FINAL_SPLIT.out.final_datasets, by: 0)
+                            .combine(work_path)
+        TRAIN_FINAL_MODEL (
+            ch_final_model,
+            params.response_transformation,
+            params.model_checkpoint_dir
+       )
+       ch_versions = ch_versions.mix(TRAIN_FINAL_MODEL.out.versions)
     }
 
     ch_consolidate = ch_vis

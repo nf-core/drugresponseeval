@@ -3,6 +3,8 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_high'
     label 'process_gpu'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
     val response_transformation
@@ -32,7 +34,7 @@ process TRAIN_AND_PREDICT_CV {
         numpy: \$(python -c "import numpy; print(numpy.__version__)")
         pandas: \$(python -c "import pandas; print(pandas.__version__)")
         pytorch_lightning: \$(python -c "import pytorch_lightning; print(pytorch_lightning.__version__)")
-        torch: \$(python -c "import torch; print(torch.__version__)")
+        torch: \$(python -c "import torch; print(torch.__version__)" | sed 's/+.*//')
         platform: \$(python -c "import platform; print(platform.__version__)")
     END_VERSIONS
     """

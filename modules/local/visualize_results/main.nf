@@ -1,6 +1,8 @@
 process VISUALIZE_RESULTS {
     label 'process_medium'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple path(eval_results), path(eval_results_per_drug), path(eval_results_per_cl), path(true_vs_predicted)
     val(path_data)

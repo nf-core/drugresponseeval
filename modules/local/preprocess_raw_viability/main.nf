@@ -1,6 +1,8 @@
 process PREPROCESS_RAW_VIABILITY {
     label 'process_low'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     val(dataset_name)
     path(work_path)

@@ -1,6 +1,8 @@
 process COLLECT_RESULTS {
     label 'process_medium'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     path(outfiles)
     path(path_data)

@@ -2,6 +2,8 @@ process EVALUATE_FIND_MAX {
     tag "${test_mode}_${model_name}_${split_id}"
     label 'process_single'
 
+    conda "${moduleDir}/env.yml"
+
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(hpam_yamls), path(pred_datas)
     val metric
