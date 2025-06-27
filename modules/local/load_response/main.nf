@@ -6,7 +6,6 @@ process LOAD_RESPONSE {
 
     input:
     tuple val(measure), path(response)
-    val no_refitting
     val cross_study_dataset
 
     output:
@@ -19,7 +18,6 @@ process LOAD_RESPONSE {
     load_response.py \\
         --response_dataset ${response} \\
         --measure ${measure} \\
-        ${no_refitting ? '--no_refitting' : ''} \\
         ${cross_study_dataset ? '--cross_study_dataset' : ''}
 
     cat <<-END_VERSIONS > versions.yml

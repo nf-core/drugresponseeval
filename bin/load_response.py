@@ -22,12 +22,6 @@ def get_parser():
 
     )
     parser.add_argument(
-        "--no_refitting",
-        action="store_true",
-        default=False,
-        help="If the CurveCurated measures should not be used.",
-    )
-    parser.add_argument(
         "--measure",
         type=str,
         default="LN_IC50",

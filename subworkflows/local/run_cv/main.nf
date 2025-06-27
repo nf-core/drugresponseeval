@@ -70,9 +70,9 @@ workflow RUN_CV {
     }
     ch_response = measure.combine(ch_response)
     ch_cross_study_datasets = measure.combine(ch_cross_study_datasets)
-    LOAD_RESPONSE(ch_response, params.no_refitting, false)
+    LOAD_RESPONSE(ch_response, false)
     ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
-    LOAD_CS_RESPONSE(ch_cross_study_datasets, params.no_refitting, true)
+    LOAD_CS_RESPONSE(ch_cross_study_datasets, true)
     ch_versions = ch_versions.mix(LOAD_CS_RESPONSE.out.versions)
 
 
