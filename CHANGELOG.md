@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed errors that arose from the latest drevalpy version.
 - Added authors and licenses to the python scripts.
 - Moved all publishDir directives to modules.config.
-- Fixed drevalpy versions in conda and docker to 1.3.4: now supporting Python 3.13
+- Fixed drevalpy versions in conda and docker to 1.3.5: now supporting Python 3.13
 - Added no_hyperparameter_tuning option for quick runs without hyperparameter tuning.
 - Flag final_model_on_full data: if True, a final/production model is saved in the results directory. If hyperparameter_tuning is true, the final model is tuned, too. The model can later be loaded using the implemented load functions of the drevalpy models.
 
