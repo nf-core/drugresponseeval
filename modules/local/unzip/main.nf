@@ -2,7 +2,7 @@ process UNZIP {
     tag "${dataset_name}"
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(dataset_name), path(file)

@@ -2,7 +2,7 @@ process MAKE_MODEL_CHANNEL {
     tag "Make model channel"
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(models), path(response_data)

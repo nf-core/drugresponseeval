@@ -2,7 +2,7 @@ process FIT_CURVES {
     tag "$dir_name"
     label 'high_cpu_low_mem'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     val dataset_name

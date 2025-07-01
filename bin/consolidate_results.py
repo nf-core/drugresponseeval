@@ -28,11 +28,11 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    results_path = os.path.join(
+    results_path = str(os.path.join(
         args.outdir_path,
         args.run_id,
         args.test_mode,
-    )
+    ))
     if args.randomization_modes == "[None]":
         randomizations = None
     else:

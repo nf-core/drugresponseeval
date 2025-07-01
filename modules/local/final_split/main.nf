@@ -2,7 +2,7 @@ process FINAL_SPLIT {
     tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(model_name), path(response), val(test_mode), path(path_data)

@@ -3,7 +3,7 @@ process TUNE_FINAL_MODEL {
     label 'process_high'
     label 'process_gpu'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(model_name), path(train_ds), path(val_ds), path(early_stop_ds), val(test_mode), path(path_data), path(hpam_combi)

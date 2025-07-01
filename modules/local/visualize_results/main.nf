@@ -1,7 +1,7 @@
 process VISUALIZE_RESULTS {
     label 'process_medium'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple path(eval_results), path(eval_results_per_drug), path(eval_results_per_cl), path(true_vs_predicted)
@@ -28,7 +28,6 @@ process VISUALIZE_RESULTS {
         drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
         pandas: \$(python -c "import pandas; print(pandas.__version__)")
         matplotlib: \$(python -c "import matplotlib; print(matplotlib.__version__)")
-        plotly: \$(python -c "import plotly; print(plotly.__version__)")
         scikit_posthocs: \$(python -c "import scikit_posthocs; print(scikit_posthocs.__version__)")
         scipy: \$(python -c "import scipy; print(scipy.__version__)")
         sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")

@@ -2,12 +2,12 @@
 
 # Written by Judith Bernett and released under the MIT License.
 
-import os
 import pathlib
 import argparse
 import pandas as pd
 
-from drevalpy.visualization.utils import create_output_directories, draw_test_mode_plots, draw_algorithm_plots, create_html, create_index_html
+from drevalpy.visualization.utils import create_output_directories, create_index_html
+from drevalpy.visualization.create_report import generate_reports_for_all_test_modes
 
 
 def get_parser():
@@ -39,50 +39,17 @@ if __name__ == "__main__":
         ev_res_per_cl = pd.read_csv(args.eval_results_per_cl, index_col=0)
     t_vs_p = pd.read_csv(args.true_vs_predicted, index_col=0)
 
-    for test_mode in test_modes:
-        unique_algos = draw_test_mode_plots(
-            test_mode=test_mode,
-            ev_res=ev_res,
-            ev_res_per_drug=ev_res_per_drug,
-            ev_res_per_cell_line=ev_res_per_cl,
-            custom_id=outdir_name,
-            path_data=args.path_data,
-            result_path=result_path,
-        )
-        # draw figures for each algorithm with all randomizations etc
-        unique_algos = set(unique_algos) - {
-            "NaiveMeanEffectsPredictor",
-            "NaivePredictor",
-            "NaiveCellLineMeansPredictor",
-            "NaiveDrugMeanPredictor",
-        }
-        for algorithm in unique_algos:
-            draw_algorithm_plots(
-                model=algorithm,
-                ev_res=ev_res,
-                ev_res_per_drug=ev_res_per_drug,
-                ev_res_per_cell_line=ev_res_per_cl,
-                t_vs_p=t_vs_p,
-                test_mode=test_mode,
-                custom_id=outdir_name,
-                result_path=result_path,
-            )
-        # get all html files from {result_path}/{run_id}
-        all_files: list[str] = []
-        for _, _, files in os.walk(f"{result_path}/{outdir_name}"):  # type: ignore[assignment]
-            for file in files:
-                if file.endswith("json") or (
-                    file.endswith(".html") and file not in ["index.html", "LPO.html", "LCO.html", "LDO.html"]
-                ):
-                    all_files.append(file)
-        # PIPELINE: WRITE_HTML
-        create_html(
-            run_id=outdir_name,
-            test_mode=test_mode,
-            files=all_files,
-            prefix_results=f"{result_path}/{outdir_name}",
-        )
-    # PIPELINE: WRITE_INDEX
+    generate_reports_for_all_test_modes(
+        test_modes=test_modes,
+        evaluation_results=ev_res,
+        evaluation_results_per_drug=ev_res_per_drug,
+        evaluation_results_per_cell_line=ev_res_per_cl,
+        true_vs_pred=t_vs_p,
+        run_id=outdir_name,
+        path_data=args.path_data,
+        result_path=result_path
+    )
+
     create_index_html(
         custom_id=outdir_name,
         test_modes=test_modes,

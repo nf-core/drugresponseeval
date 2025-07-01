@@ -3,20 +3,36 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.1.0 - [date]
+## v1.1.0 - 01.07.2025
 
-- Preprint is out now! Linking it in the documentation.
+Second release of nf-core/drugresponseeval.
+
+### `Added/Changed`
+
 - Added support for AWS: changed the structure of load response and parameter check to conform more to Nextflow
   best practices.
-- Simplified visualization: multiple short processes were creating overhang → more efficient in one process.
-- Fixed errors that arose from the latest drevalpy version.
-- Added authors and licenses to the python scripts.
-- Moved all publishDir directives to modules.config.
-- Fixed drevalpy versions in conda and docker to 1.3.4: now supporting Python 3.13
-- Added no_hyperparameter_tuning option for quick runs without hyperparameter tuning.
-- Flag final_model_on_full data: if True, a final/production model is saved in the results directory. If hyperparameter_tuning is true, the final model is tuned, too. The model can later be loaded using the implemented load functions of the drevalpy models.
 
-## v1.0.0 - [date]
+### `Added`
+
+- Preprint is out now! Linking it in the documentation.
+- Added authors and licenses to the python scripts.
+- Added `no_hyperparameter_tuning` option for quick runs without hyperparameter tuning.
+- Flag `final_model_on_full data`: if True, a final/production model is saved in the results directory. If hyperparameter_tuning is true, the final model is tuned, too. The model can later be loaded using the implemented load functions of the drevalpy models.
+
+### `Changed`
+
+- Moved all publishDir directives to modules.config.
+- Fixed drevalpy versions in conda and docker to 1.3.5: now supporting Python 3.13
+
+### `Changed/Removed`
+
+- Simplified visualization: multiple short processes were creating overhang → more efficient in one process.
+
+### `Fixed`
+
+- Fixed errors that arose from the latest drevalpy version.
+
+## v1.0.0 - 31.01.2025
 
 Initial release of nf-core/drugresponseeval, created with the [nf-core](https://nf-co.re/) template.
 

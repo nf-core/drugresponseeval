@@ -2,7 +2,7 @@ process RANDOMIZATION_SPLIT {
     tag "${model_name}_${randomization_mode}"
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(model_name), val(randomization_mode)
