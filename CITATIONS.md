@@ -2,7 +2,7 @@
 
 ## [DrugResponseEval](https://github.com/nf-core/drugresponseeval/)
 
-> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval.** > [10.1101/2025.05.26.655288](doi.org/10.1101/2025.05.26.655288) > _bioRxiv_, 2025-05.
+> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval.** > [10.1101/2025.05.26.655288](https://doi.org/10.1101/2025.05.26.655288) > _bioRxiv_, 2025-05.
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
