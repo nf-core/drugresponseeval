@@ -5,23 +5,23 @@
             {
                 "COLLECT_RESULTS": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0"
                 },
                 "CONSOLIDATE_RESULTS": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0"
                 },
                 "CV_SPLIT": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1"
                 },
                 "EVALUATE_FINAL": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
@@ -29,7 +29,7 @@
                 },
                 "EVALUATE_FIND_MAX": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
@@ -38,22 +38,22 @@
                 },
                 "HPAM_SPLIT": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "yaml": "6.0.2"
                 },
                 "LOAD_CS_RESPONSE": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0"
                 },
                 "LOAD_RESPONSE": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0"
                 },
                 "MAKE_BASELINES": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
                     "pandas": "2.3.0",
@@ -63,7 +63,7 @@
                 },
                 "MAKE_MODELS": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
                     "pandas": "2.3.0",
@@ -73,7 +73,7 @@
                 },
                 "PREDICT_FULL": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
                     "pandas": "2.3.0",
@@ -83,7 +83,7 @@
                 },
                 "TRAIN_AND_PREDICT_CV": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "sklearn": "1.7.0",
                     "numpy": "2.3.1",
                     "pandas": "2.3.0",
@@ -99,10 +99,10 @@
                 },
                 "VISUALIZE_RESULTS": {
                     "python": "3.13.5",
-                    "drevalpy": "1.3.4",
+                    "drevalpy": "1.3.5",
                     "pandas": "2.3.0",
                     "matplotlib": "3.10.3",
-                    "plotly": "6.1.2",
+                    "plotly": "6.2.0",
                     "scikit_posthocs": "0.11.4",
                     "scipy": "1.15.3",
                     "sklearn": "1.7.0"
@@ -174,6 +174,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.04.3"
         },
-        "timestamp": "2025-06-23T13:39:22.624"
+        "timestamp": "2025-07-01T13:23:24.52992"
     }
 }
