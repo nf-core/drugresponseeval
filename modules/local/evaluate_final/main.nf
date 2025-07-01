@@ -2,7 +2,7 @@ process EVALUATE_FINAL {
     tag "${test_mode}_${model_name}_${pred_file}"
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(test_mode), val(model_name), path(pred_file)

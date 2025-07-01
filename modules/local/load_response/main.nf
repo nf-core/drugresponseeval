@@ -2,7 +2,7 @@ process LOAD_RESPONSE {
     tag "${response.baseName}"
     label 'process_single'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(measure), path(response)
