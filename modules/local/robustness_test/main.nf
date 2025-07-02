@@ -3,7 +3,7 @@ process ROBUSTNESS_TEST {
     label 'process_high'
     label 'process_gpu'
 
-    conda "${moduleDir}/env.yml"
+
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration), path(path_data)

@@ -5,7 +5,7 @@
 import argparse
 import pickle
 
-from drevalpy.datasets.dataset import _split_early_stopping_data
+from drevalpy.datasets.dataset import split_early_stopping_data
 from drevalpy.experiment import make_train_val_split
 from drevalpy.models import MODEL_FACTORY
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     train_dataset, validation_dataset = make_train_val_split(response_data, test_mode=args.test_mode, val_ratio=0.1)
 
     if model_class.early_stopping:
-        validation_dataset, early_stopping_dataset = _split_early_stopping_data(validation_dataset, args.test_mode)
+        validation_dataset, early_stopping_dataset = split_early_stopping_data(validation_dataset, args.test_mode)
     else:
         early_stopping_dataset = None
 
