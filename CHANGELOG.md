@@ -11,6 +11,7 @@ Second release of nf-core/drugresponseeval.
 
 - Added support for AWS: changed the structure of load response and parameter check to conform more to Nextflow
   best practices.
+- Separate singularity container because conversion of Docker container took up too much space.
 
 ### `Added`
 
