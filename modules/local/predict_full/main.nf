@@ -2,7 +2,8 @@ process PREDICT_FULL {
     tag { "${test_mode}_${model_name}_${split_id}_gpu:${task.ext.use_gpu}" }
     label 'process_high'
     label 'process_gpu'
-    publishDir "${params.outdir}/${params.run_id}/${test_mode}", mode: 'copy'
+
+
 
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
@@ -11,8 +12,9 @@ process PREDICT_FULL {
 
     output:
     tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
+    tuple val(test_mode), val(model_name), path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
     path('**best_hpams*.json'),             emit: ch_hpams
+    path("versions.yml"),                       emit: versions
 
     script:
     """
@@ -27,6 +29,18 @@ process PREDICT_FULL {
         --path_data $path_data \\
         --cross_study_datasets $cross_study_datasets \\
         --model_checkpoint_dir $model_checkpoint_dir \\
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version | sed 's/Python //g')
+        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
+        numpy: \$(python -c "import numpy; print(numpy.__version__)")
+        pandas: \$(python -c "import pandas; print(pandas.__version__)")
+        pytorch_lightning: \$(python -c "import pytorch_lightning; print(pytorch_lightning.__version__)")
+        torch: \$(python -c "import torch; print(torch.__version__)" | sed 's/+.*//')
+        platform: \$(python -c "import platform; print(platform.__version__)")
+    END_VERSIONS
     """
 
 }

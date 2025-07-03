@@ -6,25 +6,24 @@
 </h1>
 
 [![GitHub Actions CI Status](https://github.com/nf-core/drugresponseeval/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/drugresponseeval/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/drugresponseeval/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/drugresponseeval/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.14779984-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.14779984)
 
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.04.2-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.1)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/drugresponseeval)
 
-[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
-[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)
-[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
-
-# ![drevalpy_summary](assets/drevalpy-2-qr.svg)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23drugresponseeval-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/drugresponseeval)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-**DrEval** is a bioinformatics framework which includes a PyPI package (drevalpy) and a Nextflow
+# ![drevalpy_summary](assets/dreval_summary.svg)
+
+**DrEval** is a bioinformatics framework that includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
 meaningful, and reproducible. DrEval simplifies the implementation of drug response prediction
 models, allowing researchers to focus on advancing their modeling innovations by automating
@@ -32,8 +31,6 @@ standardized evaluation protocols and preprocessing workflows. With DrEval, hype
 tuning is fair and consistent. With its flexible model interface, DrEval supports any model type,
 ranging from statistical models to complex neural networks. By contributing your model to the
 DrEval catalog, you can increase your work's exposure, reusability, and transferability.
-
-# ![Pipeline diagram showing the major steps of nf-core/drugresponseeval](assets/drugresponseeval_pipeline_simplified.png)
 
 1. The response data is loaded
 2. All models are trained and evaluated in a cross-validation setting
@@ -58,10 +55,9 @@ Now, you can run the pipeline using:
 ```bash
 nextflow run nf-core/drugresponseeval \
    -profile <docker/singularity/.../institute> \
-   --models <model1,model2,...> \
-   --baselines <baseline1,baseline2,...> \
-   --dataset_name <dataset_name> \
-   --path_data <path_data> \
+   --models <RandomForest,model2,...> \
+   --baselines <NaiveMeanEffectsPredictor,baseline2,...> \
+   --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|custom_dataset>
 ```
 
 > [!WARNING]
@@ -96,10 +92,17 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.14779984](https://doi.org/10.5281/zenodo.14779984)
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+> Our corresponding publication is at doi [10.1101/2025.05.26.655288](doi.org/10.1101/2025.05.26.655288)
+>
+> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval.**
+>
+> _bioRxiv_, 2025-05.
+
+The underlying data is available at doi: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
+
+The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone, for which we also have an extensive [ReadTheDocs Documentation](https://drevalpy.readthedocs.io/en/latest/).
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

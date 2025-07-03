@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import argparse
 import yaml
 from drevalpy.models import MODEL_FACTORY, MULTI_DRUG_MODEL_FACTORY, SINGLE_DRUG_MODEL_FACTORY
@@ -10,6 +12,8 @@ def get_parser():
         description="Take model name, get hyperparameters, and split into single hyperparameter combinations"
     )
     parser.add_argument("--model_name", type=str, help="model name")
+    parser.add_argument("--hyperparameter_tuning", action="store_true", default=False,
+                        help="if set, hyperparameter tuning is performed, otherwise only the first combination is used")
     return parser
 
 
@@ -25,6 +29,8 @@ if __name__ == "__main__":
                                                          f"MULTI_DRUG_MODEL_FACTORY.")
     model_class = MODEL_FACTORY[model_name]
     hyperparameters = model_class.get_hyperparameter_set()
+    if not args.hyperparameter_tuning:
+        hyperparameters = [hyperparameters[0]]
     hpam_idx = 0
     for hpam_combi in hyperparameters:
         with open(f"hpam_{hpam_idx}.yaml", "w") as yaml_file:

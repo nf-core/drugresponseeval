@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Written by Judith Bernett and released under the MIT License.
+
 import argparse
 
 from drevalpy.visualization.utils import evaluate_file
@@ -6,7 +9,7 @@ from drevalpy.visualization.utils import evaluate_file
 
 def get_parser():
     parser = argparse.ArgumentParser(description="Evaluate the predictions from the final model.")
-    parser.add_argument("--test_mode", type=str, default="LPO", help="Test mode (LPO, LCO, LDO).")
+    parser.add_argument("--test_mode", type=str, default="LPO", help="Test mode (LPO, LCO, LDO, LTO).")
     parser.add_argument("--model_name", type=str, required=True, help="Model name.")
     parser.add_argument("--pred_file", type=str, required=True, help="Path to predictions.")
     return parser

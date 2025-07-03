@@ -1,0 +1,178 @@
+{
+    "-profile test": {
+        "content": [
+            33,
+            {
+                "COLLECT_RESULTS": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0"
+                },
+                "CONSOLIDATE_RESULTS": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0"
+                },
+                "CV_SPLIT": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1"
+                },
+                "EVALUATE_FINAL": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "scipy": "1.15.3"
+                },
+                "EVALUATE_FIND_MAX": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "scipy": "1.15.3",
+                    "yaml": "6.0.2"
+                },
+                "HPAM_SPLIT": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "yaml": "6.0.2"
+                },
+                "LOAD_CS_RESPONSE": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0"
+                },
+                "LOAD_RESPONSE": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0"
+                },
+                "MAKE_BASELINES": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "pandas": "2.3.0",
+                    "pytorch_lightning": "2.5.2",
+                    "torch": "2.7.1",
+                    "platform": "1.0.8"
+                },
+                "MAKE_MODELS": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "pandas": "2.3.0",
+                    "pytorch_lightning": "2.5.2",
+                    "torch": "2.7.1",
+                    "platform": "1.0.8"
+                },
+                "PREDICT_FULL": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "pandas": "2.3.0",
+                    "pytorch_lightning": "2.5.2",
+                    "torch": "2.7.1",
+                    "platform": "1.0.8"
+                },
+                "TRAIN_AND_PREDICT_CV": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "sklearn": "1.7.0",
+                    "numpy": "2.3.1",
+                    "pandas": "2.3.0",
+                    "pytorch_lightning": "2.5.2",
+                    "torch": "2.7.1",
+                    "platform": "1.0.8"
+                },
+                "UNZIP_CS_RESPONSE": {
+                    "unzip": 6.0
+                },
+                "UNZIP_RESPONSE": {
+                    "unzip": 6.0
+                },
+                "VISUALIZE_RESULTS": {
+                    "python": "3.13.5",
+                    "drevalpy": "1.3.5",
+                    "pandas": "2.3.0",
+                    "matplotlib": "3.10.3",
+                    "scikit_posthocs": "0.11.4",
+                    "scipy": "1.15.3",
+                    "sklearn": "1.7.0"
+                },
+                "Workflow": {
+                    "nf-core/drugresponseeval": "v1.1.0"
+                }
+            },
+            [
+                "pipeline_info",
+                "pipeline_info/nf_core_drugresponseeval_software_versions.yml",
+                "test_run",
+                "test_run/LCO",
+                "test_run/LCO/NaiveDrugMeanPredictor",
+                "test_run/LCO/NaiveDrugMeanPredictor/best_hpams",
+                "test_run/LCO/NaiveDrugMeanPredictor/best_hpams/best_hpams_split_0.json",
+                "test_run/LCO/NaiveDrugMeanPredictor/best_hpams/best_hpams_split_1.json",
+                "test_run/LCO/NaiveDrugMeanPredictor/cross_study",
+                "test_run/LCO/NaiveDrugMeanPredictor/cross_study/cross_study_TOYv2_split_0.csv",
+                "test_run/LCO/NaiveDrugMeanPredictor/cross_study/cross_study_TOYv2_split_1.csv",
+                "test_run/LCO/NaiveDrugMeanPredictor/predictions",
+                "test_run/LCO/NaiveDrugMeanPredictor/predictions/predictions_split_0.csv",
+                "test_run/LCO/NaiveDrugMeanPredictor/predictions/predictions_split_1.csv",
+                "test_run/LCO/NaiveMeanEffectsPredictor",
+                "test_run/LCO/NaiveMeanEffectsPredictor/best_hpams",
+                "test_run/LCO/NaiveMeanEffectsPredictor/best_hpams/best_hpams_split_0.json",
+                "test_run/LCO/NaiveMeanEffectsPredictor/best_hpams/best_hpams_split_1.json",
+                "test_run/LCO/NaiveMeanEffectsPredictor/cross_study",
+                "test_run/LCO/NaiveMeanEffectsPredictor/cross_study/cross_study_TOYv2_split_0.csv",
+                "test_run/LCO/NaiveMeanEffectsPredictor/cross_study/cross_study_TOYv2_split_1.csv",
+                "test_run/LCO/NaiveMeanEffectsPredictor/predictions",
+                "test_run/LCO/NaiveMeanEffectsPredictor/predictions/predictions_split_0.csv",
+                "test_run/LCO/NaiveMeanEffectsPredictor/predictions/predictions_split_1.csv",
+                "test_run/evaluation_results.csv",
+                "test_run/evaluation_results_per_cl.csv",
+                "test_run/report",
+                "test_run/report/LCO.html",
+                "test_run/report/LCO.png",
+                "test_run/report/comp_scatter",
+                "test_run/report/comp_scatter/comp_scatter_cell_line_name_LCO.html",
+                "test_run/report/critical_difference_plots",
+                "test_run/report/favicon.png",
+                "test_run/report/heatmaps",
+                "test_run/report/heatmaps/heatmap_algorithms_LCO.html",
+                "test_run/report/heatmaps/heatmap_algorithms_LCO_normalized.html",
+                "test_run/report/html_tables",
+                "test_run/report/html_tables/table_cross_study_TOYv2_LCO.html",
+                "test_run/report/index.html",
+                "test_run/report/nf-core-drugresponseeval_logo_light.png",
+                "test_run/report/regression_plots",
+                "test_run/report/violin_plots",
+                "test_run/report/violin_plots/violin_algorithms_LCO.html",
+                "test_run/report/violin_plots/violin_algorithms_LCO_normalized.html",
+                "test_run/true_vs_pred.csv"
+            ],
+            [
+                "best_hpams_split_0.json:md5,99914b932bd37a50b983c5e7c90ae93b",
+                "best_hpams_split_1.json:md5,99914b932bd37a50b983c5e7c90ae93b",
+                "best_hpams_split_0.json:md5,99914b932bd37a50b983c5e7c90ae93b",
+                "best_hpams_split_1.json:md5,99914b932bd37a50b983c5e7c90ae93b",
+                "LCO.html:md5,39657391f49643c51c6423805458ab76",
+                "LCO.png:md5,e8bd8858f8149d610c63e8f3cc36577e",
+                "favicon.png:md5,8da229af56874ca6750c5402f0b76e2a",
+                "index.html:md5,b0bd552d41394f52069aa4bbd1bc9af1",
+                "nf-core-drugresponseeval_logo_light.png:md5,4f55fb24b445a68f35c12a84e83f99c7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "25.04.3"
+        },
+        "timestamp": "2025-07-01T15:41:03.488957"
+    }
+}

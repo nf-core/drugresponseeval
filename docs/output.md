@@ -11,13 +11,11 @@ All paths are relative to the top-level results directory.
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
-1. [Parameter check](#parameter-check): Several parameters are validated to ensure that the pipeline can run
-   successfully.
-2. `PREPROCESS_CUSTOM` subworkflow: This subworkflow is only triggered if there is a custom dataset and if in the corresponding folder, there is a file named `[dataset_name]_raw.csv`. If this is the case, CurveCurator is run on the raw data.
+1. `PREPROCESS_CUSTOM` subworkflow: This subworkflow is only triggered if there is a custom dataset and if in the corresponding folder, there is a file named `[dataset_name]_raw.csv`. If this is the case, CurveCurator is run on the raw data.
    - [Preprocess raw viability](#preprocess-raw-viability): The raw viability data is put in a format suitable for CurveCurator.
    - [Fit curves](#fit-curves): Curves are fitted using CurveCurator.
    - [Postprocess CurveCurator data](#postprocess-curvecurator-data): The individual curves.tsv files are collected and one output file is written.
-3. `RUN_CV` subworkflow: Finds the optimal hyperparameters for each model in a cross-validation setting.
+2. `RUN_CV` subworkflow: Finds the optimal hyperparameters for each model in a cross-validation setting.
    - [Load response](#load-response): The response data is loaded.
    - [CV split](#cv-split): The response data is split into cross-validation folds.
    - [Make model channel](#make-model-channel): From the input baseline and model names, channels are created. This
@@ -27,7 +25,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Train and predict CV](#train-and-predict-cv): All models are trained and evaluated in a cross-validation setting.
    - [Evaluate and find max](#evaluate-and-find-max): For each CV split, the best hyperparameters are determined
      using a grid search per model
-4. `MODEL_TESTING` subworkflow: The best hyperparameters are used to train the models on the full training set
+3. `MODEL_TESTING` subworkflow: The best hyperparameters are used to train the models on the full training set
    and predict the test set. Optionally, randomization and robustness testes are performed.
    - [Predict full](#predict-full): The model is trained on the full training set (train & validation) with the best
      hyperparameters to predict the test set.
@@ -36,47 +34,18 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
      training set with the best hyperparameters to predict the randomized test set.
    - [Robustness test](#robustness-test): If robustness tests are enabled, the model is trained N times on the full
      training set with the best hyperparameters
+   - If `--final_model_on_full_data` is set: the model is trained on the full dataset to produce a production model. If `--no_hyperparameter_tuning` is **not** set, the model will be tuned on the full dataset, too. The model will be saved in the results directory.
+     - [FINAL_SPLIT](#final-split): For each model class, the full dataset is split into training, validation, and potentially early stopping sets. This is done to ensure per model and not overall to retain the maximum amount of data for training (because the data is filtered according to cell line / drug feature availability).
+     - [TUNE_FINAL_MODEL](#tune-final-model): The final model is tuned on the full dataset.
+     - [EVALUATE_FIND_MAX_FINAL](#evaluate-and-find-max-final): The best hyperparameters for the final model are determined on the validation dataset.
+     - [TRAIN_FINAL_MODEL](#train-final-model): The final model is trained on the full dataset (train+validation) with the best hyperparameters. The model is saved in the results directory.
    - [Consolidate results](#consolidate-results): The results of the model testing are consolidated into a single
      table for each model.
    - [Evaluate final](#evaluate-final): The performance of the models is calculated on the test set results.
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
-5. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
-   - [Critical difference plot](#critical-difference): A critical difference plot is created to compare the performance
-     of the models.
-   - [Violin plot](#violin-plot): A violin plot is created to compare the performance of the models over the CV folds.
-   - [Heatmap](#heatmap): A heatmap is created to compare the average performance of the models over the CV folds.
-   - [Correlation comparison](#correlation-comparison): Renders a plot in which the per-drug/per-cell line
-     correlations between y_true and y_predicted are compared between different models.
-   - [Regression plots](#regression-plots): Plots in which the y_true and y_predicted values are compared between
-     different models.
-   - [Save tables](#save-tables): Saves the performance metrics of the models in a table.
-   - [Write html](#write-html): Writes the plots to an HTML file per setting (LPO/LCO/LDO).
-   - [Write index](#write-index): Writes an index.html file that links to all the HTML files.
-6. [Pipeline information](#pipeline-information) - Report metrics generated during the workflow execution
-
-### Parameter check
-
-The process `PARAMS_CHECK` performs the following checks:
-
-- `--models` / `--baselines`: Check if the model and baseline names are valid (for valid names, see the [usage](usage.md) page).
-- `--test_mode`: Check whether the test mode is LPO, LCO, LDO or a combination of these.
-- `--path_data`: Check if the path to the data is valid.
-- `--dataset_name`: Check if the dataset name is valid, i.e., GDSC1, GDSC2, or CCLE.
-- `--cross_study_datasets`: If supplied, check if the datasets are valid, i.e., GDSC1, GDSC2, or CCLE or a
-  combination of these.
-- `--n_cv_splits`: Check if the number of cross-validation splits is a positive integer > 1.
-- `--randomization_mode`: If supplied, checks if the randomization is SVCC, SVCD, SVRC, SVRD, or a combination of these.
-- `--randomization_type`: If supplied, checks if the randomization type is valid, i.e., permutation or invariant.
-- `--n_trials_robustness`: Checks if the number of trials for robustness tests is >= 0.
-- `--optim_metric`: Checks if the optimization metric is either MSE, RMSE, MAE, R^2, Pearson, Spearman, Kendall, or
-  Partial_Correlation.
-- `--response_transformation`: If supplied, checks whether the response transformation is either standard,
-  minmax, or robust.
-- `--measure`: Which measure of drug response should be used for the file. Available options are "LN_IC50", "EC50", "IC50", "pEC50", "AUC", "response". Default: "LN_IC50".
-- `--curve_curator`: Whether to run CurveCurator on a custom dataset. Default: false. This requires raw viability data to be located at "<path_data>/<dataset_name>/<dataset_name>\_raw.csv".
-
-It emits the path to the data but mostly so that the other processes wait for `PARAMS_CHECK` to finish before starting.
+4. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
+5. [Pipeline information](#pipeline-information): Report metrics generated during the workflow execution
 
 ### Subworkflow `PREPROCESS_CUSTOM`
 
@@ -120,8 +89,8 @@ This file contains the new adjusted measures; available are pEC50 and AUC (now i
 
 #### Load response
 
-The response data is loaded into the pipeline. If the data does not lie in `--path_data` it is downloaded and exported to
-`--path_data`.
+The response data is loaded into the pipeline. If the data does not lie in `--path_data` it is downloaded from Zenodo
+(`--zenodo_link`) and exported to `--path_data`. If it is downloaded, it is additionally unzipped by the UNZIP module.
 This step is necessary to provide the pipeline with the response data that will be used to train and evaluate the models.
 
 <details markdown="1">
@@ -255,97 +224,24 @@ csv`, `evaluation_results_per_cell_line.csv`, and `true_vs_pred.csv`.
 
 ### Subworkflow `VISUALIZATION`
 
-#### Critical difference
-
-The critical difference plot measures whether a model is significantly better than another model measured over its
-average rank over all CV folds.
+All plots are created in the `visualization` subworkflow. They are saved in the results/report directory.
 
 <details markdown="1">
 <summary>Output files</summary>
 
-- `critical_difference*.svg`: SVG file with the critical difference plot.
-
-</details>
-
-#### Violin plot
-
-The violin shows the distribution of the performance metrics over the CV folds. This plot is rendered overall for
-all real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `violin*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Heatmap
-
-The heatmap shows the average performance of the models over the CV folds. This plot is rendered overall for all
-real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `heatmap*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Correlation comparison
-
-Renders a plot in which the per-drug/per-cell line correlations between y_true and y_predicted are compared between
-different models.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `corr_comp_scatter*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Regression plots
-
-Plots in which the y_true and y_predicted values are compared between different models.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `regression_lines*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Save tables
-
-Saves the performance metrics of the models in an html table.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `table*.html`: HTML file with the violin plot.
-
-</details>
-
-#### Write html
-
-Creates a summary HTML file per setting (LPO/LCO/LDO) that contains all the plots and tables.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `{LPO,LCO,LPO}.html`: HTML file with the violin plot.
-
-</details>
-
-#### Write index
-
-Writes an index.html file that links to all the HTML files.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `index.html`: HTML file with the violin plot.
+- `critical_difference*.svg`: The critical difference plot measures whether a model is significantly better than another model measured over its
+  average rank over all CV folds.
+- `critical_difference*.html`: The corresponding p-values in a table.
+- `violin*.html`: The violin shows the distribution of the performance metrics over the CV folds. This plot is rendered overall for
+  all real predictions and once per algorithm to compare the real predictions against, e.g., the randomization results.
+- `heatmap*.html`: The heatmap shows the average performance of the models over the CV folds.
+- `comp_scatter*.html`: Renders a plot in which the per-drug/per-cell line performances between y_true and y_predicted are compared between
+  different models.
+- `regression_lines*.html`: Plots in which the y_true and y_predicted values are compared between different models (not rendered for Naive Predictors).
+- `table*.html`: Saves the cross-study performance metrics of the models in an html table.
+- `{LPO,LCO,LTO,LPO}.html`: Creates a summary HTML file per setting (LPO/LCO/LTO/LDO) that contains all the plots and tables.
+- `index.html`: HTML file that links to all the HTML files.
 - `*.png`: Some png files for the logo, etc.
-
 </details>
 
 ### Pipeline information
@@ -361,4 +257,4 @@ Writes an index.html file that links to all the HTML files.
 
 </details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times, and resource usage.

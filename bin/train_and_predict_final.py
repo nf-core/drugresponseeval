@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+
+# Written by Judith Bernett and released under the MIT License.
+
 import os
 import json
 import sys
@@ -147,7 +150,8 @@ def compute_cross(
     early_stopping_dataset,
     response_transformation,
     path_out,
-    split_index
+    split_index,
+    single_drug_id
 ):
     split_index = split_index.split("split_")[1]
     cross_study_dataset = pickle.load(open(cross_study_dataset, "rb"))
@@ -164,6 +168,7 @@ def compute_cross(
         response_transformation=response_transformation,
         path_out=path_out,
         split_index=split_index,
+        single_drug_id=single_drug_id
     )
 
 
@@ -222,7 +227,8 @@ if __name__ == "__main__":
                 early_stopping_dataset=es_set,
                 response_transformation=transformation,
                 path_out=os.path.dirname(predictions_path),
-                split_index=args.split_id
+                split_index=args.split_id,
+                single_drug_id=drug_id
             )
     elif args.mode == "randomization":
         with open(args.randomization_views_path, "r") as f:

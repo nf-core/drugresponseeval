@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Written by Judith Bernett and released under the MIT License.
+
 import os
 import argparse
 from drevalpy.models import MODEL_FACTORY
@@ -26,12 +28,15 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    results_path = os.path.join(
+    results_path = str(os.path.join(
         args.outdir_path,
         args.run_id,
         args.test_mode,
-    )
-    randomizations = args.randomization_modes.split('[')[1].split(']')[0].split(', ')
+    ))
+    if args.randomization_modes == "[None]":
+        randomizations = None
+    else:
+        randomizations = args.randomization_modes.split('[')[1].split(']')[0].split(', ')
     model = MODEL_FACTORY[args.model_name]
     if args.cross_study_datasets is None:
         args.cross_study_datasets = []
