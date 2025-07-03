@@ -71,6 +71,7 @@ jobs:
     runs-on: # use self-hosted runners
       - runs-on=$-nf-test
       - runner=4cpu-linux-x64
+      - disk=large
     strategy:
       fail-fast: false
       matrix:
@@ -82,8 +83,8 @@ jobs:
         exclude:
           - isMain: false
             profile: "conda"
-          - isMain: false
-            profile: "singularity"
+          #- isMain: false
+          #  profile: "singularity"
         NXF_VER:
           - "24.04.2"
           - "latest-everything"
