@@ -83,8 +83,8 @@ jobs:
         exclude:
           - isMain: false
             profile: "conda"
-          #- isMain: false
-          #  profile: "singularity"
+          - isMain: false
+            profile: "singularity"
         NXF_VER:
           - "24.04.2"
           - "latest-everything"

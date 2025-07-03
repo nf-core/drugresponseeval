@@ -27,6 +27,7 @@ _Zapdos is a dual-type Electric/Flying Legendary Pokémon. It is said to be a di
 
 ### `Changed`
 
+- [#53](https://github.com/nf-core/drugresponseeval/pull/53) Changed to large runner for the GitHub Actions because of Docker → Singularity conversion.
 - [#42](https://github.com/nf-core/drugresponseeval/pull/42) Moved all publishDir directives to modules.config.
 - [#44](https://github.com/nf-core/drugresponseeval/pull/44) Fixed drevalpy versions in conda and docker to 1.3.5: now supporting Python 3.13
 - [#38](https://github.com/nf-core/drugresponseeval/pull/38) Support for AWS: changed the structure of load response and parameter check to conform more to Nextflow
