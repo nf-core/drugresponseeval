@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#56](https://github.com/nf-core/drugresponseeval/pull/56) Added HiRSE code promotion badge
+
 ### `Changed`
 
 - [#55](https://github.com/nf-core/drugresponseeval/pull/55) Template version 3.3.2
