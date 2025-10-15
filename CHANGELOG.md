@@ -3,6 +3,30 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.1.1dev: Adjective Pokémon Name - [date]
+
+### `Added`
+
+- [#56](https://github.com/nf-core/drugresponseeval/pull/56) Added HiRSE code promotion badge
+
+### `Changed`
+
+- [#55](https://github.com/nf-core/drugresponseeval/pull/55) Template version 3.3.2
+
+### `Removed`
+
+### `Fixed`
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### `Parameters`
+
+| Params | Status |
+| ------ | ------ |
+
 ## [v1.1.0](https://github.com/nf-core/drugresponseeval/releases/tag/1.1.0): Humongous Zapdos - 03.07.2025
 
 Second release of nf-core/drugresponseeval.

@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/drugresponseeval/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/drugresponseeval/main/nextflow_schema.json",
     "title": "nf-core/drugresponseeval pipeline parameters",
     "description": "This pipeline evaluates drug response models in various settings on a variety of datasets.",
     "type": "object",
@@ -139,7 +139,7 @@
                     "type": "string",
                     "description": "Datasets for cross-study prediction.",
                     "help_text": "List of datasets to use to evaluate predictions across studies. Can be a combination like 'CTRPv1,CCLE'. Default is empty string which means no cross-study datasets are used.",
-                    "default": "",
+                    "default": null,
                     "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12])(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]))*)$"
                 },
                 "zenodo_link": {
