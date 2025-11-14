@@ -140,7 +140,7 @@
                     "description": "Datasets for cross-study prediction.",
                     "help_text": "List of datasets to use to evaluate predictions across studies. Can be a combination like 'CTRPv1,CCLE'. Default is empty string which means no cross-study datasets are used.",
                     "default": null,
-                    "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12])(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]))*)$"
+                    "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2)(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2))*)$"
                 },
                 "zenodo_link": {
                     "type": "string",
