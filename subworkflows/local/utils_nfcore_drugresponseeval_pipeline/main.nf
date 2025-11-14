@@ -94,6 +94,8 @@ workflow PIPELINE_INITIALISATION {
                         'SingleDrugElasticNet',
                         'SingleDrugProteomicsElasticNet',
                         'SingleDrugProteomicsRandomForest',
+                        'DrugGNN',
+                        'ChemBERTaNeuralNetwork'
                         ]
     ch_models = channel.from(models.split(',').collect { it.trim() })
     def baseline_list = baselines.split(",")
