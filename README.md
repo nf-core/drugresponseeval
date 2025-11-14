@@ -59,7 +59,7 @@ nextflow run nf-core/drugresponseeval \
    -profile <docker/singularity/.../institute> \
    --models <RandomForest,model2,...> \
    --baselines <NaiveMeanEffectsPredictor,baseline2,...> \
-   --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|custom_dataset>
+   --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|BeatAML2|PDX_Bruna|TOYv1|TOYv2|custom_dataset>
 ```
 
 > [!WARNING]

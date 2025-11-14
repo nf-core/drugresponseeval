@@ -40,7 +40,7 @@ and predicts responses as the sum of the overall mean (NaivePredictor) + cell li
 
 Furthermore, we offer a variety of more advanced **baseline models** and some **state-of-the-art models** to compare
 your model against. Similarly, we provide commonly used datasets to evaluate your model on (GDSC1, GDSC2, CCLE,
-CTRPv1, CTRPv2). You can also provide your **own dataset or your own model by contributing to our PyPI package
+CTRPv1, CTRPv2, BeatAML2, PDX data from Bruna et al.). You can also provide your **own dataset or your own model by contributing to our PyPI package
 [drevalpy](https://github.com/daisybio/drevalpy.git)** Before contributing, you can pull our respective repositories.
 More information can be found in the [drevalpy readthedocs](https://drevalpy.readthedocs.io/en/latest/).
 
@@ -209,15 +209,17 @@ new_dataset.to_csv('path/to/predictions.csv')
 
 The following datasets are available and can be supplied via `--dataset_name`:
 
-| Dataset Name | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                      |
-| ------------ | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------ |
-| CTRPv1       | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                |
-| CTRPv2       | 395,025              | 546             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                |
-| CCLE         | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                |
-| GDSC1        | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                             |
-| GDSC2        | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                             |
-| TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                        |
-| TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv2. |
+| Dataset Name | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                                         |
+| ------------ | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| CTRPv1       | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                                   |
+| CTRPv2       | 395,025              | 546             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                                   |
+| CCLE         | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                                   |
+| GDSC1        | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                |
+| GDSC2        | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                |
+| TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
+| TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv2.                    |
+| BeatAML2     | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
+| PDX_Bruna    | 2,559                | 104             | 37 (mouse passages   | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
 
 Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.

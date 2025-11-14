@@ -41,8 +41,8 @@
                 },
                 "dataset_name": {
                     "type": "string",
-                    "description": "Name of the dataset. Pre-supplied datasets are CTRPv2, CTRPv1, CCLE, GDSC1, GDSC2, TOYv1, TOYv2.",
-                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'TOYv1', 'TOYv2) in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting, or pre-fit data (see no_refitting option; not recommended for dataset comparability reasons due to potential differences in fitting procedures).",
+                    "description": "Name of the dataset. Pre-supplied datasets are CTRPv2, CTRPv1, CCLE, GDSC1, GDSC2, TOYv1, TOYv2, BeatAML2, and PDX_Bruna.",
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'TOYv1', 'TOYv2', 'BeatAML2', 'PDX_Bruna') in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting, or pre-fit data (see no_refitting option; not recommended for dataset comparability reasons due to potential differences in fitting procedures).",
                     "default": "CTRPv2"
                 },
                 "outdir": {
@@ -145,7 +145,7 @@
                 "zenodo_link": {
                     "type": "string",
                     "description": "Link to the latest Zenodo version of the dataset.",
-                    "default": "https://zenodo.org/records/17343165/files/",
+                    "default": "https://zenodo.org/records/17601682/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
                     "pattern": "^https://zenodo.org/records/[0-9]+/files/$"
                 }

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57) Updated to the new Zenodo version which now also contains two new datasets: BeatAML2 and PDX_Bruna. Adapted the documentation, config, schema and code accordingly.
 - [#55](https://github.com/nf-core/drugresponseeval/pull/55) Template version 3.3.2
 
 ### `Removed`
