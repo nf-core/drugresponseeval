@@ -35,6 +35,12 @@ def main(args):
     input_file = pathlib.Path(f"{dataset_name}.csv")
     if dataset_name in AVAILABLE_DATASETS:
         response_file = pd.read_csv(input_file, dtype={"pubchem_id": str})
+        if dataset_name == "BeatAML2":
+            # only has AML patients = blood
+            response_file[TISSUE_IDENTIFIER] = "Blood"
+        elif dataset_name == "PDX_Bruna":
+            # only has breast cancer patients
+            response_file[TISSUE_IDENTIFIER] = "Breast"
         response_data = DrugResponseDataset(
                             response=response_file[args.measure].values,
                             cell_line_ids=response_file[CELL_LINE_IDENTIFIER].values,
