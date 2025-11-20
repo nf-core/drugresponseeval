@@ -9,7 +9,7 @@ workflow PREPROCESS_CUSTOM {
     measure
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     def preimplemented_datasets = ['GDSC1', 'GDSC2', 'CCLE', 'CTRPv1', 'CTRPv2', 'TOYv1', 'TOYv2']
     if(!params.no_refitting){
         File raw_file = new File("${params.path_data}/${dataset_name}/${dataset_name}_raw.csv")
