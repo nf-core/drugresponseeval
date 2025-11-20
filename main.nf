@@ -68,10 +68,9 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
         // pipeline-specific input
         params.models,
         params.baselines,
