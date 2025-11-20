@@ -25,7 +25,7 @@ workflow MODEL_TESTING {
     ch_hpam_combis              // from RUN_CV [model_name, hpam_X.yaml]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     if (params.cross_study_datasets == '') {
         cross_study_datasets = channel.fromPath(['./NONE.csv'])
     }
@@ -83,7 +83,7 @@ workflow MODEL_TESTING {
     }
 
     if (params.n_trials_robustness > 0) {
-        ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
+        ch_trials_robustness = channel.from(1..params.n_trials_robustness)
         ch_trials_robustness = ch_models
                                 .map{it -> it[1]}
                                 .combine(ch_trials_robustness)
