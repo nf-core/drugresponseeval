@@ -304,6 +304,14 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 > [!TIP]
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
+### For developers
+
+If the drevalpy (after Docker image release) or the unzip version was updated, the snapshots need to be updated:
+
+- Delete tests/default.nf.test.snap
+- If not already installed, get nf-test: `curl -fsSL https://get.nf-test.com | bash` and run `./nf-test init`
+- Run `nf-test test --profile=+docker --verbose`
+
 ## Core Nextflow arguments
 
 > [!NOTE]
