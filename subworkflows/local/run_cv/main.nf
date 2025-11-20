@@ -18,7 +18,7 @@ workflow RUN_CV {
     measure
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
     if (!response_path.exists()) {
         log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
