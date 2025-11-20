@@ -28,18 +28,27 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_DRUGRESPONSEEVAL {
-
     take:
-    samplesheet // channel: samplesheet read in from --input
+    models          // channel: [ string(models) ]
+    baselines       // channel: [ string(baselines) ]
+    work_path       // channel: path to the data channel.fromPath(params.path_data)
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
+    ch_versions = Channel.empty()
     DRUGRESPONSEEVAL (
-        samplesheet
+        models,
+        baselines,
+        work_path
     )
+
+    ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
+
+    emit:
+    versions = ch_versions
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -63,13 +72,19 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden
+        // pipeline-specific input
+        params.models,
+        params.baselines,
+        params.path_data
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_DRUGRESPONSEEVAL (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.models,
+        PIPELINE_INITIALISATION.out.baselines,
+        PIPELINE_INITIALISATION.out.work_path,
     )
     //
     // SUBWORKFLOW: Run completion tasks
