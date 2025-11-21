@@ -23,6 +23,8 @@ _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body rem
 
 ### `Fixed`
 
+- [#62](https://github.com/nf-core/drugresponseeval/pull/62) Fixes hardcoded unzip version
+
 ### `Dependencies`
 
 | Dependency | Old version | New version |
