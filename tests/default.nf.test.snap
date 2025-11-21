@@ -109,7 +109,7 @@
                     "sklearn": "1.7.2"
                 },
                 "Workflow": {
-                    "nf-core/drugresponseeval": "v1.1.1dev"
+                    "nf-core/drugresponseeval": "v1.2.0"
                 }
             },
             [
