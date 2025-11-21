@@ -19,7 +19,7 @@ workflow RUN_CV {
     measure
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
     File meta_path = new File("${params.path_data}/meta/gene_lists/landmark_genes.csv")
     if(!meta_path.exists()) {
