@@ -10,12 +10,14 @@ _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body rem
 ### `Added`
 
 - [#56](https://github.com/nf-core/drugresponseeval/pull/56) Added HiRSE code promotion badge
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57): DrEvalPy v1.4.0 now contains two new datasets (BeatAML2, PDX_Bruna) and two new models (DrugGNN, ChemBERTaNeuralNetwork). Adapted the code and the summary svg accordingly.
 
 ### `Changed`
 
-- [#57](https://github.com/nf-core/drugresponseeval/pull/57) Updated to the new Zenodo version which now also contains two new datasets: BeatAML2 and PDX_Bruna. Adapted the documentation, config, schema and code accordingly.
+- [#59](https://github.com/nf-core/drugresponseeval/pull/59) Update to new runner size syntax
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57) Updated to the new Zenodo version which now also contains two new datasets: BeatAML2 and PDX_Bruna. Adapted the README, documentation, config, schema and code accordingly. This also required changes in /bin/load_response and a new module UNZIP_META.
 - [#57](https://github.com/nf-core/drugresponseeval/pull/57) Updated to drevalpy version 1.4.0.
-- [#55](https://github.com/nf-core/drugresponseeval/pull/55) Template version 3.3.2
+- [#55](https://github.com/nf-core/drugresponseeval/pull/55), [#58](https://github.com/nf-core/drugresponseeval/pull/58), [#60](https://github.com/nf-core/drugresponseeval/pull/60) Template version updates: -> 3.3.2 -> 3.4.1 -> 3.5.1
 
 ### `Removed`
 
