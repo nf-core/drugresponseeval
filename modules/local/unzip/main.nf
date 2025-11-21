@@ -18,7 +18,7 @@ process UNZIP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        unzip: 6.00
+        unzip: \$(unzip -v | sed -n 's/^UnZip \\([0-9.]\\+\\).*/\\1/p')
     END_VERSIONS
     """
 
