@@ -8,8 +8,9 @@ process UNZIP {
     tuple val(dataset_name), path(file)
 
     output:
-    tuple val(dataset_name), path("${file.baseName}/"), path("${file.baseName}/${file.baseName}.csv"),  emit: unzipped_archive
-    path("versions.yml"),                       emit: versions
+    tuple val(dataset_name), path("${file.baseName}/"),     emit: unzipped_archive
+    path("${file.baseName}/${file.baseName}.csv"),          emit: unzipped_csv, optional: true
+    path("versions.yml"),                                   emit: versions
 
     script:
     """

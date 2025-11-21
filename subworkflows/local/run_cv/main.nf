@@ -1,5 +1,6 @@
 include { UNZIP as UNZIP_RESPONSE           } from '../../../modules/local/unzip'
 include { UNZIP as UNZIP_CS_RESPONSE        } from '../../../modules/local/unzip'
+include { UNZIP as UNZIP_META               } from '../../../modules/local/unzip'
 include { LOAD_RESPONSE as LOAD_RESPONSE    } from '../../../modules/local/load_response'
 include { LOAD_RESPONSE as LOAD_CS_RESPONSE } from '../../../modules/local/load_response'
 include { MAKE_MODEL_CHANNEL as MAKE_MODELS } from '../../../modules/local/make_model_channel'
@@ -20,6 +21,15 @@ workflow RUN_CV {
     main:
     ch_versions = channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
+    File meta_path = new File("${params.path_data}/meta/gene_lists/landmark_genes.csv")
+    if(!meta_path.exists()) {
+        log.info "Downloading meta information including gene lists from Zenodo: ${params.zenodo_link}meta.zip"
+        ch_unzip_meta = channel
+                            .fromPath("${params.zenodo_link}meta.zip")
+                            .map { file -> ["meta", file] }
+        UNZIP_META(ch_unzip_meta)
+        ch_versions = ch_versions.mix(UNZIP_META.out.versions)
+    }
     if (!response_path.exists()) {
         log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
         ch_unzip = channel
@@ -27,8 +37,8 @@ workflow RUN_CV {
                         .map { file -> [params.dataset_name, file] }
         UNZIP_RESPONSE(ch_unzip)
         ch_versions = ch_versions.mix(UNZIP_RESPONSE.out.versions)
-        ch_response = UNZIP_RESPONSE.out.unzipped_archive
-                        .map { dataset_name, path_to_dir, response_file ->
+        ch_response = UNZIP_RESPONSE.out.unzipped_csv
+                        .map { response_file ->
                             file(response_file, checkIfExists: true)
                         }
     }else{
@@ -60,8 +70,8 @@ workflow RUN_CV {
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
         ch_versions = ch_versions.mix(UNZIP_CS_RESPONSE.out.versions)
-        ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_archive
-                        .map { dataset_name, path_to_dir, response_file ->
+        ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_csv
+                        .map { response_file ->
                             file(response_file, checkIfExists: true)
                         }
         ch_cross_study_datasets = ch_cs_cached.concat(ch_cs_loaded)

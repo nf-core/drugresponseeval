@@ -10,7 +10,7 @@ workflow PREPROCESS_CUSTOM {
 
     main:
     ch_versions = channel.empty()
-    def preimplemented_datasets = ['GDSC1', 'GDSC2', 'CCLE', 'CTRPv1', 'CTRPv2', 'TOYv1', 'TOYv2']
+    def preimplemented_datasets = ['GDSC1', 'GDSC2', 'CCLE', 'CTRPv1', 'CTRPv2', 'TOYv1', 'TOYv2', 'BeatAML2', 'PDX_Bruna']
     if(!params.no_refitting){
         File raw_file = new File("${params.path_data}/${dataset_name}/${dataset_name}_raw.csv")
         // refit with CurveCurator or use measures refitted with CurveCurator
