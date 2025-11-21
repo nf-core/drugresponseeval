@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.1.1dev: Gentle Togepi - [date]
+## v1.2.0: Gentle Togepi - [date]
 
 _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body remains encased in its eggshell. It is able to siphon the positive energy of others, storing that happiness in its shell, and then release it to those in need of it. Because of its disposition, Togepi is seen as a sign of good luck, especially if a Trainer is capable of getting a sleeping Togepi to stand. Togepi's innocent smile is said to calm the soul._
 
