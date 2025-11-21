@@ -37,8 +37,8 @@ workflow RUN_CV {
                         .map { file -> [params.dataset_name, file] }
         UNZIP_RESPONSE(ch_unzip)
         ch_versions = ch_versions.mix(UNZIP_RESPONSE.out.versions)
-        ch_response = UNZIP_RESPONSE.out.unzipped_archive
-                        .map { dataset_name, path_to_dir, response_file ->
+        ch_response = UNZIP_RESPONSE.out.unzipped_csv
+                        .map { response_file ->
                             file(response_file, checkIfExists: true)
                         }
     }else{
@@ -70,8 +70,8 @@ workflow RUN_CV {
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
         ch_versions = ch_versions.mix(UNZIP_CS_RESPONSE.out.versions)
-        ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_archive
-                        .map { dataset_name, path_to_dir, response_file ->
+        ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_csv
+                        .map { response_file ->
                             file(response_file, checkIfExists: true)
                         }
         ch_cross_study_datasets = ch_cs_cached.concat(ch_cs_loaded)
