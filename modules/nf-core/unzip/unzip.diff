@@ -1,0 +1,26 @@
+Changes in component 'nf-core/unzip'
+'modules/nf-core/unzip/environment.yml' is unchanged
+Changes in 'unzip/main.nf':
+--- modules/nf-core/unzip/main.nf
++++ modules/nf-core/unzip/main.nf
+@@ -12,6 +12,7 @@
+ 
+     output:
+     tuple val(meta), path("${prefix}/"), emit: unzipped_archive
++    path("${prefix}/${prefix}.csv")    , emit: unzipped_csv, optional: true
+     path "versions.yml"                , emit: versions
+ 
+     when:
+@@ -24,7 +25,6 @@
+     """
+     7za \\
+         x \\
+-        -o"${prefix}"/ \\
+         $args \\
+         $archive
+ 
+
+'modules/nf-core/unzip/meta.yml' is unchanged
+'modules/nf-core/unzip/tests/main.nf.test' is unchanged
+'modules/nf-core/unzip/tests/main.nf.test.snap' is unchanged
+************************************************************
