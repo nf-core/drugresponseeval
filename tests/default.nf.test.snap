@@ -56,7 +56,7 @@
                     "sklearn": "1.7.2",
                     "numpy": "2.3.5",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.5.6",
+                    "pytorch_lightning": "2.6.0",
                     "torch": "2.9.1",
                     "platform": "1.0.8"
                 },
@@ -66,7 +66,7 @@
                     "sklearn": "1.7.2",
                     "numpy": "2.3.5",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.5.6",
+                    "pytorch_lightning": "2.6.0",
                     "torch": "2.9.1",
                     "platform": "1.0.8"
                 },
@@ -76,7 +76,7 @@
                     "sklearn": "1.7.2",
                     "numpy": "2.3.5",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.5.6",
+                    "pytorch_lightning": "2.6.0",
                     "torch": "2.9.1",
                     "platform": "1.0.8"
                 },
@@ -86,18 +86,18 @@
                     "sklearn": "1.7.2",
                     "numpy": "2.3.5",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.5.6",
+                    "pytorch_lightning": "2.6.0",
                     "torch": "2.9.1",
                     "platform": "1.0.8"
                 },
                 "UNZIP_CS_RESPONSE": {
-                    "unzip": 6.0
+                    "7za": 16.02
                 },
                 "UNZIP_META": {
-                    "unzip": 6.0
+                    "7za": 16.02
                 },
                 "UNZIP_RESPONSE": {
-                    "unzip": 6.0
+                    "7za": 16.02
                 },
                 "VISUALIZE_RESULTS": {
                     "python": "3.13.9",
@@ -109,7 +109,7 @@
                     "sklearn": "1.7.2"
                 },
                 "Workflow": {
-                    "nf-core/drugresponseeval": "v1.1.1dev"
+                    "nf-core/drugresponseeval": "v1.2.0"
                 }
             },
             [
@@ -173,8 +173,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.3"
+            "nextflow": "25.04.6"
         },
-        "timestamp": "2025-11-21T12:33:12.457736"
+        "timestamp": "2025-12-04T12:02:00.645945292"
     }
 }
