@@ -1,18 +1,18 @@
-include { UNZIP as UNZIP_RESPONSE           } from '../../../modules/local/unzip'
-include { UNZIP as UNZIP_CS_RESPONSE        } from '../../../modules/local/unzip'
-include { UNZIP as UNZIP_META               } from '../../../modules/local/unzip'
-include { LOAD_RESPONSE as LOAD_RESPONSE    } from '../../../modules/local/load_response'
-include { LOAD_RESPONSE as LOAD_CS_RESPONSE } from '../../../modules/local/load_response'
-include { MAKE_MODEL_CHANNEL as MAKE_MODELS } from '../../../modules/local/make_model_channel'
+include { UNZIP as UNZIP_RESPONSE              } from '../../../modules/nf-core/unzip/main'
+include { UNZIP as UNZIP_CS_RESPONSE           } from '../../../modules/nf-core/unzip/main'
+include { UNZIP as UNZIP_META                  } from '../../../modules/nf-core/unzip/main'
+include { LOAD_RESPONSE as LOAD_RESPONSE       } from '../../../modules/local/load_response'
+include { LOAD_RESPONSE as LOAD_CS_RESPONSE    } from '../../../modules/local/load_response'
+include { MAKE_MODEL_CHANNEL as MAKE_MODELS    } from '../../../modules/local/make_model_channel'
 include { MAKE_MODEL_CHANNEL as MAKE_BASELINES } from '../../../modules/local/make_model_channel'
-include { CV_SPLIT                          } from '../../../modules/local/cv_split'
-include { HPAM_SPLIT                        } from '../../../modules/local/hpam_split'
-include { TRAIN_AND_PREDICT_CV              } from '../../../modules/local/train_and_predict_cv'
-include { EVALUATE_FIND_MAX                 } from '../../../modules/local/evaluate_find_max'
+include { CV_SPLIT                             } from '../../../modules/local/cv_split'
+include { HPAM_SPLIT                           } from '../../../modules/local/hpam_split'
+include { TRAIN_AND_PREDICT_CV                 } from '../../../modules/local/train_and_predict_cv'
+include { EVALUATE_FIND_MAX                    } from '../../../modules/local/evaluate_find_max'
 
 workflow RUN_CV {
     take:
-    test_modes                      // LPO,LDO,LCO, LTO
+    test_modes                     // LPO,LDO,LCO, LTO
     ch_models                      // channel of model names for full testing
     ch_baselines                   // channel of model names for comparison
     work_path                      // path to data
@@ -22,11 +22,11 @@ workflow RUN_CV {
     ch_versions = channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
     File meta_path = new File("${params.path_data}/meta/gene_lists/landmark_genes.csv")
-    if(!meta_path.exists()) {
+    if (!meta_path.exists()) {
         log.info "Downloading meta information including gene lists from Zenodo: ${params.zenodo_link}meta.zip"
         ch_unzip_meta = channel
                             .fromPath("${params.zenodo_link}meta.zip")
-                            .map { file -> ["meta", file] }
+                            .map { file -> [[id:"meta"], file] }
         UNZIP_META(ch_unzip_meta)
         ch_versions = ch_versions.mix(UNZIP_META.out.versions)
     }
@@ -34,14 +34,11 @@ workflow RUN_CV {
         log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
         ch_unzip = channel
                         .fromPath("${params.zenodo_link}${params.dataset_name}.zip")
-                        .map { file -> [params.dataset_name, file] }
+                        .map { file -> [[id:params.dataset_name], file] }
         UNZIP_RESPONSE(ch_unzip)
         ch_versions = ch_versions.mix(UNZIP_RESPONSE.out.versions)
         ch_response = UNZIP_RESPONSE.out.unzipped_csv
-                        .map { response_file ->
-                            file(response_file, checkIfExists: true)
-                        }
-    }else{
+    } else {
         log.info "Using existing response dataset ${params.dataset_name} from ${response_path}"
         ch_response = channel.fromPath(response_path, checkIfExists: true)
     }
@@ -66,18 +63,16 @@ workflow RUN_CV {
                                     !dataset_path.exists()
                                 }
                                 .map { dataset_name, dataset_path ->
-                                    [dataset_name, "${params.zenodo_link}${dataset_path.baseName}.zip"]
+                                    [[id:dataset_name], "${params.zenodo_link}${dataset_path.baseName}.zip"]
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
         ch_versions = ch_versions.mix(UNZIP_CS_RESPONSE.out.versions)
         ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_csv
-                        .map { response_file ->
-                            file(response_file, checkIfExists: true)
-                        }
         ch_cross_study_datasets = ch_cs_cached.concat(ch_cs_loaded)
     } else {
         ch_cross_study_datasets = channel.empty()
     }
+
     ch_response = measure.combine(ch_response)
     ch_cross_study_datasets = measure.combine(ch_cross_study_datasets)
     LOAD_RESPONSE(ch_response, false)
