@@ -2,7 +2,8 @@ process EVALUATE_FINAL {
     tag "${test_mode}_${model_name}_${pred_file}"
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     tuple val(test_mode), val(model_name), path(pred_file)

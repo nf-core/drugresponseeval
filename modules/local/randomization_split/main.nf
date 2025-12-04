@@ -2,7 +2,8 @@ process RANDOMIZATION_SPLIT {
     tag "${model_name}_${randomization_mode}"
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     tuple val(model_name), val(randomization_mode)
