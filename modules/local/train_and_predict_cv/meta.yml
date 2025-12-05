@@ -1,0 +1,77 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: train_and_predict_cv
+description: Train and predict loop for a cross-validation fold for a specified hyperparameter configuration.
+keywords:
+  - cross-validation
+  - optimization
+  - machine learning
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model.
+    - test_mode:
+        type: string
+        description: Specifies the test mode. One of LPO, LCO, LTO, LDO.
+    - cv_data:
+        type: file
+        description: Pickled cross-validation fold.
+        pattern: "*pkl"
+    - hyperparameters:
+        type: file
+        description: Hyperparameter configuration to be tested.
+        pattern: "*yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - path_data:
+        type: file
+        description: Path to the data for loading cell line and drug features.
+  - response_transformation:
+      type: string
+      description: Either None or a specified transformation that should be applied to the response.
+  - model_checkpoint_dir:
+      type: string
+      description: Either TEMPORARY or a directory where model checkpoints should be saved.
+
+output:
+  pred_data:
+    - - model_name:
+          type: string
+          description: See input.
+      - test_mode:
+          type: string
+          description: See input.
+      - cv_data.baseName:
+          type: string
+          description: cross-validation fold.
+      - hyperparameters:
+          type: file
+          description: see input.
+      - "prediction_dataset_*.pkl":
+          type: file
+          description: |
+            Pickled DrugResponseDataset containing the predicted values.
+          pattern: "prediction_dataset_*.pkl"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

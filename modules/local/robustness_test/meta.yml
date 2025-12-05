@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: robustness_test
+description: |
+  Makes a robustness experiment for a specified model with the determined optimal
+  hyperparameter configuration.
+keywords:
+  - robustness
+  - repeated experiment
+  - machine learning
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model.
+    - test_mode:
+        type: string
+        description: Test mode, i.e., LPO, LCO, LTO, or LDO.
+    - split_id:
+        type: string
+        description: specified cross-validation fold. One model per fold.
+    - split_dataset:
+        type: file
+        description: Pickled split.
+        pattern: "*pkl"
+    - best_hpams:
+        type: file
+        description: yaml of the optimal hyperparameter configuration.
+        pattern: "*yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - robustness_iteration:
+        type: integer
+        description: Which robustness iteration.
+    - path_data:
+        type: file
+        description: Path to the data directory. Used to load cell line/drug feature data.
+  - response_transformation:
+      type: string
+      description: Either None or a specified transformation that should be applied to the response.
+  - model_checkpoint_dir:
+      type: string
+      description: Either TEMPORARY or a directory where model checkpoints should be saved.
+
+output:
+  ch_vis:
+    - - test_mode:
+          type: string
+          description: See input.
+      - model_name:
+          type: string
+          description: See input.
+      - "**robustness*.csv":
+          type: file
+          description: |
+            All predicted values for the specified dataset for the robustness test.
+          pattern: "**robustness*.csv"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

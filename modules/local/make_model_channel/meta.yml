@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: make_model_channel
+description: |
+  Takes the model names and emits a txt, either one with a list of all models,
+  or one with a list of all baselines.
+keywords:
+  - model names
+  - helper function
+  - baselines
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - models:
+        type: string
+        description: List of models, either specified with --models or via --baselines
+    - response_data:
+        type: file
+        description: Pickled response data. For single-drug models, one model instance per unique drug id is needed.
+  - name:
+      type: string
+      description: |
+        Either models or baselines.
+
+output:
+  all_models:
+    - "{models,baselines}*.txt":
+        type: file
+        description: |
+          Contains either the list of all models or the list of all baselines, so that future processes can spawn one
+          process per model. For single-drug models, there is one line per model-drug name combination.
+        pattern: "{models,baselines}*.txt"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

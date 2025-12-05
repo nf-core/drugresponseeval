@@ -11,7 +11,7 @@ from drevalpy.experiment import consolidate_single_drug_model_predictions
 def get_parser():
     parser = argparse.ArgumentParser(description="Consolidate results for SingleDrugModels")
     parser.add_argument('--run_id', type=str, required=True, help="Run ID")
-    parser.add_argument("--test_mode", type=str, required=True, help="Test mode (LPO, LCO, LDO)")
+    parser.add_argument("--test_mode", type=str, required=True, help="Test mode (LPO, LCO, LTO, LDO)")
     parser.add_argument("--model_name", type=str, required=True, help="All Model "
                                                                                   "names")
     parser.add_argument("--outdir_path", type=str, required=True, help="Output directory path")

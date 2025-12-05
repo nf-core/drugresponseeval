@@ -9,7 +9,7 @@ process VISUALIZE_RESULTS {
     val(path_data)
 
     output:
-    path('report/*'), emit: html_out
+    path('report/*'),                           emit: html_out
     path("versions.yml"),                       emit: versions
 
 

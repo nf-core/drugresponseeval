@@ -8,7 +8,6 @@ process ROBUSTNESS_TEST {
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration), path(path_data)
-    val(randomization_type)
     val(response_transformation)
     val model_checkpoint_dir
 
