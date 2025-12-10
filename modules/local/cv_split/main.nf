@@ -2,7 +2,8 @@ process CV_SPLIT {
     tag "$test_mode"
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     tuple val(test_mode), path(response)

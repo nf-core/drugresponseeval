@@ -221,7 +221,7 @@ The following datasets are available and can be supplied via `--dataset_name`:
 | TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
 | TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv2.                    |
 | BeatAML2     | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
-| PDX_Bruna    | 2,559                | 104             | 37 (mouse passages   | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
+| PDX_Bruna    | 2,559                | 104             | 37 (mouse passages)  | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
 
 Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
