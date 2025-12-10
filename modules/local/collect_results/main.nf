@@ -1,6 +1,8 @@
 process COLLECT_RESULTS {
     label 'process_medium'
 
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
 
     input:

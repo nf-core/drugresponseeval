@@ -1,7 +1,8 @@
 process POSTPROCESS_CURVECURATOR_DATA {
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     val dataset_name

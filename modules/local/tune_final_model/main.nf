@@ -3,14 +3,13 @@ process TUNE_FINAL_MODEL {
     label 'process_high'
     label 'process_gpu'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     tuple val(model_name), path(train_ds), path(val_ds), path(early_stop_ds), val(test_mode), path(path_data), path(hpam_combi)
     val response_transformation
     val model_checkpoint_dir
-    val metric
-
 
     output:
     tuple val(model_name), val(test_mode), val("final"), path(hpam_combi), path("final_prediction_dataset_*.pkl"),  emit: final_prediction

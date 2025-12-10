@@ -1,0 +1,8 @@
+name: nf-core-drugresponseeval
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - pip:
+      - curve_curator==0.6.0

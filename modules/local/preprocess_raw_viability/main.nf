@@ -1,7 +1,8 @@
 process PREPROCESS_RAW_VIABILITY {
     label 'process_low'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:60b919fcfd35888b"
 
     input:
     val(dataset_name)
