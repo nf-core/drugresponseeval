@@ -227,7 +227,7 @@ Our pipeline also supports cross-study prediction, i.e., training on one dataset
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
 
 The drug response measure that you want to use as the target variable can be specified via the `--measure` parameter.
-Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”]`.
+Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”, "LN_IC50", "response"]`.
 
 We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
 well. By default, we use those measures. If you do not want to use those measures, enable the `--no_refitting` flag.
@@ -252,7 +252,7 @@ For individual results, look in the work directories.
 
 We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>.csv`
 (corresponding to the `--path_data` and `--dataset_name` options), with at least the columns `[“cell_line_id”, “drug_id”, <measure>”]`
-where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, “IC50”]`).
+where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, "LN_IC50", “IC50”, "response"]`).
 It is required that you use measure names that are also working with the available datasets if you use the `--cross_study_datasets` option.
 
 ### Available Randomization Tests
