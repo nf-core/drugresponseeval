@@ -16,7 +16,7 @@ process HPAM_SPLIT {
 
     script:
     """
-    hpam_split.py \\
+    drevalpy-make-hpam-yamls \\
         --model_name "${model_name}" \\
         ${no_hyperparameter_tuning ? '' : '--hyperparameter_tuning'}
 

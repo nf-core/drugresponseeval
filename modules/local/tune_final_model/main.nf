@@ -17,7 +17,7 @@ process TUNE_FINAL_MODEL {
 
     script:
     """
-    tune_final_model.py \\
+    drevalpy-tune-final-model \\
         --train_data $train_ds \\
         --val_data $val_ds \\
         --early_stopping_data $early_stop_ds \\

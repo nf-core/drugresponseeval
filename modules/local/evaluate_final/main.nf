@@ -15,7 +15,7 @@ process EVALUATE_FINAL {
 
     script:
     """
-    evaluate_final.py \\
+    drevalpy-evaluate-test \\
         --test_mode $test_mode \\
         --model_name "${model_name}" \\
         --pred_file $pred_file

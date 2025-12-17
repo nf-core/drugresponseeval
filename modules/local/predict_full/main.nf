@@ -19,7 +19,7 @@ process PREDICT_FULL {
 
     script:
     """
-    train_and_predict_final.py \\
+    drevalpy-test-cv \\
         --mode full \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

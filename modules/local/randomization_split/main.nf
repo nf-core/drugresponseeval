@@ -14,7 +14,7 @@ process RANDOMIZATION_SPLIT {
 
     script:
     """
-    randomization_split.py --model_name "${model_name}" --randomization_mode ${randomization_mode}
+    drevalpy-make-randomization-yamls --model_name "${model_name}" --randomization_mode ${randomization_mode}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

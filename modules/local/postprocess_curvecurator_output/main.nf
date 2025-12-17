@@ -16,7 +16,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
 
     script:
     """
-    postprocess_curvecurator_output.py --dataset_name ${dataset_name}
+    drevalpy-viability-postprocess --dataset_name ${dataset_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

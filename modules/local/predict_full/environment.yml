@@ -5,4 +5,4 @@ dependencies:
   - python=3.13
   - pip
   - pip:
-      - drevalpy==1.4.0
+      - drevalpy==1.4.1

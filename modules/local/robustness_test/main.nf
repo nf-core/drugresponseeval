@@ -17,7 +17,7 @@ process ROBUSTNESS_TEST {
 
     script:
     """
-    train_and_predict_final.py \\
+    drevalpy-test-cv \\
         --mode robustness \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

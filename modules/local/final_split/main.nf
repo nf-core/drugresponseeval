@@ -15,7 +15,7 @@ process FINAL_SPLIT {
 
     script:
     """
-    final_split.py \\
+    drevalpy-make-final-split-pkls \\
         --response $response \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
