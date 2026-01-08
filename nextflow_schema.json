@@ -147,7 +147,7 @@
                     "description": "Link to the latest Zenodo version of the dataset.",
                     "default": "https://zenodo.org/records/17611663/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
-                    "pattern": "^https://zenodo.org/records/[0-9]+/files/$"
+                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://github.com/nf-core/test-datasets/raw/refs/heads/drugresponseeval/test_data/)"
                 }
             }
         },
