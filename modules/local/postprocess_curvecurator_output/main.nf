@@ -1,7 +1,8 @@
 process POSTPROCESS_CURVECURATOR_DATA {
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     val dataset_name
@@ -15,7 +16,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
 
     script:
     """
-    postprocess_curvecurator_output.py --dataset_name ${dataset_name}
+    drevalpy-viability-postprocess --dataset_name ${dataset_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

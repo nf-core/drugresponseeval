@@ -4,6 +4,5 @@ channels:
 dependencies:
   - python=3.13
   - pip
-  - conda-forge::unzip=6.0
   - pip:
-      - drevalpy==1.4.0
+      - drevalpy==1.4.1

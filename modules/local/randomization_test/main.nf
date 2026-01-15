@@ -3,7 +3,8 @@ process RANDOMIZATION_TEST {
     label 'process_high'
     label 'process_gpu'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), path(randomization_views), path(path_data)
@@ -17,7 +18,7 @@ process RANDOMIZATION_TEST {
 
     script:
     """
-    train_and_predict_final.py \\
+    drevalpy-test-cv \\
         --mode randomization \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

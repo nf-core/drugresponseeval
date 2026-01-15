@@ -1,6 +1,8 @@
 process COLLECT_RESULTS {
     label 'process_medium'
 
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
 
     input:
@@ -16,7 +18,7 @@ process COLLECT_RESULTS {
 
     script:
     """
-    collect_results.py \\
+    drevalpy-collect-results \\
         --outfiles $outfiles \\
         --path_data $path_data
 
