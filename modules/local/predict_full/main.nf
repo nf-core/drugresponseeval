@@ -4,7 +4,7 @@ process PREDICT_FULL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:60b919fcfd35888b"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)

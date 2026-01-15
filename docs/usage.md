@@ -245,6 +245,14 @@ We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_n
 with the columns `[“dose”, “response”, “sample”, “drug”]` and an optional “replicate” column.
 If replicates are provided, the procedure will fit one curve per sample / drug pair using all replicates.
 
+**All dosages have to be provided in µM!** Drevalpy will compute the following response measures:
+
+- pEC50_curvecurator: computed internally by CurveCurator. Is computed as -log10(EC50_curvecurator[M]).
+- EC50_curvecurator: given in µM
+- IC50_curvecurator: given in µM
+- LN_IC50_curvecurator: computed from IC50_curvecurator
+- AUC_curvecurator
+
 The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
 For individual results, look in the work directories.
 
