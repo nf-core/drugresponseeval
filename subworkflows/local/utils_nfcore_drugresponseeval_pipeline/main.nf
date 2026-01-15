@@ -134,12 +134,12 @@ workflow PIPELINE_INITIALISATION {
         log.warn "NaiveMeanEffectsPredictor baseline model was not specified, adding it to the list of baselines."
     }
     ch_baselines = channel
-                    .from(baselines)
-                    .map { baseline ->
-                        if(!valid_model_names.contains(baseline)){
-                            error("Invalid baseline model specified: ${baseline}. If you use a custom model, please specify it under --models. For baselines, please use one of the following: ${valid_model_names.join(', ')}")
+                    .from(baseline_list)
+                    .map { baseline_name ->
+                        if(!valid_model_names.contains(baseline_name)){
+                            error("Invalid baseline model specified: ${baseline_name}. If you use a custom model, please specify it under --models. For baselines, please use one of the following: ${valid_model_names.join(', ')}")
                         } else {
-                            baseline
+                            baseline_name
                         }
                     }
 

@@ -3,7 +3,7 @@ process RANDOMIZATION_SPLIT {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:60b919fcfd35888b"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(model_name), val(randomization_mode)
@@ -14,7 +14,7 @@ process RANDOMIZATION_SPLIT {
 
     script:
     """
-    randomization_split.py --model_name "${model_name}" --randomization_mode ${randomization_mode}
+    drevalpy-make-randomization-yamls --model_name "${model_name}" --randomization_mode ${randomization_mode}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -3,7 +3,7 @@ process FINAL_SPLIT {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:60b919fcfd35888b"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(model_name), path(response), val(test_mode), path(path_data)
@@ -15,7 +15,7 @@ process FINAL_SPLIT {
 
     script:
     """
-    final_split.py \\
+    drevalpy-make-final-split-pkls \\
         --response $response \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
