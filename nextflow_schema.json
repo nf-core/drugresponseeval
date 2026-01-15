@@ -131,7 +131,7 @@
                     "type": "string",
                     "default": "LN_IC50",
                     "description": "The name of the drug response measure to use.",
-                    "help": "The name of the measure to use, default 'LN_IC50'. If using one of the available datasets (see 'dataset_name' option), this is restricted to one of ['LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'no_refitting' is not set (default), the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'no_refitting' option for details).",
+                    "help": "The name of the measure to use, default 'LN_IC50'. Restricted to one of ['LN_IC50', 'IC50', 'pEC50', 'EC50', 'AUC', 'response']. This corresponds to the name of the column that contains the measure in the provided input dataset. If the option 'no_refitting' is not set (default), the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'no_refitting' option for details).",
                     "help_text": "Column of the response dataset in which the drug response is stored. ",
                     "enum": ["LN_IC50", "pEC50", "AUC", "response", "EC50", "IC50"]
                 },
@@ -147,7 +147,7 @@
                     "description": "Link to the latest Zenodo version of the dataset.",
                     "default": "https://zenodo.org/records/17611663/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
-                    "pattern": "^https://zenodo.org/records/[0-9]+/files/$"
+                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://github.com/nf-core/test-datasets/raw/refs/heads/drugresponseeval/test_data/)"
                 }
             }
         },

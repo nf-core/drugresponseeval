@@ -3,7 +3,7 @@ process EVALUATE_FIND_MAX {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:60b919fcfd35888b"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(hpam_yamls), path(pred_datas)
@@ -15,12 +15,12 @@ process EVALUATE_FIND_MAX {
 
     script:
     """
-    evaluate_and_find_max.py \\
+    drevalpy-evaluate-hpams \\
         --model_name "${model_name}" \\
         --split_id $split_id \\
         --hpam_yamls $hpam_yamls \\
         --pred_datas $pred_datas \\
-        --metric $metric
+        --optim_metric $metric
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

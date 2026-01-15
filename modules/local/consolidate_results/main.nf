@@ -3,7 +3,7 @@ process CONSOLIDATE_RESULTS {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:60b919fcfd35888b"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(test_mode), val(model_name)
@@ -17,7 +17,7 @@ process CONSOLIDATE_RESULTS {
     script:
     def outdirPath = new File(params.outdir).getAbsolutePath()
     """
-    consolidate_results.py \\
+    drevalpy-consolidate-single-drug \\
         --run_id ${params.run_id} \\
         --test_mode ${test_mode} \\
         --model_name "${model_name}" \\
