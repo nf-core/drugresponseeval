@@ -12,8 +12,8 @@ _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body rem
 - [#56](https://github.com/nf-core/drugresponseeval/pull/56) Added HiRSE code promotion badge
 - [#57](https://github.com/nf-core/drugresponseeval/pull/57) DrEvalPy v1.4.0 contains two new datasets (BeatAML2, PDX_Bruna) and two new models (DrugGNN, ChemBERTaNeuralNetwork). Adapted the code and the summary svg accordingly.
 - [#67](https://github.com/nf-core/drugresponseeval/pull/67)
-  - Replaced local `unzip` module with patched nf-core one.(by @vagkaratzas)
-  - Added amd64, arm64 containers, and condalock environment configurations and profiles.(by @vagkaratzas)
+  - Replaced local `unzip` module with patched nf-core one (by @vagkaratzas)
+  - Added amd64, arm64 containers, and condalock environment configurations and profiles.(by @vagkaratzas) -> condalock files deactivated again by [#74](https://github.com/nf-core/drugresponseeval/pull/74)
 
 ### `Changed`
 
