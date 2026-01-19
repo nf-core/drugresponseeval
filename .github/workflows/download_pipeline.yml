@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "REPO_LOWERCASE=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
           echo "REPOTITLE_LOWERCASE=$(basename ${GITHUB_REPOSITORY,,})" >> "$GITHUB_OUTPUT"
-          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
+          echo "REPO_BRANCH=${{ github.event.inputs.testbranch || github.head_ref || 'dev' }}" >> "$GITHUB_OUTPUT"
 
   download:
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ./singularity_container_images
         run: |
-          nf-core pipelines download ${{ needs.configure.outputs.REPO_LOWERCASE }} \
+          nf-core --verbose pipelines download ${{ needs.configure.outputs.REPO_LOWERCASE }} \
           --revision ${{ needs.configure.outputs.REPO_BRANCH }} \
           --outdir ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }} \
           --compress "none" \
