@@ -38,7 +38,7 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     //
     // WORKFLOW: Run pipeline
     //
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     DRUGRESPONSEEVAL (
         models,
         baselines,
@@ -68,6 +68,9 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
+        params.help,
+        params.help_full,
+        params.show_hidden,
         // pipeline-specific input
         params.models,
         params.baselines,

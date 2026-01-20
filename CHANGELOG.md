@@ -3,6 +3,47 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.0: Gentle Togepi - [date]
+
+_Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body remains encased in its eggshell. It is able to siphon the positive energy of others, storing that happiness in its shell, and then release it to those in need of it. Because of its disposition, Togepi is seen as a sign of good luck, especially if a Trainer is capable of getting a sleeping Togepi to stand. Togepi's innocent smile is said to calm the soul._
+
+### `Added`
+
+- [#56](https://github.com/nf-core/drugresponseeval/pull/56) Added HiRSE code promotion badge
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57) DrEvalPy v1.4.0 contains two new datasets (BeatAML2, PDX_Bruna) and two new models (DrugGNN, ChemBERTaNeuralNetwork). Adapted the code and the summary svg accordingly.
+- [#67](https://github.com/nf-core/drugresponseeval/pull/67)
+  - Replaced local `unzip` module with patched nf-core one (by @vagkaratzas)
+  - Added amd64, arm64 containers, and condalock environment configurations and profiles.(by @vagkaratzas) -> condalock files deactivated again by [#74](https://github.com/nf-core/drugresponseeval/pull/74)
+
+### `Changed`
+
+- [#59](https://github.com/nf-core/drugresponseeval/pull/59) Update to new runner size syntax
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57) Updated to the new Zenodo version which now also contains two new datasets: BeatAML2 and PDX_Bruna. Adapted the README, documentation, config, schema and code accordingly. This also required changes in /bin/load_response and a new module UNZIP_META.
+- [#57](https://github.com/nf-core/drugresponseeval/pull/57), [#73](https://github.com/nf-core/drugresponseeval/pull/73) drevalpy version updates: -> 1.4.0 -> 1.4.1
+- [#55](https://github.com/nf-core/drugresponseeval/pull/55), [#58](https://github.com/nf-core/drugresponseeval/pull/58), [#60](https://github.com/nf-core/drugresponseeval/pull/60) Template version updates: -> 3.3.2 -> 3.4.1 -> 3.5.1
+- [#69](https://github.com/nf-core/drugresponseeval/pull/69) Added local environment.yml files, meta.yml files, and conda/container declarations for each local module and subworkflow.
+- [#72](https://github.com/nf-core/drugresponseeval/pull/72) Updated the minimal Nextflow version to 25.10.0
+- [#73](https://github.com/nf-core/drugresponseeval/pull/73) Pulling test data from nf-core/test-datasets
+
+### `Removed`
+
+- [#73](https://github.com/nf-core/drugresponseeval/pull/73) Python scripts that are now handled by the drevalpy CLI
+
+### `Fixed`
+
+- [#62](https://github.com/nf-core/drugresponseeval/pull/62) Fixes hardcoded unzip version
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| drevalpy   | 1.3.5       | 1.4.1       |
+
+### `Parameters`
+
+| Params | Status |
+| ------ | ------ |
+
 ## [v1.1.0](https://github.com/nf-core/drugresponseeval/releases/tag/1.1.0): Humongous Zapdos - 03.07.2025
 
 Second release of nf-core/drugresponseeval.

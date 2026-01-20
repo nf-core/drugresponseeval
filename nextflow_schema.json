@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/drugresponseeval/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/drugresponseeval/main/nextflow_schema.json",
     "title": "nf-core/drugresponseeval pipeline parameters",
     "description": "This pipeline evaluates drug response models in various settings on a variety of datasets.",
     "type": "object",
@@ -41,8 +41,8 @@
                 },
                 "dataset_name": {
                     "type": "string",
-                    "description": "Name of the dataset. Pre-supplied datasets are CTRPv2, CTRPv1, CCLE, GDSC1, GDSC2, TOYv1, TOYv2.",
-                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'TOYv1', 'TOYv2) in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting, or pre-fit data (see no_refitting option; not recommended for dataset comparability reasons due to potential differences in fitting procedures).",
+                    "description": "Name of the dataset. Pre-supplied datasets are CTRPv2, CTRPv1, CCLE, GDSC1, GDSC2, TOYv1, TOYv2, BeatAML2, and PDX_Bruna.",
+                    "help_text": "Name of the dataset used for the pipeline. This can be either one of the provided datasets ('GDSC1', 'GDSC2', 'CCLE', 'CTRPv2', 'TOYv1', 'TOYv2', 'BeatAML2', 'PDX_Bruna') in which case the datasets with the fitted curves is downloaded, or a custom dataset name, pointing either to raw viability measurements for automatic curve fitting, or pre-fit data (see no_refitting option; not recommended for dataset comparability reasons due to potential differences in fitting procedures).",
                     "default": "CTRPv2"
                 },
                 "outdir": {
@@ -131,7 +131,7 @@
                     "type": "string",
                     "default": "LN_IC50",
                     "description": "The name of the drug response measure to use.",
-                    "help": "The name of the measure to use, default 'LN_IC50'. If using one of the available datasets (see 'dataset_name' option), this is restricted to one of ['LN_IC50', 'EC50', 'IC50', 'pEC50', 'AUC', 'response']. This corresponds to the names of the columns that contain theses measures in the provided input dataset. If providing a custom dataset (see 'dataset_name' option), this may differ. If the option 'no_refitting' is not set (default), the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'no_refitting' option for details).",
+                    "help": "The name of the measure to use, default 'LN_IC50'. Restricted to one of ['LN_IC50', 'IC50', 'pEC50', 'EC50', 'AUC', 'response']. This corresponds to the name of the column that contains the measure in the provided input dataset. If the option 'no_refitting' is not set (default), the prefix '_curvecurator' is automatically appended, e.g. 'LN_IC50_curvecurator', to allow using the refit measures instead of the ones originally published for the available datasets (see 'dataset_name' option for details), allowing for better dataset comparability (refit measures are already provided in the available datasets or computed as part of the fitting procedure when providing custom raw viability datasets, see 'no_refitting' option for details).",
                     "help_text": "Column of the response dataset in which the drug response is stored. ",
                     "enum": ["LN_IC50", "pEC50", "AUC", "response", "EC50", "IC50"]
                 },
@@ -139,15 +139,15 @@
                     "type": "string",
                     "description": "Datasets for cross-study prediction.",
                     "help_text": "List of datasets to use to evaluate predictions across studies. Can be a combination like 'CTRPv1,CCLE'. Default is empty string which means no cross-study datasets are used.",
-                    "default": "",
-                    "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12])(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]))*)$"
+                    "default": null,
+                    "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2)(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2))*)$"
                 },
                 "zenodo_link": {
                     "type": "string",
                     "description": "Link to the latest Zenodo version of the dataset.",
-                    "default": "https://zenodo.org/records/15533857/files/",
+                    "default": "https://zenodo.org/records/17611663/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
-                    "pattern": "^https://zenodo.org/records/[0-9]+/files/$"
+                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://github.com/nf-core/test-datasets/raw/refs/heads/drugresponseeval/test_data/)"
                 }
             }
         },
@@ -320,6 +320,18 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }

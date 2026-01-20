@@ -2,7 +2,8 @@ process LOAD_RESPONSE {
     tag "${response.baseName}"
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     tuple val(measure), path(response)
@@ -15,7 +16,7 @@ process LOAD_RESPONSE {
 
     script:
     """
-    load_response.py \\
+    drevalpy-load-response \\
         --response_dataset ${response} \\
         --measure ${measure} \\
         ${cross_study_dataset ? '--cross_study_dataset' : ''}

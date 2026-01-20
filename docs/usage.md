@@ -40,7 +40,7 @@ and predicts responses as the sum of the overall mean (NaivePredictor) + cell li
 
 Furthermore, we offer a variety of more advanced **baseline models** and some **state-of-the-art models** to compare
 your model against. Similarly, we provide commonly used datasets to evaluate your model on (GDSC1, GDSC2, CCLE,
-CTRPv1, CTRPv2). You can also provide your **own dataset or your own model by contributing to our PyPI package
+CTRPv1, CTRPv2, BeatAML2, PDX data from Bruna et al.). You can also provide your **own dataset or your own model by contributing to our PyPI package
 [drevalpy](https://github.com/daisybio/drevalpy.git)** Before contributing, you can pull our respective repositories.
 More information can be found in the [drevalpy readthedocs](https://drevalpy.readthedocs.io/en/latest/).
 
@@ -140,6 +140,8 @@ The following models are available:
 | SVR                              | Baseline Method            | Multi-Drug Model                     | Fits an [Sklearn Support Vector Regressor](https://scikit-learn.org/1.5/modules/generated/sklearn.svm.SVR.html) gene expression data and drug fingerprints.                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | SimpleNeuralNetwork              | Baseline Method            | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on gene expression and drug fingerprints (concatenated input) with 3 layers of varying dimensions and Dropout layers.                                                                                                                                                                                                                                                                                                                                          |
 | MultiOmicsNeuralNetwork          | Baseline Method            | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on gene expression, methylation, mutation, copy number variation data, and drug fingerprints (concatenated input) with 3 layers of varying dimensions and Dropout layers. The dimensionality of the methylation data is reduced with a PCA to the first 100 components before it is fed to the model.                                                                                                                                                          |
+| ChemBERTaNeuralNetwork           | Baseline Method            | Multi-Drug Model                     | Same architecture as the SimpleNeuralNetwork but uses pre-computed ChemBERTa embeddings as input instead of drug fingerprints.                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| DrugGNN                          | Baseline Method            | Multi-Drug Model                     | Represents drugs as graph, encodes their structure with a 3-layer GNN. Uses a 2-layer MLP for encoding gene expression. Concatenates the representations and feeds them through 2 more MLP layers.                                                                                                                                                                                                                                                                                                                                                                                        |
 | SRMF                             | Published Model            | Multi-Drug Model                     | [Similarity Regularization Matrix Factorization](https://doi.org/10.1186/s12885-017-3500-5) model by Wang et al. on gene expression data and drug fingerprints. Re-implemented Matlab code into Python. The basic idea is represent each drug and each cell line by their respective similarities to all other drugs/cell lines. Those similarities are mapped into a shared latent low-dimensional space from which responses are predicted.                                                                                                                                             |
 | MOLIR                            | Published Model            | Single-Drug Model                    | Regression extension of [MOLI: multi-omics late integration deep neural network.](https://doi.org/10.1093/bioinformatics/btz318) by Sharifi-Noghabi et al. Takes somatic mutation, copy number variation and gene expression data as input. MOLI reduces the dimensionality of each omics type with a hidden layer, concatenates them into one representation and optimizes this representation via a combined cost function consisting of a triplet loss and a binary cross-entropy loss. We implemented a regression adaption with MSE loss and an adapted triplet loss for regression. |
 | SuperFELTR                       | Published Model            | Single-Drug Model                    | Regression extension of [SuperFELT: supervised feature extraction learning using triplet loss for drug response](https://doi.org/10.1186/s12859-021-04146-z) by Park et al. Very similar to MOLI(R). In MOLI(R), encoders and the classifier were trained jointly. Super.FELT(R) trains them independently. MOLI(R) was trained without feature selection (except for the Variance Threshold on the gene expression). Super.FELT(R) uses feature selection for all omics data.                                                                                                            |
@@ -209,21 +211,23 @@ new_dataset.to_csv('path/to/predictions.csv')
 
 The following datasets are available and can be supplied via `--dataset_name`:
 
-| Dataset Name | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                      |
-| ------------ | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------ |
-| CTRPv1       | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                |
-| CTRPv2       | 395,025              | 546             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                |
-| CCLE         | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                |
-| GDSC1        | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                             |
-| GDSC2        | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                             |
-| TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                        |
-| TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv2. |
+| Dataset Name | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                                         |
+| ------------ | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| CTRPv1       | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                                   |
+| CTRPv2       | 395,025              | 546             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                                   |
+| CCLE         | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                                   |
+| GDSC1        | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                |
+| GDSC2        | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                |
+| TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
+| TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv2.                    |
+| BeatAML2     | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
+| PDX_Bruna    | 2,559                | 104             | 37 (mouse passages)  | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
 
 Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
 
 The drug response measure that you want to use as the target variable can be specified via the `--measure` parameter.
-Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”]`.
+Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”, "LN_IC50", "response"]`.
 
 We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
 well. By default, we use those measures. If you do not want to use those measures, enable the `--no_refitting` flag.
@@ -241,6 +245,16 @@ We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_n
 with the columns `[“dose”, “response”, “sample”, “drug”]` and an optional “replicate” column.
 If replicates are provided, the procedure will fit one curve per sample / drug pair using all replicates.
 
+**All dosages have to be provided in µM!** Drevalpy will compute the following response measures:
+
+| Measure              | Computation                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
+| pEC50_curvecurator   | Computed internally by CurveCurator. Is computed as -log10(EC50_curvecurator[M]). |
+| EC50_curvecurator    | Given in µM.                                                                      |
+| IC50_curvecurator    | Given in µM.                                                                      |
+| LN_IC50_curvecurator | Computed from IC50_curvecurator                                                   |
+| AUC_curvecurator     | (unitless; computed as integral)                                                  |
+
 The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
 For individual results, look in the work directories.
 
@@ -248,7 +262,7 @@ For individual results, look in the work directories.
 
 We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_name>.csv`
 (corresponding to the `--path_data` and `--dataset_name` options), with at least the columns `[“cell_line_id”, “drug_id”, <measure>”]`
-where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, “IC50”]`).
+where `<measure>` is replaced with the name of the measure you provide (`[“AUC”, “pEC50”, “EC50”, "LN_IC50", “IC50”, "response"]`).
 It is required that you use measure names that are also working with the available datasets if you use the `--cross_study_datasets` option.
 
 ### Available Randomization Tests
@@ -300,6 +314,14 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 > [!TIP]
 > If you wish to share such profile (such as upload as supplementary material for academic publications), make sure to NOT include cluster specific paths to files, nor institutional specific profiles.
 
+### For developers
+
+If the drevalpy (after Docker image release) or the unzip version was updated, the snapshots need to be updated:
+
+- If not already installed, get nf-test: `curl -fsSL https://get.nf-test.com | bash` and run `./nf-test init`
+- Run `nf-test test --profile=+docker --verbose`
+- If tests/default.nf.test.snap already exists, run nf-test with `--update-snapshot`
+
 ## Core Nextflow arguments
 
 > [!NOTE]
@@ -333,7 +355,7 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
 - `shifter`
   - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
 - `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+  - A generic configuration profile to be used with [Charliecloud](https://charliecloud.io/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
 - `wave`

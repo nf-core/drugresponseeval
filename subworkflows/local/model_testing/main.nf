@@ -25,7 +25,7 @@ workflow MODEL_TESTING {
     ch_hpam_combis              // from RUN_CV [model_name, hpam_X.yaml]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     if (params.cross_study_datasets == '') {
         cross_study_datasets = channel.fromPath(['./NONE.csv'])
     }
@@ -83,7 +83,7 @@ workflow MODEL_TESTING {
     }
 
     if (params.n_trials_robustness > 0) {
-        ch_trials_robustness = Channel.from(1..params.n_trials_robustness)
+        ch_trials_robustness = channel.from(1..params.n_trials_robustness)
         ch_trials_robustness = ch_models
                                 .map{it -> it[1]}
                                 .combine(ch_trials_robustness)
@@ -98,7 +98,6 @@ workflow MODEL_TESTING {
         ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0).combine(work_path)
         ROBUSTNESS_TEST (
             ch_robustness,
-            params.randomization_type,
             params.response_transformation,
             params.model_checkpoint_dir
         )
@@ -132,8 +131,7 @@ workflow MODEL_TESTING {
         TUNE_FINAL_MODEL(
             ch_tune_final_model,
             params.response_transformation,
-            params.model_checkpoint_dir,
-            params.optim_metric
+            params.model_checkpoint_dir
         )
         ch_versions = ch_versions.mix(TUNE_FINAL_MODEL.out.versions)
         ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])

@@ -2,7 +2,8 @@ process HPAM_SPLIT {
     tag "$model_name"
     label 'process_single'
 
-
+    conda "${moduleDir}/environment.yml"
+    container "python_pip_drevalpy:a2b7a0d499377204"
 
     input:
     val model_name
@@ -15,7 +16,7 @@ process HPAM_SPLIT {
 
     script:
     """
-    hpam_split.py \\
+    drevalpy-make-hpam-yamls \\
         --model_name "${model_name}" \\
         ${no_hyperparameter_tuning ? '' : '--hyperparameter_tuning'}
 
