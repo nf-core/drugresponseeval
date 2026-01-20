@@ -247,11 +247,13 @@ If replicates are provided, the procedure will fit one curve per sample / drug p
 
 **All dosages have to be provided in µM!** Drevalpy will compute the following response measures:
 
-- pEC50_curvecurator: computed internally by CurveCurator. Is computed as -log10(EC50_curvecurator[M]).
-- EC50_curvecurator: given in µM
-- IC50_curvecurator: given in µM
-- LN_IC50_curvecurator: computed from IC50_curvecurator
-- AUC_curvecurator
+| Measure              | Computation                                                                       |
+| -------------------- | --------------------------------------------------------------------------------- |
+| pEC50_curvecurator   | Computed internally by CurveCurator. Is computed as -log10(EC50_curvecurator[M]). |
+| EC50_curvecurator    | Given in µM.                                                                      |
+| IC50_curvecurator    | Given in µM.                                                                      |
+| LN_IC50_curvecurator | Computed from IC50_curvecurator                                                   |
+| AUC_curvecurator     | (unitless; computed as integral)                                                  |
 
 The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
 For individual results, look in the work directories.
@@ -316,9 +318,9 @@ To further assist in reproducibility, you can use share and reuse [parameter fil
 
 If the drevalpy (after Docker image release) or the unzip version was updated, the snapshots need to be updated:
 
-- Delete tests/default.nf.test.snap
 - If not already installed, get nf-test: `curl -fsSL https://get.nf-test.com | bash` and run `./nf-test init`
 - Run `nf-test test --profile=+docker --verbose`
+- If tests/default.nf.test.snap already exists, run nf-test with `--update-snapshot`
 
 ## Core Nextflow arguments
 

@@ -3,6 +3,6 @@ channels:
   - conda-forge
 dependencies:
   - python=3.13
-  - pip
+  - pip=25.3
   - pip:
       - drevalpy==1.4.1
