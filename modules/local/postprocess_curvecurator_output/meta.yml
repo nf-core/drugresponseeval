@@ -1,7 +1,6 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: postprocess_curvecurator_data
-description: Module to make the output of the CurveCurator call fitting for drevalpy.
+description: Module to make the output of the CurveCurator call fitting for
+  drevalpy.
 keywords:
   - collection
   - results
@@ -28,13 +27,15 @@ input:
       pattern: "*.tsv"
   - measure:
       type: string
-      description: Response measure selected for this drevalpy run. Will then get updated to {measure}_curvecurator.
+      description: Response measure selected for this drevalpy run. Will then get
+        updated to {measure}_curvecurator.
 
 output:
   path_to_dataset:
     - "${dataset_name}.csv":
         type: file
-        description: The new, reprocessed drug response dataset. Will get saved to path_data.
+        description: The new, reprocessed drug response dataset. Will get saved to
+          path_data.
         pattern: "*.csv"
   measure:
     - "measure_curvecurator":
@@ -51,3 +52,27 @@ authors:
   - "@JudithBernett"
 maintainers:
   - "@JudithBernett"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/nf-core-drugresponseeval:998fa86004835e40
+      buildId: bd-998fa86004835e40_1
+      scanId: sc-20b8c4533aac5b4d_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/nf-core-drugresponseeval:21ac96c54f03ba28
+      buildId: bd-21ac96c54f03ba28_1
+      scanId: sc-a34fb88df55a0e28_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:6332f7632f00e483
+      buildId: bd-6332f7632f00e483_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/93/93942d215e2a3419d33da145436188ee07c78ec5ab2cf3939d44c55434f04206/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:edd42b1c07162f57
+      buildId: bd-edd42b1c07162f57_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/81021d0c83dd72234b54f54f77d1a7aa0efe961784cbbb391a9bf256c86799d6/data
+  conda:
+    linux/amd64:
+      lock_file: modules/local/postprocess_curvecurator_output/.conda-lock/linux-amd64-bd-998fa86004835e40_1.txt
+    linux/arm64:
+      lock_file: modules/local/postprocess_curvecurator_output/.conda-lock/linux-arm64-bd-21ac96c54f03ba28_1.txt

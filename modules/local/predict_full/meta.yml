@@ -1,5 +1,3 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: predict_full
 description: |
   Final train and predict loop, trains model on the collapsed train and validation set
@@ -34,7 +32,8 @@ input:
         description: Test mode, i.e., LPO, LCO, LTO, or LDO.
     - split_id:
         type: string
-        description: specified cross-validation fold. PREDICT_FULL gives one model per fold.
+        description: specified cross-validation fold. PREDICT_FULL gives one model
+          per fold.
     - split_dataset:
         type: file
         description: Pickled split.
@@ -47,13 +46,16 @@ input:
           - edam: http://edamontology.org/format_3750 # YAML
     - path_data:
         type: file
-        description: Path to the data directory. Used to load cell line/drug feature data.
+        description: Path to the data directory. Used to load cell line/drug
+          feature data.
   - response_transformation:
       type: string
-      description: Either None or a specified transformation that should be applied to the response.
+      description: Either None or a specified transformation that should be
+        applied to the response.
   - model_checkpoint_dir:
       type: string
-      description: Either TEMPORARY or a directory where model checkpoints should be saved.
+      description: Either TEMPORARY or a directory where model checkpoints should
+        be saved.
 
 output:
   ch_vis:
@@ -98,3 +100,27 @@ authors:
   - "@JudithBernett"
 maintainers:
   - "@JudithBernett"
+containers:
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/nf-core-drugresponseeval:998fa86004835e40
+      buildId: bd-998fa86004835e40_1
+      scanId: sc-20b8c4533aac5b4d_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/nf-core-drugresponseeval:21ac96c54f03ba28
+      buildId: bd-21ac96c54f03ba28_1
+      scanId: sc-a34fb88df55a0e28_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:6332f7632f00e483
+      buildId: bd-6332f7632f00e483_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/93/93942d215e2a3419d33da145436188ee07c78ec5ab2cf3939d44c55434f04206/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:edd42b1c07162f57
+      buildId: bd-edd42b1c07162f57_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/81021d0c83dd72234b54f54f77d1a7aa0efe961784cbbb391a9bf256c86799d6/data
+  conda:
+    linux/amd64:
+      lock_file: modules/local/predict_full/.conda-lock/linux-amd64-bd-998fa86004835e40_1.txt
+    linux/arm64:
+      lock_file: modules/local/predict_full/.conda-lock/linux-arm64-bd-21ac96c54f03ba28_1.txt
