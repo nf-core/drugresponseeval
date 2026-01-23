@@ -53,24 +53,24 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/nf-core-drugresponseeval:998fa86004835e40
-      buildId: bd-998fa86004835e40_1
-      scanId: sc-20b8c4533aac5b4d_1
+      name: community.wave.seqera.io/library/python_pip_drevalpy:07cdd5a85ef96789
+      buildId: bd-07cdd5a85ef96789_1
+      scanId: sc-973f6f00d423213e_1
     linux/arm64:
-      name: community.wave.seqera.io/library/nf-core-drugresponseeval:21ac96c54f03ba28
-      buildId: bd-21ac96c54f03ba28_1
-      scanId: sc-a34fb88df55a0e28_1
+      name: community.wave.seqera.io/library/python_pip_drevalpy:73a364e6a61f3951
+      buildId: bd-73a364e6a61f3951_1
+      scanId: sc-ae9f02412bc90df3_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:6332f7632f00e483
-      buildId: bd-6332f7632f00e483_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/93/93942d215e2a3419d33da145436188ee07c78ec5ab2cf3939d44c55434f04206/data
+      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:1069f505cb1315b2
+      buildId: bd-1069f505cb1315b2_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3f/3f8fdc4bf25d3160c2b44a1c628d34bcc01c292c51b3e8f6232c927eb985109b/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/nf-core-drugresponseeval:edd42b1c07162f57
-      buildId: bd-edd42b1c07162f57_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/81/81021d0c83dd72234b54f54f77d1a7aa0efe961784cbbb391a9bf256c86799d6/data
+      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:9257eb86bb296106
+      buildId: bd-9257eb86bb296106_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f8/f86188574968e43df4813ad20d8d083761a124930c6335a6bb4cca0553e31680/data
   conda:
     linux/amd64:
-      lock_file: modules/local/cv_split/.conda-lock/linux-amd64-bd-998fa86004835e40_1.txt
+      lock_file: modules/local/cv_split/.conda-lock/linux-amd64-bd-07cdd5a85ef96789_1.txt
     linux/arm64:
-      lock_file: modules/local/cv_split/.conda-lock/linux-arm64-bd-21ac96c54f03ba28_1.txt
+      lock_file: modules/local/cv_split/.conda-lock/linux-arm64-bd-73a364e6a61f3951_1.txt

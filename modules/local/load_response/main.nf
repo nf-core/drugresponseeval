@@ -3,7 +3,7 @@ process LOAD_RESPONSE {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "python_pip_drevalpy:07cdd5a85ef96789"
 
     input:
     tuple val(measure), path(response)
