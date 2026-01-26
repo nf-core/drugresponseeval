@@ -57,7 +57,7 @@
                     "numpy": "2.4.1",
                     "pandas": "2.3.3",
                     "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "torch": "2.10.0",
                     "platform": "1.0.8"
                 },
                 "MAKE_MODELS": {
@@ -67,7 +67,7 @@
                     "numpy": "2.4.1",
                     "pandas": "2.3.3",
                     "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "torch": "2.10.0",
                     "platform": "1.0.8"
                 },
                 "PREDICT_FULL": {
@@ -77,7 +77,7 @@
                     "numpy": "2.4.1",
                     "pandas": "2.3.3",
                     "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "torch": "2.10.0",
                     "platform": "1.0.8"
                 },
                 "TRAIN_AND_PREDICT_CV": {
@@ -87,7 +87,7 @@
                     "numpy": "2.4.1",
                     "pandas": "2.3.3",
                     "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "torch": "2.10.0",
                     "platform": "1.0.8"
                 },
                 "UNZIP_CS_RESPONSE": {
