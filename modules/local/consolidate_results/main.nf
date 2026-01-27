@@ -3,7 +3,7 @@ process CONSOLIDATE_RESULTS {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:07cdd5a85ef96789"
+    container "python_pip_drevalpy:af9bf54ab78b9680"
 
     input:
     tuple val(test_mode), val(model_name)

@@ -3,7 +3,7 @@ process MAKE_MODEL_CHANNEL {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:07cdd5a85ef96789"
+    container "python_pip_drevalpy:af9bf54ab78b9680"
 
     input:
     tuple val(models), path(response_data)

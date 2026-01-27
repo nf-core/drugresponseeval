@@ -2,7 +2,7 @@ process VISUALIZE_RESULTS {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:07cdd5a85ef96789"
+    container "python_pip_drevalpy:af9bf54ab78b9680"
 
     input:
     tuple path(eval_results), path(eval_results_per_drug), path(eval_results_per_cl), path(true_vs_predicted)

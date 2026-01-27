@@ -55,24 +55,24 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/python_pip_curve_curator:20ec98c3526b960b
-      buildId: bd-20ec98c3526b960b_1
-      scanId: sc-9b2a2d46da45a359_1
+      name: community.wave.seqera.io/library/python_pip_curve_curator:3b584472647bda92
+      buildId: bd-3b584472647bda92_1
+      scanId: sc-6af48bcbe83fbbbf_1
     linux/arm64:
-      name: community.wave.seqera.io/library/python_pip_curve_curator:cab146344eb7904c
-      buildId: bd-cab146344eb7904c_1
-      scanId: sc-caea37e074ecd382_1
+      name: community.wave.seqera.io/library/python_pip_curve_curator:97424bed6a7f7435
+      buildId: bd-97424bed6a7f7435_1
+      scanId: sc-496561a8e367d080_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:106cf54a58edcb69
-      buildId: bd-106cf54a58edcb69_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ad/ad74f382e14f619b62c49e0c8f8c8b86e2f433f6eff9b95220d7e9b5b7f46b85/data
+      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:230cb19609b08d6b
+      buildId: bd-230cb19609b08d6b_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3c/3c2430fc8317997355ac2576512dbb971c9f04b81fadfc7ecf0a7d24d2520b67/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:65ea17fd4a7a8daf
-      buildId: bd-65ea17fd4a7a8daf_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/94/9440bc2bb8da816716d46ec8e52a7a05727509f23a9b937244443c11a3f0ccef/data
+      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:9eb2c4a784e83d96
+      buildId: bd-9eb2c4a784e83d96_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ea/ea3d3ad28e82f7502cea3e4dab169d83204d57af1ae85b71d1464f88caddc8db/data
   conda:
     linux/amd64:
-      lock_file: modules/local/fit_curves/.conda-lock/linux-amd64-bd-20ec98c3526b960b_1.txt
+      lock_file: modules/local/fit_curves/.conda-lock/linux-amd64-bd-3b584472647bda92_1.txt
     linux/arm64:
-      lock_file: modules/local/fit_curves/.conda-lock/linux-arm64-bd-cab146344eb7904c_1.txt
+      lock_file: modules/local/fit_curves/.conda-lock/linux-arm64-bd-97424bed6a7f7435_1.txt

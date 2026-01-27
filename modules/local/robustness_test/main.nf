@@ -4,7 +4,7 @@ process ROBUSTNESS_TEST {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:07cdd5a85ef96789"
+    container "python_pip_drevalpy:af9bf54ab78b9680"
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(split_dataset), path(best_hpams), val(robustness_iteration), path(path_data)

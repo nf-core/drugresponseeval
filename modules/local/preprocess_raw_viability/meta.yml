@@ -52,24 +52,24 @@ maintainers:
 containers:
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/python_pip_drevalpy:07cdd5a85ef96789
-      buildId: bd-07cdd5a85ef96789_1
-      scanId: sc-973f6f00d423213e_1
+      name: community.wave.seqera.io/library/python_pip_drevalpy:af9bf54ab78b9680
+      buildId: bd-af9bf54ab78b9680_2
+      scanId: sc-b6d2bf0ab809292d_1
     linux/arm64:
-      name: community.wave.seqera.io/library/python_pip_drevalpy:73a364e6a61f3951
-      buildId: bd-73a364e6a61f3951_1
-      scanId: sc-ae9f02412bc90df3_1
+      name: community.wave.seqera.io/library/python_pip_drevalpy:c833eff049957dc2
+      buildId: bd-c833eff049957dc2_1
+      scanId: sc-4f679c779337d3be_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:1069f505cb1315b2
-      buildId: bd-1069f505cb1315b2_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3f/3f8fdc4bf25d3160c2b44a1c628d34bcc01c292c51b3e8f6232c927eb985109b/data
+      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:14f6aa7ce515f298
+      buildId: bd-14f6aa7ce515f298_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c3/c38ed8e928ffd441f865d16ada04b42aebbeaafb7b630e6b89f19593ebd92537/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:9257eb86bb296106
-      buildId: bd-9257eb86bb296106_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/f8/f86188574968e43df4813ad20d8d083761a124930c6335a6bb4cca0553e31680/data
+      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:71ba1f0f872b5905
+      buildId: bd-71ba1f0f872b5905_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d3/d34593b3682b661bcdb45c4d7387af50d99766b643c5ea5a792b38ef41379f6b/data
   conda:
     linux/amd64:
-      lock_file: modules/local/preprocess_raw_viability/.conda-lock/linux-amd64-bd-07cdd5a85ef96789_1.txt
+      lock_file: modules/local/preprocess_raw_viability/.conda-lock/linux-amd64-bd-af9bf54ab78b9680_2.txt
     linux/arm64:
-      lock_file: modules/local/preprocess_raw_viability/.conda-lock/linux-arm64-bd-73a364e6a61f3951_1.txt
+      lock_file: modules/local/preprocess_raw_viability/.conda-lock/linux-arm64-bd-c833eff049957dc2_1.txt
