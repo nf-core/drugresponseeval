@@ -71,15 +71,15 @@ jobs:
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes-arm.outputs.shard) }}
         archProfile: [arm64]
-        profile: [docker_arm]
+        profile: [docker_arm, conda_arm, singularity_arm]
         isMain:
           - ${{ github.base_ref == 'master' || github.base_ref == 'main' }}
         # Exclude conda and singularity on dev
-        exclude:
-          - isMain: false
-            profile: "conda_arm"
-          - isMain: false
-            profile: "singularity_arm"
+        # exclude:
+        # - isMain: false
+        #   profile: "conda_arm"
+        # - isMain: false
+        #   profile: "singularity_arm"
         NXF_VER:
           - "25.10.0"
           - "latest-everything"
