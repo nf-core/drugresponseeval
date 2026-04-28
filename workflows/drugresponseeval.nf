@@ -21,9 +21,6 @@ include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def test_modes = params.test_mode.split(",")
-def randomizations = params.randomization_mode.split(",")
-
 workflow DRUGRESPONSEEVAL {
 
     take:
@@ -34,6 +31,8 @@ workflow DRUGRESPONSEEVAL {
     main:
 
     def ch_versions = channel.empty()
+    def test_modes = params.test_mode.split(",")
+    def randomizations = params.randomization_mode.split(",")
 
     ch_models_baselines = models.concat(baselines)
 
@@ -89,7 +88,7 @@ workflow DRUGRESPONSEEVAL {
     def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir}/pipeline_info",
+            storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
             sort: true,
             newLine: true
