@@ -1,0 +1,55 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: fit_curves
+description: Fits curves using CurveCurator.
+keywords:
+  - curve fitting
+  - dose-response data
+  - harmonization
+tools:
+  - curve_curator:
+      description: |
+        CurveCurator is an open-source analysis platform for dose-dependent data sets. It fits a classical
+        4-parameter equation to estimate effect potency, effect size, and the statistical significance
+        of the observed response.
+      homepage: https://github.com/kusterlab/curve_curator
+      documentation: https://github.com/kusterlab/curve_curator
+      tool_dev_url: https://github.com/kusterlab/curve_curator
+      doi: "10.1038/s41467-023-43696-z"
+      licence: ["Apache-2.9"]
+      identifier: ""
+
+input:
+  - dataset_name:
+      type: string
+      description: Name of the dataset, e.g., CTRPv2
+  - - dir_name:
+        type: string
+        description: Directory name where the toml file lies.
+    - toml:
+        type: file
+        description: TOML file specifying the parameters for CurveCurator.
+        pattern: "config.toml"
+    - curvecurator_input:
+        type: file
+        description: Contains the input to CurveCurator, i.e., samples, drugs, doses, replicates
+        pattern: "curvecurator_input.tsv"
+
+output:
+  path_to_curvecurator_out:
+    - "curves.tsv":
+        type: file
+        description: |
+          Contains fitted curves.
+        pattern: "curves.tsv"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

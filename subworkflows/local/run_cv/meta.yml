@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "RUN_CV"
+description: |
+  Subworkflow for identifying the optimal hyperparameter configurations of each model via cross-validation.
+keywords:
+  - train
+  - predict
+  - cross-validation
+  - hyperparameter optimization
+components:
+  - unzip
+  - load/response
+  - make/model/channel
+  - cv/split
+  - hpam/split
+  - train/and/predict/cv
+  - evaluate/find/max
+input:
+  - test_modes:
+      type: list
+      description: e.g., LPO, LCO
+  - ch_models:
+      type: list
+      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
+  - ch_baselines:
+      type: list
+      description: Channel only containing [model_class, model_name] for baselines (used for comparison)
+  - work_path:
+      type: file
+      description: path to the data channel.fromPath(params.path_data)
+  - measure:
+      type: string
+      description: Response measure of choice.
+output:
+  - best_hpam_per_split:
+      type: list
+      description: |
+        Channel containing the best hyperparameters per split in the form
+        [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
+  - response_dataset:
+      type: file
+      description: Pickled dataset containing the response data.
+  - cross_study_datasets:
+      type: list
+      description: List of pickled datasets containing the pickled cross-study datasets.
+  - ch_models:
+      type: list
+      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
+  - ch_hpam_combis:
+      type: list
+      description: channel containing the optimal hyperparameter combinations [model_name, hpam_X.yaml]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
