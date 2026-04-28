@@ -1,5 +1,6 @@
 Changes in component 'nf-core/unzip'
 'modules/nf-core/unzip/environment.yml' is unchanged
+'modules/nf-core/unzip/meta.yml' is unchanged
 Changes in 'unzip/main.nf':
 --- modules/nf-core/unzip/main.nf
 +++ modules/nf-core/unzip/main.nf
@@ -20,7 +21,6 @@ Changes in 'unzip/main.nf':
          $archive
  
 
-'modules/nf-core/unzip/meta.yml' is unchanged
-'modules/nf-core/unzip/tests/main.nf.test' is unchanged
 'modules/nf-core/unzip/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/unzip/tests/main.nf.test' is unchanged
 ************************************************************
