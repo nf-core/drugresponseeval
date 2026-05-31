@@ -4,7 +4,9 @@ process PREDICT_FULL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/258ae8d4dc806d30de817bb11421fb2316bdb3dd3305dfaa37e5ea01eb475341/data' :
+        'community.wave.seqera.io/library/python_pip_drevalpy:8252ebecce29d755' }"
 
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)

@@ -4,7 +4,9 @@ process TRAIN_FINAL_MODEL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/258ae8d4dc806d30de817bb11421fb2316bdb3dd3305dfaa37e5ea01eb475341/data' :
+        'community.wave.seqera.io/library/python_pip_drevalpy:8252ebecce29d755' }"
 
     input:
     tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
