@@ -42,7 +42,8 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     DRUGRESPONSEEVAL (
         models,
         baselines,
-        work_path
+        work_path,
+        params.outdir
     )
 
     ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)

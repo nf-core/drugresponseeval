@@ -21,15 +21,13 @@ include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def test_modes = params.test_mode.split(",")
-def randomizations = params.randomization_mode.split(",")
-
 workflow DRUGRESPONSEEVAL {
 
     take:
     models          // channel: [ string(models) ]
     baselines       // channel: [ string(baselines) ]
     work_path       // channel: path to the data channel.fromPath(params.path_data)
+    outdir
 
     main:
 
@@ -43,6 +41,9 @@ workflow DRUGRESPONSEEVAL {
         params.measure
     )
     ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
+
+    test_modes = params.test_mode.split(",")
+    randomizations = params.randomization_mode.split(",")
 
     RUN_CV (
         test_modes,
