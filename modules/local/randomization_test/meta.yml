@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: randomization_test
+description: |
+  Makes a randomization experiment for a specified model with the determined optimal
+  hyperparameter configuration.
+keywords:
+  - randomization
+  - ablation
+  - machine learning
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model.
+    - test_mode:
+        type: string
+        description: Test mode, i.e., LPO, LCO, LTO, or LDO.
+    - split_id:
+        type: string
+        description: specified cross-validation fold. One model per fold.
+    - split_dataset:
+        type: file
+        description: Pickled split.
+        pattern: "*pkl"
+    - best_hpams:
+        type: file
+        description: yaml of the optimal hyperparameter configuration.
+        pattern: "*yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - randomization_views:
+        type: file
+        description: Definition of the randomization experiment.
+        pattern: "*.yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - path_data:
+        type: file
+        description: Path to the data directory. Used to load cell line/drug feature data.
+  - randomization_type:
+      type: string
+      description: Randomization type (permutation, invariant).
+  - response_transformation:
+      type: string
+      description: Either None or a specified transformation that should be applied to the response.
+  - model_checkpoint_dir:
+      type: string
+      description: Either TEMPORARY or a directory where model checkpoints should be saved.
+
+output:
+  ch_vis:
+    - - test_mode:
+          type: string
+          description: See input.
+      - model_name:
+          type: string
+          description: See input.
+      - "**randomization*.csv":
+          type: file
+          description: |
+            All predicted values for the specified dataset for the randomization.
+          pattern: "**randomization*.csv"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

@@ -1,0 +1,59 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: visualize_results
+description: Makes the interactive HTML results plots and files.
+keywords:
+  - visualization
+  - interactive
+  - html
+  - results
+  - exploration
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - eval_results:
+        type: file
+        description: Global evaluation results.
+        pattern: "*csv"
+    - eval_results_per_drug:
+        type: file
+        description: Evaluation results per drug.
+        pattern: "*csv"
+    - eval_results_per_cl:
+        type: file
+        description: Evaluation results per cell line.
+        pattern: "*csv"
+    - true_vs_predicted:
+        type: file
+        description: True vs. predicted values.
+        pattern: "*csv"
+  - path_data:
+      type: string
+      description: Path to the data.
+
+output:
+  html_out:
+    - "report/*":
+        type: file
+        description: Folder containing all report-related files.
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
