@@ -3,91 +3,91 @@
         "content": [
             {
                 "COLLECT_RESULTS": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3"
                 },
                 "CONSOLIDATE_RESULTS": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3"
                 },
                 "CV_SPLIT": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1"
+                    "numpy": "2.4.6"
                 },
                 "EVALUATE_FINAL": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
-                    "scipy": "1.17.0"
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1"
                 },
                 "EVALUATE_FIND_MAX": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
-                    "scipy": "1.17.0",
+                    "numpy": "2.4.6",
+                    "scipy": "1.17.1",
                     "yaml": "6.0.3"
                 },
                 "HPAM_SPLIT": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "yaml": "6.0.3"
                 },
                 "LOAD_CS_RESPONSE": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3"
                 },
                 "LOAD_RESPONSE": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3"
                 },
                 "MAKE_BASELINES": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
+                    "numpy": "2.4.6",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "pytorch_lightning": "2.6.5",
+                    "torch": "2.12.0",
                     "platform": "1.0.8"
                 },
                 "MAKE_MODELS": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
+                    "numpy": "2.4.6",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "pytorch_lightning": "2.6.5",
+                    "torch": "2.12.0",
                     "platform": "1.0.8"
                 },
                 "PREDICT_FULL": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
+                    "numpy": "2.4.6",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "pytorch_lightning": "2.6.5",
+                    "torch": "2.12.0",
                     "platform": "1.0.8"
                 },
                 "TRAIN_AND_PREDICT_CV": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "sklearn": "1.8.0",
-                    "numpy": "2.4.1",
+                    "numpy": "2.4.6",
                     "pandas": "2.3.3",
-                    "pytorch_lightning": "2.6.0",
-                    "torch": "2.9.1",
+                    "pytorch_lightning": "2.6.5",
+                    "torch": "2.12.0",
                     "platform": "1.0.8"
                 },
                 "UNZIP_CS_RESPONSE": {
@@ -100,12 +100,12 @@
                     "7za": 16.02
                 },
                 "VISUALIZE_RESULTS": {
-                    "python": "3.13.11",
+                    "python": "3.13.13",
                     "drevalpy": "1.4.1",
                     "pandas": "2.3.3",
-                    "matplotlib": "3.10.8",
-                    "scikit_posthocs": "0.11.4",
-                    "scipy": "1.17.0",
+                    "matplotlib": "3.10.9",
+                    "scikit_posthocs": "0.14.0",
+                    "scipy": "1.17.1",
                     "sklearn": "1.8.0"
                 },
                 "Workflow": {
@@ -171,10 +171,10 @@
                 "nf-core-drugresponseeval_logo_light.png:md5,4f55fb24b445a68f35c12a84e83f99c7"
             ]
         ],
+        "timestamp": "2026-05-31T11:48:43.356128",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-22T12:11:11.55079"
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.2"
+        }
     }
 }
