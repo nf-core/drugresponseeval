@@ -5,8 +5,8 @@ process TRAIN_AND_PREDICT_CV {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/25/258ae8d4dc806d30de817bb11421fb2316bdb3dd3305dfaa37e5ea01eb475341/data' :
-        'community.wave.seqera.io/library/python_pip_drevalpy:8252ebecce29d755' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/90/908156ca5b3770a1797cd6f564cea34935ab7b09b39643436494f3bdf6331266/data' :
+        'community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:0868f8788117e11b' }"
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
