@@ -9,7 +9,6 @@ lint:
   multiqc_config: false
   nextflow_config:
     - params.input
-  container_configs: false
 nf_core_version: 4.0.2
 repository_type: pipeline
 template:

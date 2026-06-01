@@ -1,16 +1,8 @@
+name: nf-core-drugresponseeval
 channels:
   - conda-forge
-  - bioconda
 dependencies:
-  - conda-forge::matplotlib=3.10.9
-  - conda-forge::numpy=2.4.6
-  - conda-forge::pandas=2.3.3
-  - conda-forge::python=3.13.13
-  - conda-forge::scikit-learn=1.8.0
-  - conda-forge::scikit-posthocs=0.14.0
-  - conda-forge::scipy=1.17.1
-  - pip
+  - python=3.13
+  - pip=25.3
   - pip:
-      - drevalpy==1.4.1
-      - pytorch-lightning==2.6.5
-      - torch==2.12.0
+      - curve_curator==0.6.0
