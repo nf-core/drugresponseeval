@@ -14,4 +14,3 @@ dependencies:
       - drevalpy==1.4.1
       - pytorch-lightning==2.6.5
       - torch==2.12.0
-
