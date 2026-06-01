@@ -86,22 +86,22 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-a2b7a0d499377204_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-0868f8788117e11b_1/condalock
     linux/arm64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-c0ad67ba4f34e1c5_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-b9be8869b9baf043_1/condalock
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/python_pip_drevalpy:a2b7a0d499377204
-      build_id: bd-a2b7a0d499377204_1
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:0868f8788117e11b
+      build_id: bd-0868f8788117e11b_1
     linux/arm64:
-      name: community.wave.seqera.io/library/python_pip_drevalpy:c0ad67ba4f34e1c5
-      build_id: bd-c0ad67ba4f34e1c5_1
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:b9be8869b9baf043
+      build_id: bd-b9be8869b9baf043_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:9f89d6d50658553e
-      build_id: bd-9f89d6d50658553e_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/88/88d06bd843a342074e5def5c95e7d993cfe4a7f0acb7c41eb6c00e78d9ce8654/data
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:4b5a559039349628
+      build_id: bd-4b5a559039349628_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/90/908156ca5b3770a1797cd6f564cea34935ab7b09b39643436494f3bdf6331266/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/python_pip_drevalpy:1f164cef478f17cc
-      build_id: bd-1f164cef478f17cc_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/3e/3ecc057132a723d9c2b97bec20727e0b83999fddc02842832efd7193a4690e30/data
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:5ece055ed10da168
+      build_id: bd-5ece055ed10da168_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58bcddaaf126fea865e5b9d7e0cb61bbb4fc162127120fb53b1ed3921c9e9b15/data
