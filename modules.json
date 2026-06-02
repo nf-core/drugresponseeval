@@ -8,7 +8,8 @@
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "eac429d4c67ac5114ce7d4287d460d8f05fd9fab",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/custom/dumpsoftwareversions/custom-dumpsoftwareversions.diff"
                     },
                     "unzip": {
                         "branch": "master",
