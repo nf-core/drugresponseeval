@@ -2,7 +2,7 @@ process PREPROCESS_RAW_VIABILITY {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
 
     input:
     val(dataset_name)
