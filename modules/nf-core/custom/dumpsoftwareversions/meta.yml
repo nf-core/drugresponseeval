@@ -58,3 +58,25 @@ authors:
 maintainers:
   - "@drpatelh"
   - "@grst"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-b0d1ffb40dfd9e97_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-7cf5785022026d98_1/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/multiqc:1.27--b0d1ffb40dfd9e97
+      build_id: bd-b0d1ffb40dfd9e97_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/multiqc:1.27--7cf5785022026d98
+      build_id: bd-7cf5785022026d98_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/multiqc:1.27--aa757e3b271fdcd4
+      build_id: bd-aa757e3b271fdcd4_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/73/732bd18637498ce2b481446fd70dca7cb9a64f52e7e87adccbebc3cb1e2e188d/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/multiqc:1.27--1ec335afadbdd8d1
+      build_id: bd-1ec335afadbdd8d1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/1a/1aae92ac75e399f3a11ae631d2455688616884213f6e3e6ea09e85bfbac67775/data
