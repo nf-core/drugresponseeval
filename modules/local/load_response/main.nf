@@ -16,7 +16,7 @@ process LOAD_RESPONSE {
 
     script:
     """
-    drevalpy-load-response \\
+    drevalpy load-response \\
         --response_dataset ${response} \\
         --measure ${measure} \\
         ${cross_study_dataset ? '--cross_study_dataset' : ''}

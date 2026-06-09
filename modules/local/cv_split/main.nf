@@ -16,7 +16,7 @@ process CV_SPLIT {
 
     script:
     """
-    drevalpy-make-cv-pkls \\
+    drevalpy make-cv-pkls \\
         --response $response \\
         --n_cv_splits $n_cv_splits \\
         --test_mode $test_mode

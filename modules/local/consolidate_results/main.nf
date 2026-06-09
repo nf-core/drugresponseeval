@@ -17,7 +17,7 @@ process CONSOLIDATE_RESULTS {
     script:
     def outdirPath = new File(params.outdir).getAbsolutePath()
     """
-    drevalpy-consolidate-single-drug \\
+    drevalpy consolidate-single-drug \\
         --run_id ${params.run_id} \\
         --test_mode ${test_mode} \\
         --model_name "${model_name}" \\

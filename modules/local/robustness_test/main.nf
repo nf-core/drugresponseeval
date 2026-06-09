@@ -17,7 +17,7 @@ process ROBUSTNESS_TEST {
 
     script:
     """
-    drevalpy-test-cv \\
+    drevalpy test-cv \\
         --mode robustness \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

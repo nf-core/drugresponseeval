@@ -18,7 +18,7 @@ process RANDOMIZATION_TEST {
 
     script:
     """
-    drevalpy-test-cv \\
+    drevalpy test-cv \\
         --mode randomization \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

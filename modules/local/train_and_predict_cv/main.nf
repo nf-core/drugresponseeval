@@ -18,7 +18,7 @@ process TRAIN_AND_PREDICT_CV {
 
     script:
     """
-    drevalpy-train-cv \\
+    drevalpy train-cv \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
         --test_mode $test_mode \\

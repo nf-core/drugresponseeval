@@ -18,7 +18,7 @@ process TRAIN_FINAL_MODEL {
 
     script:
     """
-    drevalpy-train-final-model \\
+    drevalpy train-final-model \\
         --train_data $train_data \\
         --val_data $val_data \\
         --early_stopping_data $early_stop_data \\

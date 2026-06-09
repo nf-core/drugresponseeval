@@ -18,7 +18,7 @@ process COLLECT_RESULTS {
 
     script:
     """
-    drevalpy-collect-results \\
+    drevalpy collect-results \\
         --outfiles $outfiles \\
         --path_data $path_data
 

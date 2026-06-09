@@ -15,7 +15,7 @@ process VISUALIZE_RESULTS {
 
     script:
     """
-    drevalpy-make-pipeline-report \\
+    drevalpy make-pipeline-report \\
         --test_modes ${params.test_mode.replace(',', ' ')} \\
         --eval_results $eval_results \\
         --eval_results_per_drug $eval_results_per_drug \\
