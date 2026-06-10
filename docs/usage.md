@@ -165,6 +165,18 @@ If you want to use your own model, you must contribute it to drevalpy. Please fo
 8. From your environment, try to run the pipeline: `nextflow run nf-core/drugresponseeval -r dev -profile test`
 9. If everything works, try running your model: `nextflow run nf-core/drugresponseeval -r dev --models <your_model> --dataset_name <dataset_name>`
 
+### Running an existing model with different input
+
+We now offer to run our existing sklearn baseline models with flexible inputs. This, however, requires a bit of work (for now). The following steps are required:
+
+1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
+2. Create a mamba environment: `mamba create -n drevalpy python=3.13`
+3. Install the dependencies:
+   - Run: `pip install poetry`
+   - Then run: `poetry install`
+4. Adjust `drevalpy/models/baselines/hyperparameters.yaml`: In the yaml, each baseline model defines its cell line input and drug input via `cell_line_views` and `drug_views`. Just insert the name of your input. For more information, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/example_flexible_inputs.html)
+5. Install drevalpy into your environment: `pip install -e .` and run the pipeline (without specifying conda, docker or singularity in -profile, of course)
+
 ### Saving a production model
 
 If you want to save a production model, you can set the `--final_model_on_full_data` flag. This will save the model trained on the full dataset in the results directory.
