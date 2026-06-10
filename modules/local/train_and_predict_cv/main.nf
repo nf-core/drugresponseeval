@@ -4,7 +4,7 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)

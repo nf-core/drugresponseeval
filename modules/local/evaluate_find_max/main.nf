@@ -3,7 +3,7 @@ process EVALUATE_FIND_MAX {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), val(test_mode), val(split_id), path(hpam_yamls), path(pred_datas)
