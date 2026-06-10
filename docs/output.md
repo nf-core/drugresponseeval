@@ -125,7 +125,7 @@ A model is trained in the specified test mode, on the specific cross-validation 
 hyperparameter combination.
 
 As soon as the GPU support is available, the training and prediction will be done on the GPU for the models
-SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, and PharmaFormer.
+SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
 
 #### Evaluate and find max
 
@@ -161,7 +161,7 @@ unperturbed test set of the specified CV split. How the data is randomized is de
 `--randomization_type`.
 
 As soon as GPU support is available, the training and prediction will be done on the GPU for
-the models SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, and PharmaFormer.
+the models SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -176,7 +176,7 @@ Trains the model `--n_trials_robustness` times on the full training set with the
 specific CV split.
 
 As soon as GPU support is available, the training and prediction will be done on the GPU for the models
-SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, and PharmaFormer.
+SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
 
 <details markdown="1">
 <summary>Output files</summary>
