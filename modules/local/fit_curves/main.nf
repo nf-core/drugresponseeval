@@ -3,7 +3,7 @@ process FIT_CURVES {
     label 'high_cpu_low_mem'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "python_pip_curve-curator:8f275bea1867edfd"
 
     input:
     val dataset_name

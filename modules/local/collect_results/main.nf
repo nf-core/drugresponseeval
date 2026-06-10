@@ -2,7 +2,7 @@ process COLLECT_RESULTS {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
 
     input:
@@ -18,7 +18,7 @@ process COLLECT_RESULTS {
 
     script:
     """
-    drevalpy-collect-results \\
+    drevalpy collect-results \\
         --outfiles $outfiles \\
         --path_data $path_data
 

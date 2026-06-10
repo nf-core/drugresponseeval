@@ -2,7 +2,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     val dataset_name
@@ -16,7 +16,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
 
     script:
     """
-    drevalpy-viability-postprocess --dataset_name ${dataset_name}
+    drevalpy viability-postprocess --dataset_name ${dataset_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -3,7 +3,7 @@ process FINAL_SPLIT {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), path(response), val(test_mode), path(path_data)
@@ -15,7 +15,7 @@ process FINAL_SPLIT {
 
     script:
     """
-    drevalpy-make-final-split-pkls \\
+    drevalpy make-final-split-pkls \\
         --response $response \\
         --model_name "${model_name}" \\
         --path_data $path_data \\

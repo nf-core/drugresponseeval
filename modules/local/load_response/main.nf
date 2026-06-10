@@ -3,7 +3,7 @@ process LOAD_RESPONSE {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(measure), path(response)
@@ -16,7 +16,7 @@ process LOAD_RESPONSE {
 
     script:
     """
-    drevalpy-load-response \\
+    drevalpy load-response \\
         --response_dataset ${response} \\
         --measure ${measure} \\
         ${cross_study_dataset ? '--cross_study_dataset' : ''}

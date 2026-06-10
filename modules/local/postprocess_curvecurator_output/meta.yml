@@ -54,22 +54,22 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-0868f8788117e11b_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-4ca8e30ab27649ab_1/condalock
     linux/arm64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-b9be8869b9baf043_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-d6def7fa2145d0f6_1/condalock
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:0868f8788117e11b
-      build_id: bd-0868f8788117e11b_1
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab
+      build_id: bd-4ca8e30ab27649ab_1
     linux/arm64:
-      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:b9be8869b9baf043
-      build_id: bd-b9be8869b9baf043_1
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:d6def7fa2145d0f6
+      build_id: bd-d6def7fa2145d0f6_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:4b5a559039349628
-      build_id: bd-4b5a559039349628_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/90/908156ca5b3770a1797cd6f564cea34935ab7b09b39643436494f3bdf6331266/data
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:54314124d6599bfc
+      build_id: bd-54314124d6599bfc_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a5/a589391212c7f5bdb805ac3e01d7609bbe0acc5b3e6321d2ecf3034c045f0ea2/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:5ece055ed10da168
-      build_id: bd-5ece055ed10da168_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/58/58bcddaaf126fea865e5b9d7e0cb61bbb4fc162127120fb53b1ed3921c9e9b15/data
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:fd698882595ef0f9
+      build_id: bd-fd698882595ef0f9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/99/9971ee517d7e1d9ae0cee7bba39b1fbdb803cd4ac87d369d22c316b49270976f/data

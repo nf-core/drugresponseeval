@@ -4,7 +4,7 @@ process TUNE_FINAL_MODEL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), path(train_ds), path(val_ds), path(early_stop_ds), val(test_mode), path(path_data), path(hpam_combi)
@@ -17,7 +17,7 @@ process TUNE_FINAL_MODEL {
 
     script:
     """
-    drevalpy-tune-final-model \\
+    drevalpy tune-final-model \\
         --train_data $train_ds \\
         --val_data $val_ds \\
         --early_stopping_data $early_stop_ds \\

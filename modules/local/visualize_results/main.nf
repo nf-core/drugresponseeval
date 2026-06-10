@@ -2,7 +2,7 @@ process VISUALIZE_RESULTS {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "matplotlib_numpy_pandas_python_pruned:0868f8788117e11b"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple path(eval_results), path(eval_results_per_drug), path(eval_results_per_cl), path(true_vs_predicted)
@@ -15,7 +15,7 @@ process VISUALIZE_RESULTS {
 
     script:
     """
-    drevalpy-make-pipeline-report \\
+    drevalpy make-pipeline-report \\
         --test_modes ${params.test_mode.replace(',', ' ')} \\
         --eval_results $eval_results \\
         --eval_results_per_drug $eval_results_per_drug \\
