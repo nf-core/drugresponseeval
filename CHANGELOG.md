@@ -26,6 +26,8 @@ _Snorlax is a Pokémon whose body is composed of mostly its belly. It wakes up o
 
 ### `Fixed`
 
+- [#87](https://github.com/nf-core/drugresponseeval/pull/87) Fixed wrong singularity image hash
+
 ### `Dependencies`
 
 | Dependency   | Old version | New version |
