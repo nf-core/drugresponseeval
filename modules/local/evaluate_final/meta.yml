@@ -67,8 +67,8 @@ containers:
     linux/amd64:
       name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:54314124d6599bfc
       build_id: bd-54314124d6599bfc_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/a5/a589391212c7f5bdb805ac3e01d7609bbe0acc5b3e6321d2ecf3034c045f0ea2/data
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/13/130b23cb662522b2bd7b816191eb494db9567f9061f1a145e232812609d6694d/data
     linux/arm64:
       name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:fd698882595ef0f9
       build_id: bd-fd698882595ef0f9_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/99/9971ee517d7e1d9ae0cee7bba39b1fbdb803cd4ac87d369d22c316b49270976f/data
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/5f/5f90bcc9d16a22c6cbb6773b7b5aca899be071f9589cf86c56ce4cad4ad92a73/data
