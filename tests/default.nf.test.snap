@@ -109,7 +109,7 @@
                     "sklearn": "1.9.0"
                 },
                 "Workflow": {
-                    "nf-core/drugresponseeval": "v1.2.1"
+                    "nf-core/drugresponseeval": "v1.2.2dev"
                 }
             },
             [
@@ -171,7 +171,7 @@
                 "nf-core-drugresponseeval_logo_light.png:md5,4f55fb24b445a68f35c12a84e83f99c7"
             ]
         ],
-        "timestamp": "2026-06-10T15:15:18.83693",
+        "timestamp": "2026-06-11T12:00:33.131507",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.3"
