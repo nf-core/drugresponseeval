@@ -3,7 +3,44 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.2.0: Gentle Togepi - [date]
+## v1.2.1: Sleepy Snorlax - [date]
+
+_Snorlax is a Pokémon whose body is composed of mostly its belly. It wakes up only to eat, requiring about 400 kg of food per day before returning to its slumber, although it can also eat while it is resting. A Poké Flute is one of the few things that can awaken Snorlax from its slumber. Snorlax is docile enough to let children and small Pokémon bounce on its large stomach. A lot of Pokémon tend to gather around Snorlax to sleep near it or on it._
+
+### `Added`
+
+- [#84](https://github.com/nf-core/drugresponseeval/pull/84)
+  - Added support for flexible input to the baseline models. Better supported in the Python package drevalpy for now; modifying the input would require a local version of the package.
+  - Therefore, the ProteomicsElasticNet, ProteomicsRandomForest, the SingleDrugProteomicsElasticNet, SingleDrugProteomicsRandomForest and the ChemBERTaNeuralNetwork models are now deprecated because they are just an ElasticNet, RandomForest, and SimpleNeuralNetwork with another input modality.
+
+### `Changed`
+
+- [#84](https://github.com/nf-core/drugresponseeval/pull/84)
+  - The MultiOmics(NeuralNetwork|RandomForest) have now been renamed to MultiView(NeuralNetwork|RandomForest) because they support flexible input now.
+  - Support for new baseline models: AdaBoostDecisionTree, Lasso, MultiViewXGBoost, KNNRegressor
+  - Support for new models: PharmaFormer, Precily
+  - Updated the summary image to include the new models
+  - Changed to new CLI syntax for drevalpy with subcommands instead of single commands
+
+### `Removed`
+
+### `Fixed`
+
+- [#87](https://github.com/nf-core/drugresponseeval/pull/87) Fixed wrong singularity image hash
+
+### `Dependencies`
+
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| drevalpy     | 1.4.1       | 1.5.0       |
+| scikit-learn | 1.8.0       | 1.9.0       |
+
+### `Parameters`
+
+| Params | Status |
+| ------ | ------ |
+
+## v1.2.0: Gentle Togepi - 20.01.2026
 
 _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body remains encased in its eggshell. It is able to siphon the positive energy of others, storing that happiness in its shell, and then release it to those in need of it. Because of its disposition, Togepi is seen as a sign of good luck, especially if a Trainer is capable of getting a sleeping Togepi to stand. Togepi's innocent smile is said to calm the soul._
 
@@ -44,7 +81,7 @@ _Togepi is a Fairy type Pokémon. After hatching from its Egg, Togepi's body rem
 | Params | Status |
 | ------ | ------ |
 
-## [v1.1.0](https://github.com/nf-core/drugresponseeval/releases/tag/1.1.0): Humongous Zapdos - 03.07.2025
+## v1.1.0: Humongous Zapdos - 03.07.2025
 
 Second release of nf-core/drugresponseeval.
 
@@ -111,7 +148,7 @@ _Zapdos is a dual-type Electric/Flying Legendary Pokémon. It is said to be a di
 | `--no_refitting`             | New (replaces `--curve_curator`) |
 | `--curve_curator`            | Removed                          |
 
-## [v1.0.0](https://github.com/nf-core/drugresponseeval/releases/tag/1.0.0) - 31.01.2025
+## v1.0.0 - 31.01.2025
 
 Initial release of nf-core/drugresponseeval, created with the [nf-core](https://nf-co.re/) template.
 

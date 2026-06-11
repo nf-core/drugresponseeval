@@ -2,7 +2,7 @@ process PREPROCESS_RAW_VIABILITY {
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     val(dataset_name)
@@ -15,7 +15,7 @@ process PREPROCESS_RAW_VIABILITY {
 
     script:
     """
-    drevalpy-viability-preprocess --path_data ${work_path} --dataset_name ${dataset_name} --cores ${task.cpus}
+    drevalpy viability-preprocess --path_data ${work_path} --dataset_name ${dataset_name} --cores ${task.cpus}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

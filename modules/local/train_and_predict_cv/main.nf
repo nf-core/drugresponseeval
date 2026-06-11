@@ -4,7 +4,7 @@ process TRAIN_AND_PREDICT_CV {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), val(test_mode), path(cv_data), path(hyperparameters), path(path_data)
@@ -18,7 +18,7 @@ process TRAIN_AND_PREDICT_CV {
 
     script:
     """
-    drevalpy-train-cv \\
+    drevalpy train-cv \\
         --model_name "${model_name}" \\
         --path_data $path_data \\
         --test_mode $test_mode \\

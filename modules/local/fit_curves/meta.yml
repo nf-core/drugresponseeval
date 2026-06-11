@@ -53,3 +53,25 @@ authors:
   - "@JudithBernett"
 maintainers:
   - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-8f275bea1867edfd_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-160cb0a74a2355bd_1/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/python_pip_curve-curator:8f275bea1867edfd
+      build_id: bd-8f275bea1867edfd_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/python_pip_curve-curator:160cb0a74a2355bd
+      build_id: bd-160cb0a74a2355bd_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/python_pip_curve-curator:ca21c8b99edf33f1
+      build_id: bd-ca21c8b99edf33f1_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e7/e7b10d877585cdfd383daf38494baf81e52793282aeb3393088cf612e26a27b9/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/python_pip_curve-curator:43a2fee2721524e8
+      build_id: bd-43a2fee2721524e8_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8e/8ecce0dbba7b794a89b5b221dcf2321a6a0e1942bc50b51429bdf81fb35731f4/data

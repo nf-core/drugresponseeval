@@ -4,7 +4,7 @@ process PREDICT_FULL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple path(cross_study_datasets), val(model_name), val(test_mode), val(split_id), path(split_dataset), path(hpam_combi), path(path_data)
@@ -19,7 +19,7 @@ process PREDICT_FULL {
 
     script:
     """
-    drevalpy-test-cv \\
+    drevalpy test-cv \\
         --mode full \\
         --model_name "${model_name}" \\
         --split_id $split_id \\

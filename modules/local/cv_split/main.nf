@@ -3,7 +3,7 @@ process CV_SPLIT {
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(test_mode), path(response)
@@ -16,7 +16,7 @@ process CV_SPLIT {
 
     script:
     """
-    drevalpy-make-cv-pkls \\
+    drevalpy make-cv-pkls \\
         --response $response \\
         --n_cv_splits $n_cv_splits \\
         --test_mode $test_mode

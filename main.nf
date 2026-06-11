@@ -42,7 +42,8 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     DRUGRESPONSEEVAL (
         models,
         baselines,
-        work_path
+        work_path,
+        params.outdir
     )
 
     ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
@@ -94,7 +95,6 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        params.hook_url,
     )
 }
 

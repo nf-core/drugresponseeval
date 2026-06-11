@@ -4,7 +4,7 @@ process TRAIN_FINAL_MODEL {
     label 'process_gpu'
 
     conda "${moduleDir}/environment.yml"
-    container "python_pip_drevalpy:a2b7a0d499377204"
+    container "matplotlib_numpy_pandas_python_pruned:4ca8e30ab27649ab"
 
     input:
     tuple val(model_name), val(test_mode), path(best_hpam_combi), path(train_data), path(val_data), path(early_stop_data), path(path_data)
@@ -18,7 +18,7 @@ process TRAIN_FINAL_MODEL {
 
     script:
     """
-    drevalpy-train-final-model \\
+    drevalpy train-final-model \\
         --train_data $train_data \\
         --val_data $val_data \\
         --early_stopping_data $early_stop_data \\

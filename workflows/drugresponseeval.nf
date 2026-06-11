@@ -21,19 +21,17 @@ include { MODEL_TESTING } from '../subworkflows/local/model_testing'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def test_modes = params.test_mode.split(",")
-def randomizations = params.randomization_mode.split(",")
-
 workflow DRUGRESPONSEEVAL {
 
     take:
     models          // channel: [ string(models) ]
     baselines       // channel: [ string(baselines) ]
     work_path       // channel: path to the data channel.fromPath(params.path_data)
+    outdir
 
     main:
 
-    ch_versions = channel.empty()
+    def ch_versions = channel.empty()
 
     ch_models_baselines = models.concat(baselines)
 
@@ -43,6 +41,9 @@ workflow DRUGRESPONSEEVAL {
         params.measure
     )
     ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
+
+    test_modes = params.test_mode.split(",")
+    randomizations = params.randomization_mode.split(",")
 
     RUN_CV (
         test_modes,
@@ -86,18 +87,16 @@ workflow DRUGRESPONSEEVAL {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_core_'  +  'drugresponseeval_software_'  + 'versions.yml',
             sort: true,
             newLine: true
-        ).set { ch_collated_versions }
-
+        )
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
-
 }
 
 /*
