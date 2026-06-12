@@ -11,6 +11,6 @@ dependencies:
   - conda-forge::scipy=1.17.1
   - pip
   - pip:
-      - drevalpy==1.5.0
+      - drevalpy==1.5.1
       - pytorch-lightning==2.6.5
       - torch==2.12.0
