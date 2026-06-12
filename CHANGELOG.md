@@ -5,6 +5,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.2.2dev: Adjective Pokémon - [date]
 
+### `Added`
+
+### `Changed`
+
+- [#89](https://github.com/nf-core/drugresponseeval/pull/89)
+  - drevalpy v1.5.1 supports the CLI command drevalpy --version -> changed call for versions.yml
+  - the randomization channel is now filtered to only contain valid randomization modes, i.e., a view is only randomized if it occurs in the best hpam combination.
+
+### `Removed`
+
+### `Fixed`
+
+- [#89](https://github.com/nf-core/drugresponseeval/pull/89) Broken randomization
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| drevalpy   | 1.5.0       | 1.5.1       |
+
+### `Parameters`
+
+| Params | Status |
+| ------ | ------ |
+
 ## v1.2.1: Sleepy Snorlax - 11.06.2026
 
 _Snorlax is a Pokémon whose body is composed of mostly its belly. It wakes up only to eat, requiring about 400 kg of food per day before returning to its slumber, although it can also eat while it is resting. A Poké Flute is one of the few things that can awaken Snorlax from its slumber. Snorlax is docile enough to let children and small Pokémon bounce on its large stomach. A lot of Pokémon tend to gather around Snorlax to sleep near it or on it._
