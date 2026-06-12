@@ -21,7 +21,7 @@ process POSTPROCESS_CURVECURATOR_DATA {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //g')
     END_VERSIONS
     """
 }

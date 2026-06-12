@@ -30,7 +30,7 @@ process TRAIN_AND_PREDICT_CV {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //g')
         sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
         numpy: \$(python -c "import numpy; print(numpy.__version__)")
         pandas: \$(python -c "import pandas; print(pandas.__version__)")

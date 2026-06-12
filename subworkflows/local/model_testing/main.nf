@@ -71,6 +71,23 @@ workflow MODEL_TESTING {
         ch_randomization = ch_best_hpams_per_split_rand
                             .combine(ch_rand_views, by: 0)
                             .combine(work_path)
+                            .filter { model_name, test_mode, split_id, split_dataset, best_hpams, randomization_views, path_data ->
+                                def yaml = new org.yaml.snakeyaml.Yaml()
+                                def hpam_data = yaml.load(best_hpams.text)
+                                def best_hpam = hpam_data[hpam_data.keySet().first()]["best_hpam_combi"]
+                                def cl_views  = best_hpam["cell_line_views"]
+                                def dr_views  = best_hpam["drug_views"]
+                                if (cl_views instanceof String)  cl_views  = [cl_views]
+                                if (dr_views instanceof String)  dr_views  = [dr_views]
+                                def all_views = (cl_views ?: []) + (dr_views ?: [])
+                                def rand_data = yaml.load(randomization_views.text)
+                                def view      = rand_data["view"]
+                                def keep = all_views.contains(view)
+                                if (!keep) {
+                                    log.info "Skipping randomization test: view '${view}' not in model views ${all_views} for ${model_name} ${split_id}"
+                                }
+                                return keep
+                            }
 
         RANDOMIZATION_TEST (
             ch_randomization,

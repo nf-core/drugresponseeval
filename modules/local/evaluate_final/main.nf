@@ -23,7 +23,7 @@ process EVALUATE_FINAL {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //g')
         pandas: \$(python -c "import pandas; print(pandas.__version__)")
         sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
         numpy: \$(python -c "import numpy; print(numpy.__version__)")
