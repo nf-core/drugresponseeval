@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.2.2: Pretty Psyduck - [date]
+## v1.2.2: Pretty Psyduck - 23.06.2026
 
 _Psyduck is a Water-type Pokémon, usually living in freshwater lakes and small ponds. It is constantly stunned by its headache and is unable to think very clearly. It usually stands immobile, trying to calm its headache. However, when its headache becomes too severe, Psyduck releases tension in the form of strong psychic powers._
 
@@ -13,31 +13,6 @@ _Psyduck is a Water-type Pokémon, usually living in freshwater lakes and small 
 
 - [#89](https://github.com/nf-core/drugresponseeval/pull/89)
   - drevalpy v1.5.1 supports the CLI command `drevalpy --version` -> changed call for versions.yml
-  - the randomization channel is now filtered to only contain valid randomization modes, i.e., a view is only randomized if it occurs in the best hpam combination.
-
-### `Removed`
-
-### `Fixed`
-
-- [#89](https://github.com/nf-core/drugresponseeval/pull/89) Broken randomization
-
-### `Dependencies`
-
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| drevalpy   | 1.5.0       | 1.5.1       |
-
-### `Parameters`
-
-| Params | Status |
-| ------ | ------ |
-
-### `Added`
-
-### `Changed`
-
-- [#89](https://github.com/nf-core/drugresponseeval/pull/89)
-  - drevalpy v1.5.1 supports the CLI command drevalpy --version -> changed call for versions.yml
   - the randomization channel is now filtered to only contain valid randomization modes, i.e., a view is only randomized if it occurs in the best hpam combination.
 
 ### `Removed`

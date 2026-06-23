@@ -20,7 +20,7 @@ process PREPROCESS_RAW_VIABILITY {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //g')
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
     END_VERSIONS
     """
 }
