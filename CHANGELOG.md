@@ -3,6 +3,27 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.2.3dev: Adjective Pokémon - [date]
+
+### `Added`
+
+### `Changed`
+
+### `Removed`
+
+### `Fixed`
+
+### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+|            |             |             |
+
+### `Parameters`
+
+| Params | Status |
+| ------ | ------ |
+
 ## v1.2.2: Pretty Psyduck - 23.06.2026
 
 _Psyduck is a Water-type Pokémon, usually living in freshwater lakes and small ponds. It is constantly stunned by its headache and is unable to think very clearly. It usually stands immobile, trying to calm its headache. However, when its headache becomes too severe, Psyduck releases tension in the form of strong psychic powers._
