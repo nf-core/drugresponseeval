@@ -23,7 +23,7 @@ process HPAM_SPLIT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
         yaml: \$(python -c "import yaml; print(yaml.__version__)")
     """
 

@@ -26,7 +26,7 @@ process VISUALIZE_RESULTS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
         pandas: \$(python -c "import pandas; print(pandas.__version__)")
         matplotlib: \$(python -c "import matplotlib; print(matplotlib.__version__)")
         scikit_posthocs: \$(python -c "import scikit_posthocs; print(scikit_posthocs.__version__)")

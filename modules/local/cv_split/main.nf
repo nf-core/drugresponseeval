@@ -24,7 +24,7 @@ process CV_SPLIT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(python -c "import drevalpy; print(drevalpy.__version__)")
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
         sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
         numpy: \$(python -c "import numpy; print(numpy.__version__)")
     END_VERSIONS
