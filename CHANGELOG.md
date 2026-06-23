@@ -12,7 +12,7 @@ _Psyduck is a Water-type Pokémon, usually living in freshwater lakes and small 
 ### `Changed`
 
 - [#89](https://github.com/nf-core/drugresponseeval/pull/89)
-  - drevalpy v1.5.1 supports the CLI command drevalpy --version -> changed call for versions.yml
+  - drevalpy v1.5.1 supports the CLI command `drevalpy --version` -> changed call for versions.yml
   - the randomization channel is now filtered to only contain valid randomization modes, i.e., a view is only randomized if it occurs in the best hpam combination.
 
 ### `Removed`
