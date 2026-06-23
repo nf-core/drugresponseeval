@@ -31,7 +31,7 @@ process TUNE_FINAL_MODEL {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //g')
+        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
         sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
         numpy: \$(python -c "import numpy; print(numpy.__version__)")
         pandas: \$(python -c "import pandas; print(pandas.__version__)")
