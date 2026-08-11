@@ -6,18 +6,22 @@ process AGGREGATE {
     container 'docker.io/nicotru/drevalpy:latest'
 
     input:
-    path(results)
-    val(output_dir)
+    path(results, stageAs: 'results/results_?.npz')
 
     output:
-    path("$output_dir/**"), emit: experiment
+    path("aggregated/"), emit: experiment
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def result_args = results.collect { it.toString() }.join(' ')
     """
-    drevalpy aggregate $result_args --output-dir $output_dir
+    drevalpy aggregate $results --output-dir aggregated
+    """
+
+    stub:
+    """
+    mkdir -p aggregated
+    touch aggregated/aggregated.npz
     """
 }

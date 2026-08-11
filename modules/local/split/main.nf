@@ -9,8 +9,6 @@ process SPLIT {
     path(dataset)
     val(mode)
     val(n_splits)
-    val(validation_ratio)
-    val(random_state)
 
     output:
     path('splits/*.npz'), emit: folds
@@ -21,6 +19,14 @@ process SPLIT {
     script:
     """
     mkdir -p splits
-    drevalpy data split $dataset splits --mode $mode --n-splits $n_splits --validation-ratio $validation_ratio --random-state $random_state
+    drevalpy data split $dataset splits --mode $mode --n-splits $n_splits
+    """
+
+    stub:
+    """
+    mkdir -p splits
+    for i in {1..$n_splits}; do
+        touch splits/fold_\$i.npz
+    done
     """
 }

@@ -23,11 +23,15 @@ workflow DRUGRESPONSEEVAL {
 
     take:
     dataset          // channel: [ string(dataset) ]
+    test_mode
+    n_cv_splits
 
     main:
 
     RUN (
-        dataset
+        dataset,
+        test_mode,
+        n_cv_splits
     )
 }
 

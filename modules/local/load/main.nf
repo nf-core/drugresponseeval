@@ -9,7 +9,7 @@ process LOAD {
     val(dataset)
 
     output:
-    path('*.h5mu')
+    path('*.h5mu'), emit: data
 
     when:
     task.ext.when == null || task.ext.when
@@ -17,5 +17,10 @@ process LOAD {
     script:
     """
     drevalpy data load $dataset -o ${dataset}.h5mu
+    """
+
+    stub:
+    """
+    touch ${dataset}.h5mu
     """
 }
