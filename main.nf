@@ -30,6 +30,8 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 workflow NFCORE_DRUGRESPONSEEVAL {
     take:
     dataset          // channel: [ string(dataset) ]
+    test_mode
+    n_cv_splits
 
     main:
 
@@ -37,7 +39,9 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     // WORKFLOW: Run pipeline
     //
     DRUGRESPONSEEVAL (
-        dataset
+        dataset,
+        test_mode,
+        n_cv_splits
     )
 }
 /*
@@ -71,7 +75,9 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_DRUGRESPONSEEVAL (
-        params.dataset_name
+        params.dataset_name,
+        params.test_mode,
+        params.n_cv_splits
     )
     //
     // SUBWORKFLOW: Run completion tasks
