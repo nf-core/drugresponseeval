@@ -16,7 +16,9 @@ process LOAD {
 
     script:
     """
-    drevalpy data load $dataset -o ${dataset}.h5mu
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
+    drevalpy data load $dataset ${dataset}.h5mu
     """
 
     stub:

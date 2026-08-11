@@ -18,6 +18,8 @@ process SPLIT {
 
     script:
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     mkdir -p splits
     drevalpy data split $dataset splits --mode $mode --n-splits $n_splits
     """

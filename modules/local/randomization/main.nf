@@ -21,6 +21,8 @@ process RANDOMIZATION {
     script:
     def mode_flags = modes.collect { "--mode $it" }.join(' ')
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     mkdir -p randomized
     drevalpy experiments randomization $model $dataset randomized $mode_flags --randomization-type $randomization_type --random-state $random_state
     """

@@ -16,6 +16,8 @@ process AGGREGATE {
 
     script:
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     drevalpy aggregate $results --output-dir aggregated
     """
 
