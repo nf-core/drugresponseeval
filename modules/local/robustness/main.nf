@@ -17,6 +17,8 @@ process ROBUSTNESS {
 
     script:
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     mkdir -p robustness_splits
     drevalpy experiments robustness $splits_dir robustness_splits --n-permutations $n_permutations
     """

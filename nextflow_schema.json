@@ -31,13 +31,14 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["run_id", "dataset_name", "outdir"],
+            "required": ["dataset_name", "outdir"],
             "properties": {
-                "run_id": {
+                "dataset_file": {
                     "type": "string",
-                    "description": "Run name for the pipeline. The subdirectory in results will be named like this.",
-                    "help_text": "You will need to set a run identifier for the pipeline. This is used to create a unique output directory for each run.",
-                    "default": "my_run"
+                    "format": "file-path",
+                    "description": "Path to the dataset file.",
+                    "help_text": "Path to the dataset file. The dataset file will be downloaded and used for the pipeline.",
+                    "default": null
                 },
                 "dataset_name": {
                     "type": "string",

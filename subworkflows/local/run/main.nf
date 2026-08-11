@@ -7,19 +7,25 @@ include { REPORT } from '../../../modules/local/report/main.nf'
 workflow RUN {
 
     take:
-    dataset
+    dataset_file
+    dataset_name
     test_mode
     n_cv_splits
 
 
     main:
 
-    LOAD (
-        dataset
-    )
+    if (!dataset_file) {
+        LOAD (
+            dataset_name
+        )
+        ch_dataset = LOAD.out.data.collect()
+    } else {
+        ch_dataset = channel.value(file(dataset_file, checkIfExists: true))
+    }
 
     SPLIT (
-        LOAD.out.data,
+        ch_dataset,
         test_mode,
         n_cv_splits
     )
@@ -29,7 +35,7 @@ workflow RUN {
 
     SINGLE(
         model_splits,
-        LOAD.out.data.collect()
+        ch_dataset
     )
 
     AGGREGATE (
@@ -40,7 +46,7 @@ workflow RUN {
         AGGREGATE.out.experiment,
         'Test',
         'NaiveMeanEffectsPredictor',
-        LOAD.out.data
+        ch_dataset
     )
 
 }

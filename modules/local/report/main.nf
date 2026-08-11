@@ -19,6 +19,8 @@ process REPORT {
 
     script:
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     drevalpy report $experiment_dir --output-dir report/ --title "$title" --reference-model "$reference_model" --dataset-path "$dataset_path"
     """
 

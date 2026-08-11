@@ -22,14 +22,16 @@ include { RUN } from '../subworkflows/local/run/main.nf'
 workflow DRUGRESPONSEEVAL {
 
     take:
-    dataset          // channel: [ string(dataset) ]
+    dataset_file          // channel: [ string(dataset) ]
+    dataset_name
     test_mode
     n_cv_splits
 
     main:
 
     RUN (
-        dataset,
+        dataset_file,
+        dataset_name,
         test_mode,
         n_cv_splits
     )

@@ -1,6 +1,6 @@
 
 process SINGLE {
-    label 'process_single'
+    label 'process_high'
 
     container 'docker.io/nicotru/drevalpy:latest'
 
@@ -16,6 +16,8 @@ process SINGLE {
 
     script:
     """
+    export XDG_CACHE_HOME=./cache/
+    export XDG_CONFIG_HOME=./config/
     drevalpy single $model $dataset $split_file result.npz
     """
 
