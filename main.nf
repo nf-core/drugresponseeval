@@ -29,46 +29,16 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 //
 workflow NFCORE_DRUGRESPONSEEVAL {
     take:
-    models          // channel: [ string(models) ]
-    baselines       // channel: [ string(baselines) ]
-    work_path       // channel: path to the data channel.fromPath(params.path_data)
+    dataset          // channel: [ string(dataset) ]
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    ch_versions = channel.empty()
     DRUGRESPONSEEVAL (
-        models,
-        baselines,
-        work_path,
-        params.outdir,
-        params.path_data,
-        params.dataset_name,
-        params.measure,
-        params.no_refitting,
-        params.test_mode,
-        params.zenodo_link,
-        params.cross_study_datasets,
-        params.clean_min_responders,
-        params.clean_min_responder_frac,
-        params.custom_splitter_path,
-        params.n_cv_splits,
-        params.no_hyperparameter_tuning,
-        params.response_transformation,
-        params.model_checkpoint_dir,
-        params.optim_metric,
-        params.randomization_mode,
-        params.randomization_type,
-        params.n_trials_robustness,
-        params.final_model_on_full_data
+        dataset
     )
-
-    ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
-
-    emit:
-    versions = ch_versions
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -142,9 +112,7 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_DRUGRESPONSEEVAL (
-        PIPELINE_INITIALISATION.out.models,
-        PIPELINE_INITIALISATION.out.baselines,
-        PIPELINE_INITIALISATION.out.work_path,
+        params.dataset_name
     )
     //
     // SUBWORKFLOW: Run completion tasks
