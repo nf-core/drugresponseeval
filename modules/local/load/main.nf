@@ -16,6 +16,6 @@ process LOAD {
 
     script:
     """
-    drevalpy load 
+    drevalpy data load $dataset -o ${dataset}.h5mu
     """
 }
