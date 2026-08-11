@@ -101,68 +101,6 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE (
         nextflow_cli_args
     )
-
-    //
-    // Custom tests
-    //
-
-    // it is possible to supply a custom model name, but write a warning
-    valid_model_names = [
-                        'NaivePredictor',
-                        'NaiveCellLineMeanPredictor',
-                        'NaiveDrugMeanPredictor',
-                        'NaiveMeanEffectsPredictor',
-                        'NaiveTissueMeanPredictor',
-                        'NaiveTissueDrugMeanPredictor',
-                        'AdaBoostDecisionTree',
-                        'ElasticNet',
-                        'Lasso',
-                        'SingleDrugElasticNet',
-                        'GradientBoosting',
-                        'MultiViewXGBoost',
-                        'KNNRegressor',
-                        'RandomForest',
-                        'MultiViewRandomForest',
-                        'SingleDrugRandomForest',
-                        'SVR',
-                        'SimpleNeuralNetwork',
-                        'MultiViewNeuralNetwork',
-                        'DrugGNN',
-                        'PharmaFormer',
-                        'SRMF',
-                        'MOLIR',
-                        'SuperFELTR',
-                        'DIPK',
-                        'Precily'
-                        ]
-    ch_models = channel.from(models.split(',').collect { it.trim() })
-    def baseline_list = baselines.split(",")
-    // if NaiveMeanEffectsPredictor is not in baselines, add it
-    if (!baseline_list.contains("NaiveMeanEffectsPredictor")) {
-        baseline_list = baseline_list + "NaiveMeanEffectsPredictor"
-        log.warn "NaiveMeanEffectsPredictor baseline model was not specified, adding it to the list of baselines."
-    }
-    ch_baselines = channel
-                    .from(baseline_list)
-                    .map { baseline_name ->
-                        if(!valid_model_names.contains(baseline_name)){
-                            error("Invalid baseline model specified: ${baseline_name}. If you use a custom model, please specify it under --models. For baselines, please use one of the following: ${valid_model_names.join(', ')}")
-                        } else {
-                            baseline_name
-                        }
-                    }
-
-    new_models = ch_models
-                .filter { model -> !valid_model_names.contains(model) }
-    new_models.view { model -> log.warn "You have specified a model not pre-implemented by us: ${model}. If it is your own model in your own fork of drevalpy and you are working in a custom environment, all good :) If not, here is the list of pre-implemented models: ${valid_model_names.join(', ')}" }
-
-    work_path = channel.fromPath(path_data)
-
-    emit:
-    models              = ch_models
-    baselines           = ch_baselines
-    work_path           = work_path
-    versions            = ch_versions
 }
 
 /*
