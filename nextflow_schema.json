@@ -23,6 +23,11 @@
                     "description": "Baselines to be tested.",
                     "help_text": "Baselines to be tested. See documentation of a list of available models. For baselines, randomization and robustness tests are not run. The NaiveMeanEffectsPredictor will always be included.",
                     "default": "NaiveMeanEffectsPredictor"
+                },
+                "normalization_reference": {
+                    "type": "string",
+                    "description": "Baseline model used as normalization reference in reports. Automatically added to the models list.",
+                    "default": "NaiveMeanEffectsPredictor"
                 }
             }
         },
@@ -31,8 +36,18 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["dataset_name", "outdir"],
+            "required": ["input", "dataset_name", "outdir"],
             "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_input.json",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "Path to CSV samplesheet with model names/recipe strings.",
+                    "fa_icon": "fas fa-file-csv"
+                },
                 "dataset_file": {
                     "type": "string",
                     "format": "file-path",
