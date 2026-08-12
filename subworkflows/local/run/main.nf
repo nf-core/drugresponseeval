@@ -16,6 +16,7 @@ workflow RUN {
     no_hyperparameter_tuning
     optim_metric
     hpo_num_samples
+    response_transformation
 
 
     main:
@@ -42,7 +43,8 @@ workflow RUN {
         ch_dataset,
         no_hyperparameter_tuning,
         optim_metric,
-        hpo_num_samples
+        hpo_num_samples,
+        response_transformation
     )
 
     AGGREGATE (

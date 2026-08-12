@@ -197,7 +197,7 @@
                     "type": "string",
                     "description": "Response transformation",
                     "help_text": "Transformation to apply to the response variable possible values: None, standard, minmax, robust",
-                    "default": "None",
+                    "default": "standard",
                     "enum": ["None", "standard", "minmax", "robust"]
                 },
                 "model_checkpoint_dir": {

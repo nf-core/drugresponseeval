@@ -38,6 +38,7 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     no_hyperparameter_tuning
     optim_metric
     hpo_num_samples
+    response_transformation
 
     main:
 
@@ -53,7 +54,8 @@ workflow NFCORE_DRUGRESPONSEEVAL {
         n_cv_splits,
         no_hyperparameter_tuning,
         optim_metric,
-        hpo_num_samples
+        hpo_num_samples,
+        response_transformation
     )
 }
 /*
@@ -91,7 +93,8 @@ workflow {
         params.n_cv_splits,
         params.no_hyperparameter_tuning,
         params.optim_metric,
-        params.hpo_num_samples
+        params.hpo_num_samples,
+        params.response_transformation
     )
     //
     // SUBWORKFLOW: Run completion tasks

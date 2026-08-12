@@ -11,6 +11,7 @@ process SINGLE {
     val(no_hyperparameter_tuning)
     val(optim_metric)
     val(hpo_num_samples)
+    val(response_transformation)
 
     output:
     path('*.npz'), emit: result
@@ -23,7 +24,7 @@ process SINGLE {
     """
     export XDG_CACHE_HOME=./cache/
     export XDG_CONFIG_HOME=./config/
-    drevalpy single $model $dataset $split_file result.npz $hpo_flag --hpo-metric $optim_metric --hpo-num-samples $hpo_num_samples
+    drevalpy single $model $dataset $split_file result.npz $hpo_flag --hpo-metric $optim_metric --hpo-num-samples $hpo_num_samples --response-transformation $response_transformation
     """
 
     stub:
