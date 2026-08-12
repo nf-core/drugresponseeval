@@ -197,6 +197,13 @@
                     "default": false,
                     "help_text": "Set this flag to disable hyperparameter tuning. If set, the pipeline will not perform hyperparameter tuning and will use the default parameters for the models (more meant for quick runs or debugging)."
                 },
+                "hpo_num_samples": {
+                    "type": "integer",
+                    "description": "Number of hyperparameter optimization trials.",
+                    "default": 16,
+                    "help_text": "Number of HPO trials to run per model and fold. Higher values explore more of the hyperparameter space but increase runtime.",
+                    "minimum": 1
+                },
                 "final_model_on_full_data": {
                     "type": "boolean",
                     "description": "Train final model on full data.",

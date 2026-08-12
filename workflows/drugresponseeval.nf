@@ -26,6 +26,9 @@ workflow DRUGRESPONSEEVAL {
     dataset_name
     test_mode
     n_cv_splits
+    no_hyperparameter_tuning
+    optim_metric
+    hpo_num_samples
 
     main:
 
@@ -33,7 +36,10 @@ workflow DRUGRESPONSEEVAL {
         dataset_file,
         dataset_name,
         test_mode,
-        n_cv_splits
+        n_cv_splits,
+        no_hyperparameter_tuning,
+        optim_metric,
+        hpo_num_samples
     )
 }
 
