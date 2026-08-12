@@ -33,7 +33,7 @@ workflow RUN {
         n_cv_splits
     )
 
-    models = channel.fromList(['RandomForest', 'NaiveMeanEffectsPredictor'])
+    models = channel.fromList(['pca[gene_expression]:fingerprints:elasticNet', 'NaiveMeanEffectsPredictor'])
     model_splits = models.combine(SPLIT.out.folds.flatten())
 
     SINGLE(
