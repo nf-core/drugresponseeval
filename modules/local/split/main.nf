@@ -1,6 +1,6 @@
 
 process SPLIT {
-    tag "$dataset"
+    tag "$dataset:$mode:$n_splits"
     label 'process_single'
 
     container 'docker.io/nicotru/drevalpy:latest'

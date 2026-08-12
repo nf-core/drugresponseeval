@@ -1,5 +1,6 @@
 
 process SINGLE {
+    tag "$model"
     label 'process_high'
 
     container 'docker.io/nicotru/drevalpy:latest'
