@@ -34,10 +34,6 @@ workflow PIPELINE_INITIALISATION {
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
-    // pipeline-specific input
-    models                  //  string: Comma-separated list of models to run
-    baselines               //  string: Comma-separated list of baseline models to run
-    path_data              //  string: Path to the data directory containing the input data
 
     main:
 
@@ -101,6 +97,23 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE (
         nextflow_cli_args
     )
+
+    //
+    // Create channel from input file provided through params.input
+    //
+    ch_samplesheet = params.input
+        ? Channel.fromList(
+            samplesheetToList(params.input, "${projectDir}/assets/schema_input.json")
+        ).map { row -> row[0] }
+        : Channel.empty()
+
+    ch_models = ch_samplesheet
+        .mix(Channel.of(params.normalization_reference))
+        .unique()
+
+    emit:
+    samplesheet = ch_models
+    versions    = ch_versions
 }
 
 /*
@@ -152,20 +165,6 @@ workflow PIPELINE_COMPLETION {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-//
-// Validate channels from input samplesheet
-//
-def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
-
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
-    }
-
-    return [ metas[0], fastqs ]
-}
 //
 // Generate methods description for MultiQC
 //

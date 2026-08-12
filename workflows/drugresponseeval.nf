@@ -22,7 +22,9 @@ include { RUN } from '../subworkflows/local/run/main.nf'
 workflow DRUGRESPONSEEVAL {
 
     take:
-    dataset_file          // channel: [ string(dataset) ]
+    models                    // channel: model name/recipe strings from samplesheet
+    normalization_reference   // val: baseline model name for reports
+    dataset_file              // channel: [ string(dataset) ]
     dataset_name
     test_mode
     n_cv_splits
@@ -33,6 +35,8 @@ workflow DRUGRESPONSEEVAL {
     main:
 
     RUN (
+        models,
+        normalization_reference,
         dataset_file,
         dataset_name,
         test_mode,

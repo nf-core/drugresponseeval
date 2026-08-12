@@ -29,7 +29,9 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 //
 workflow NFCORE_DRUGRESPONSEEVAL {
     take:
-    dataset_file          // channel: [ string(dataset) ]
+    models                    // channel: model name/recipe strings from samplesheet
+    normalization_reference   // val: baseline model name for reports
+    dataset_file              // channel: [ string(dataset) ]
     dataset_name
     test_mode
     n_cv_splits
@@ -43,6 +45,8 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     // WORKFLOW: Run pipeline
     //
     DRUGRESPONSEEVAL (
+        models,
+        normalization_reference,
         dataset_file,
         dataset_name,
         test_mode,
@@ -72,17 +76,15 @@ workflow {
         params.outdir,
         params.help,
         params.help_full,
-        params.show_hidden,
-        // pipeline-specific input
-        params.models,
-        params.baselines,
-        params.path_data
+        params.show_hidden
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_DRUGRESPONSEEVAL (
+        PIPELINE_INITIALISATION.out.samplesheet,
+        params.normalization_reference,
         params.dataset_file,
         params.dataset_name,
         params.test_mode,

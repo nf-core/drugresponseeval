@@ -7,6 +7,8 @@ include { REPORT } from '../../../modules/local/report/main.nf'
 workflow RUN {
 
     take:
+    models                    // channel: model name/recipe strings
+    normalization_reference   // val: baseline model name for REPORT
     dataset_file
     dataset_name
     test_mode
@@ -33,7 +35,6 @@ workflow RUN {
         n_cv_splits
     )
 
-    models = channel.fromList(['pca[gene_expression]:fingerprints:elasticNet', 'NaiveMeanEffectsPredictor'])
     model_splits = models.combine(SPLIT.out.folds.flatten())
 
     SINGLE(
@@ -51,7 +52,7 @@ workflow RUN {
     REPORT (
         AGGREGATE.out.experiment,
         'Test',
-        'NaiveMeanEffectsPredictor',
+        normalization_reference,
         ch_dataset
     )
 
