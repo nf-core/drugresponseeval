@@ -217,9 +217,9 @@
                 "response_transformation": {
                     "type": "string",
                     "description": "Response transformation",
-                    "help_text": "Transformation to apply to the response variable possible values: None, standard, minmax, robust, drug_mean, drug_tissue_mean",
-                    "default": "None",
-                    "enum": ["None", "standard", "minmax", "robust", "drug_mean", "drug_tissue_mean"]
+                    "help_text": "Transformation to apply to the response variable possible values: None, standard, minmax, robust",
+                    "default": "standard",
+                    "enum": ["None", "standard", "minmax", "robust"]
                 },
                 "model_checkpoint_dir": {
                     "type": "string",

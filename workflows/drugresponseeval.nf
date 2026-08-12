@@ -31,6 +31,7 @@ workflow DRUGRESPONSEEVAL {
     no_hyperparameter_tuning
     optim_metric
     hpo_num_samples
+    response_transformation
 
     main:
 
@@ -43,7 +44,8 @@ workflow DRUGRESPONSEEVAL {
         n_cv_splits,
         no_hyperparameter_tuning,
         optim_metric,
-        hpo_num_samples
+        hpo_num_samples,
+        response_transformation
     )
 }
 
