@@ -18,6 +18,8 @@ process AGGREGATE {
     """
     export XDG_CACHE_HOME=./cache/
     export XDG_CONFIG_HOME=./config/
+    # Unbuffered stdout so the last progress line survives an OOM SIGKILL.
+    export PYTHONUNBUFFERED=1
     drevalpy aggregate results/*.npz --output-dir aggregated
     """
 
