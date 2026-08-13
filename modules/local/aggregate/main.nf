@@ -1,7 +1,7 @@
 
 process AGGREGATE {
     tag "aggregate"
-    label 'process_single'
+    label 'process_medium'
 
     container 'docker.io/nicotru/drevalpy:latest'
 
@@ -18,7 +18,7 @@ process AGGREGATE {
     """
     export XDG_CACHE_HOME=./cache/
     export XDG_CONFIG_HOME=./config/
-    drevalpy aggregate $results --output-dir aggregated
+    drevalpy aggregate results/*.npz --output-dir aggregated
     """
 
     stub:

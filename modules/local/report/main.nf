@@ -1,7 +1,7 @@
 
 process REPORT {
     tag "report"
-    label 'process_single'
+    label 'process_medium'
 
     container 'docker.io/nicotru/drevalpy:latest'
 
