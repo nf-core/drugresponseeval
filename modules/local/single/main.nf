@@ -24,11 +24,11 @@ process SINGLE {
     """
     export XDG_CACHE_HOME=./cache/
     export XDG_CONFIG_HOME=./config/
-    drevalpy single $model $dataset $split_file result.npz $hpo_flag --hpo-metric $optim_metric --hpo-num-samples $hpo_num_samples --response-transformation $response_transformation
+    drevalpy single $model $dataset $split_file ${model}-${split_file.baseName}.npz $hpo_flag --hpo-metric $optim_metric --hpo-num-samples $hpo_num_samples --response-transformation $response_transformation
     """
 
     stub:
     """
-    touch result.npz
+    touch ${model}-${split_file.baseName}.npz
     """
 }
