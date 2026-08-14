@@ -3,8 +3,6 @@ process AGGREGATE {
     tag "aggregate"
     label 'process_medium'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     path(results, stageAs: 'results/results_?.npz')
 

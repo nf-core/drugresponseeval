@@ -3,8 +3,6 @@ process SINGLE {
     tag "$model-${split_file.baseName}"
     label 'process_high'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     tuple val(model), path(split_file)
     path(dataset)

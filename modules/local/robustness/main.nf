@@ -3,8 +3,6 @@ process ROBUSTNESS {
     tag "robustness"
     label 'process_single'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     path(splits_dir)
     val(n_permutations)

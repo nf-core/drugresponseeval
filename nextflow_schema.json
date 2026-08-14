@@ -89,7 +89,6 @@
                     "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), or LDO (Leave-Drug-Out).",
                     "default": "LCO",
                     "help_text": "Which tests to run (LPO=Leave-random-Pairs-Out, LCO=Leave-Cell-line-Out, LTO=Leave-Tissue-Out, LDO=Leave-Drug-Out). Can be a list of test runs e.g. 'LPO,LCO,LTO,LDO' to run all tests. Default is LCO.",
-                    "pattern": "^((LPO|LCO|LTO|LDO)?,?)*(?<!,)$"
                 }
             }
         },

@@ -3,8 +3,6 @@ process RANDOMIZATION {
     tag "$model"
     label 'process_medium'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     val(model)
     path(dataset)
