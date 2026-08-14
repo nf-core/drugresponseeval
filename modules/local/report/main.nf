@@ -3,8 +3,6 @@ process REPORT {
     tag "report"
     label 'process_medium'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     path(experiment_dir)
     val(title)

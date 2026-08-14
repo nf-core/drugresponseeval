@@ -3,8 +3,6 @@ process LOAD {
     tag "$dataset"
     label 'process_single'
 
-    container 'docker.io/nicotru/drevalpy:latest'
-
     input:
     val(dataset)
 
