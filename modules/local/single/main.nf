@@ -1,6 +1,6 @@
 
 process SINGLE {
-    tag "$model"
+    tag "$model-${split_file.baseName}"
     label 'process_high'
 
     container 'docker.io/nicotru/drevalpy:latest'
