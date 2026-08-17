@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: randomization_split
+description: Creates yaml configuration files to spawn one process per randomization experiment.
+keywords:
+  - randomization
+  - preprocessing
+  - setup
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model for which the randomization experiments will be made.
+    - randomization_mode:
+        type: string
+        description: Could be SVRC, SVRD, SVCC, SVCD.
+
+output:
+  randomization_test_views:
+    - - model_name:
+          type: string
+          description: See input.
+      - "randomization_test_view*.yaml":
+          type: file
+          description: |
+            YAML files containing the different randomization experiments.
+          pattern: "randomization_test_view*.yaml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-a7cebe5b9fa462ea_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-efdcf01a3b56c2ab_2/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:e3225eb976969752
+      build_id: bd-e3225eb976969752_3
+    linux/arm64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:efdcf01a3b56c2ab
+      build_id: bd-efdcf01a3b56c2ab_2
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:a7cebe5b9fa462ea
+      build_id: bd-a7cebe5b9fa462ea_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b3/b3c7537ef89d5160d212fea27f38dbe8e7846dda288bc451d9612ea88dd2a715/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:e1fbe7eefaa8d0b7
+      build_id: bd-e1fbe7eefaa8d0b7_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/70/70b4089063c4861beb0a9e697415b5a6a891f8c3cac468efb04610fa023aef16/data
