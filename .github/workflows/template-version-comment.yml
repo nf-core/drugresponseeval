@@ -5,6 +5,8 @@ name: nf-core template version comment
 on:
   pull_request:
 
+permissions: {}
+
 jobs:
   check_template_version:
     runs-on: ubuntu-latest
