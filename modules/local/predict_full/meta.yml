@@ -1,0 +1,122 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: predict_full
+description: |
+  Final train and predict loop, trains model on the collapsed train and validation set
+  with the optimal hyperparameter configurations to predict the test set and the cross-study datasets for the
+  specified cross-validation fold.
+keywords:
+  - cross-validation
+  - final training
+  - optimization
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - cross_study_datasets:
+        type: file
+        description: List of pickled cross-study datasets or None.csv.
+        pattern: "*{.csv,.pkl}"
+    - model_name:
+        type: string
+        description: Name of the model.
+    - test_mode:
+        type: string
+        description: Test mode, i.e., LPO, LCO, LTO, or LDO.
+    - split_id:
+        type: string
+        description: specified cross-validation fold. PREDICT_FULL gives one model per fold.
+    - split_dataset:
+        type: file
+        description: Pickled split.
+        pattern: "*pkl"
+    - hpam_combi:
+        type: file
+        description: yaml of the optimal hyperparameter configuration.
+        pattern: "*yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - path_data:
+        type: file
+        description: Path to the data directory. Used to load cell line/drug feature data.
+  - response_transformation:
+      type: string
+      description: Either None or a specified transformation that should be applied to the response.
+  - model_checkpoint_dir:
+      type: string
+      description: Either TEMPORARY or a directory where model checkpoints should be saved.
+
+output:
+  ch_vis:
+    - - test_mode:
+          type: string
+          description: See input.
+      - model_name:
+          type: string
+          description: See input.
+      - "**predictions*.csv":
+          type: file
+          description: |
+            All predicted values for the specified dataset.
+          pattern: "**predictions*.csv"
+  ch_cross:
+    - - test_mode:
+          type: string
+          description: See input.
+      - model_name:
+          type: string
+          description: See input.
+      - "**cross_study/cross_study*.csv":
+          type: file
+          description: |
+            All predicted values for the specified cross-study datasets.
+          pattern: "**cross_study/cross_study*.csv"
+  ch_hpams:
+    - "**best_hpams*.json":
+        type: file
+        description: Best hyperparameters in a readable json format.
+        pattern: "**best_hpams*.json"
+        ontologies:
+          - edam: http://edamontology.org/format_3464 # JSON
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-a7cebe5b9fa462ea_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-efdcf01a3b56c2ab_2/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:e3225eb976969752
+      build_id: bd-e3225eb976969752_3
+    linux/arm64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:efdcf01a3b56c2ab
+      build_id: bd-efdcf01a3b56c2ab_2
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:a7cebe5b9fa462ea
+      build_id: bd-a7cebe5b9fa462ea_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b3/b3c7537ef89d5160d212fea27f38dbe8e7846dda288bc451d9612ea88dd2a715/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:e1fbe7eefaa8d0b7
+      build_id: bd-e1fbe7eefaa8d0b7_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/70/70b4089063c4861beb0a9e697415b5a6a891f8c3cac468efb04610fa023aef16/data
