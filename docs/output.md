@@ -242,6 +242,7 @@ All plots are created in the `visualization` subworkflow. They are saved in the 
 - `{LPO,LCO,LTO,LPO}.html`: Creates a summary HTML file per setting (LPO/LCO/LTO/LDO) that contains all the plots and tables.
 - `index.html`: HTML file that links to all the HTML files.
 - `*.png`: Some png files for the logo, etc.
+
 </details>
 
 ### Pipeline information
@@ -257,4 +258,4 @@ All plots are created in the `visualization` subworkflow. They are saved in the 
 
 </details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times, and resource usage.
+[Nextflow](https://docs.seqera.io/platform-cloud/reports/overview) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
