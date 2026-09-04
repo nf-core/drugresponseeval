@@ -126,7 +126,7 @@ workflow MODEL_TESTING {
         // we only do this for models, not for baselines
         ch_test_modes = channel.from(test_modes)
         ch_final_split = ch_models
-                            .map{it -> it[0]}
+                            .map{it -> it[1]}
                             .unique()
                             .combine(response_dataset)
                             .combine(ch_test_modes)
@@ -138,9 +138,8 @@ workflow MODEL_TESTING {
         ch_versions = ch_versions.mix(FINAL_SPLIT.out.versions)
 
         ch_tune_final_model = ch_models
+                            .map{it -> it[1] }
                             .combine(FINAL_SPLIT.out.final_datasets, by: 0)
-                            .map { model_class, model_name, train_ds, val_ds, es_ds ->
-                                [model_name, train_ds, val_ds, es_ds] }
                             .combine(ch_test_modes)
                             .combine(work_path)
                             .combine(ch_hpam_combis, by: 0)

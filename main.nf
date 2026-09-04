@@ -57,6 +57,35 @@ workflow NFCORE_DRUGRESPONSEEVAL {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+params {
+    // False by default (=refitting). By default, we use measures calculated with CurveCurator instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data with CurveCurator. Set this flag to disable this option.
+    no_refitting: Boolean = false
+
+    // Disable hyperparameter tuning.
+    no_hyperparameter_tuning: Boolean = false
+
+    // Train final model on full data.
+    final_model_on_full_data: Boolean = false
+
+    // Display version and exit.
+    version: Boolean
+
+    // Send plain-text email instead of HTML.
+    plaintext_email: Boolean
+
+    // Do not use coloured log outputs.
+    monochrome_logs: Boolean
+
+    // Boolean whether to validate parameters against the schema at runtime
+    validate_params: Boolean = true
+
+    // Display the full detailed help message.
+    help_full: Boolean
+
+    // Display hidden parameters in the help message (only works when --help or --help_full are provided).
+    show_hidden: Boolean
+}
+
 workflow {
 
     main:
