@@ -105,7 +105,8 @@ This step is necessary to provide the pipeline with the response data that will 
 The response data is split into as many cross-validation folds as specified over the `--n_cv_splits` parameter.
 The data is split into training, validation, and test sets for each fold. For models using early stopping, the early
 stopping dataset is split from the validation set. This ensures that all models are trained and evaluated on the
-same dataset.
+same dataset. Alternatively, a Python script passed via `--custom_splitter_path` can define the splits, see
+[usage](usage.md).
 
 #### Make model channel
 

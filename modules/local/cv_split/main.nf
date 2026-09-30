@@ -8,6 +8,7 @@ process CV_SPLIT {
     input:
     tuple val(test_mode), path(response)
     val n_cv_splits
+    path custom_splitter
 
     output:
     tuple val(test_mode), path("split*.pkl")    , emit: response_cv_splits
@@ -15,11 +16,13 @@ process CV_SPLIT {
 
 
     script:
+    def splitter_arg = custom_splitter.name != 'NO_FILE' ? "--custom_splitter_path $custom_splitter" : ''
     """
     drevalpy make-cv-pkls \\
         --response $response \\
         --n_cv_splits $n_cv_splits \\
-        --test_mode $test_mode
+        --test_mode $test_mode \\
+        $splitter_arg
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

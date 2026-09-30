@@ -177,6 +177,18 @@ We now offer to run our existing sklearn baseline models with flexible inputs. T
 4. Adjust `drevalpy/models/baselines/hyperparameters.yaml`: In the yaml, each baseline model defines its cell line input and drug input via `cell_line_views` and `drug_views`. Just insert the name of your input. For more information, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/example_flexible_inputs.html)
 5. Install drevalpy into your environment: `pip install -e .` and run the pipeline (without specifying conda, docker or singularity in -profile, of course)
 
+### Custom CV splits
+
+By default, the CV splits are created by drevalpy. To use your own, pass a Python script via `--custom_splitter_path`.
+The script must define a module-level function `create_splits(response_data, params)` that returns a list of folds.
+Each fold is a dict with the keys `train`, `validation` and `test` (optionally also `validation_es` and
+`early_stopping`, otherwise they are derived from `validation`) holding `DrugResponseDataset`s.
+`params.test_mode` is the test mode the script is called for; the script is used for every mode in `--test_mode`, and
+the output is validated against that mode (e.g., no shared cell lines between train and test for LCO).
+The script runs inside the `CV_SPLIT` container, so it can only use the packages installed there and has to be able
+to reach any files it reads. An example that loads folds from a directory of CSVs is in
+`assets/custom_splitter_from_csvs.py`.
+
 ### Saving a production model
 
 If you want to save a production model, you can set the `--final_model_on_full_data` flag. This will save the model trained on the full dataset in the results directory.

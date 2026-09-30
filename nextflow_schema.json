@@ -177,6 +177,14 @@
                     "help_text": "Number of cross-validation splits. Default is 10.",
                     "minimum": 2
                 },
+                "custom_splitter_path": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.py$",
+                    "description": "Path to a Python script with a custom CV splitter.",
+                    "help_text": "Path to a Python script defining `create_splits(response_data, params)` which returns a list of folds, each a dict with the keys `train`, `validation` and `test` (optionally `validation_es` and `early_stopping`) holding DrugResponseDatasets. If set, the built-in CV splitting is skipped and the script is used for every test mode in `--test_mode`; `params.test_mode` tells the script which mode it is called for. The output is validated against that test mode. The script runs inside the CV_SPLIT container, so it can only use the packages available there and must be able to reach any files it reads."
+                },
                 "response_transformation": {
                     "type": "string",
                     "description": "Response transformation",

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- `--custom_splitter_path` to provide a Python script defining custom CV splits instead of the built-in splitting.
+
 ### `Changed`
 
 ### `Removed`

@@ -29,6 +29,11 @@ input:
       type: integer
       description: |
         Number of cross-validation splits to be created.
+  - custom_splitter:
+      type: file
+      description: |
+        Python script defining `create_splits(response_data, params)`, used instead of the built-in splitting.
+        `assets/NO_FILE` if the built-in splitting is used.
 
 output:
   response_cv_split:
