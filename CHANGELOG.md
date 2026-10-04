@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- The `NONE.csv` placeholder for `PREDICT_FULL` is now a real file (`assets/NONE.csv`), so staging no longer fails when inputs are copied instead of symlinked.
+
 ### `Dependencies`
 
 | Dependency | Old version | New version |

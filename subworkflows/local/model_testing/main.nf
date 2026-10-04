@@ -27,7 +27,7 @@ workflow MODEL_TESTING {
     main:
     ch_versions = channel.empty()
     if (params.cross_study_datasets == '') {
-        cross_study_datasets = channel.fromPath(['./NONE.csv'])
+        cross_study_datasets = channel.of(file("${projectDir}/assets/NONE.csv", checkIfExists: true))
     }
     ch_tmp = best_hpam_per_split.map{
         split_id, test_mode, path_to_split, model_name, path_to_hpams ->
