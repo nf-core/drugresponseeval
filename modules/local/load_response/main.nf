@@ -22,8 +22,8 @@ process LOAD_RESPONSE {
         --response_dataset ${response} \\
         --measure ${measure} \\
         ${cross_study_dataset ? '--cross_study_dataset' : ''} \\
-        ${clean_min_responders != null ? "--clean_min_responders ${clean_min_responders}" : ''} \\
-        ${clean_min_responder_frac != null ? "--clean_min_responder_frac ${clean_min_responder_frac}" : ''}
+        ${clean_min_responders ? "--clean_min_responders ${clean_min_responders}" : ''} \\
+        ${clean_min_responder_frac ? "--clean_min_responder_frac ${clean_min_responder_frac}" : ''}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -159,6 +159,8 @@ The following models are available:
 
 ### Custom models
 
+If you want to compare your own model to the models on the leaderboard, see [Benchmark your own model](#benchmark-your-own-model).
+
 If you want to use your own model, you must contribute it to drevalpy. Please follow the following steps:
 
 1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
@@ -172,6 +174,170 @@ If you want to use your own model, you must contribute it to drevalpy. Please fo
 7. Install drevalpy into your environment: `pip install -e .`
 8. From your environment, try to run the pipeline: `nextflow run nf-core/drugresponseeval -r dev -profile test`
 9. If everything works, try running your model: `nextflow run nf-core/drugresponseeval -r dev --models <your_model> --dataset_name <dataset_name>`
+
+### Benchmark your own model
+
+This section is the shortest path from "I have a model" to "my model is on the leaderboard". The leaderboard compares
+models on fixed, precomputed cross-validation (CV) splits of CTRPv2 in the leave-cell-line-out setting (LCO), so every
+model is evaluated on exactly the same data.
+
+You need to do four things:
+
+1. [Implement your model](#1-implement-your-model) in `drevalpy` and install it.
+2. [Download the precomputed splits](#2-get-the-splits-and-the-leaderboard-results) and the existing leaderboard results.
+3. [Run the pipeline](#3-run-your-model-on-the-leaderboard-splits) with your model on those splits.
+4. [Add your results to the leaderboard](#4-compare-against-the-leaderboard) and plot it.
+
+> [!NOTE]
+> The leaderboard is defined for `--test_mode LCO` and `--dataset_name CTRPv2` (both are the pipeline defaults) with the
+> default measure (`LN_IC50`, which resolves to the CurveCurator-refitted `LN_IC50_curvecurator`). Do not set
+> `--no_refitting`.
+
+#### 1. Implement your model
+
+Your model has to live in the `drevalpy` Python package, because the pipeline calls models through `drevalpy`.
+
+```bash
+git clone https://github.com/daisybio/drevalpy.git
+cd drevalpy
+mamba create -n drevalpy python=3.13
+mamba activate drevalpy
+pip install poetry && poetry install
+```
+
+Then:
+
+1. Create `drevalpy/models/your_model_name/your_model.py` with a class `YourModel` that inherits from `DRPModel`.
+2. Register it in `drevalpy/models/__init__.py` (add it to `MULTI_DRUG_MODEL_FACTORY`, or to `SINGLE_DRUG_MODEL_FACTORY`
+   if it is trained per drug).
+3. If your model has tunable hyperparameters, list the values to test in `drevalpy/models/your_model_name/hyperparameters.yaml`.
+   The pipeline runs a grid search over them in every CV split.
+4. Install your clone into the environment you will start Nextflow from: `pip install -e .`
+
+The full walkthrough, including a complete example, is in the drevalpy docs:
+[Implement your model](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html) and
+[a complete example](https://drevalpy.readthedocs.io/en/latest/example_tinynn.html).
+
+Check that the pipeline works with your model on the small toy data before using the real data:
+
+```bash
+nextflow run nf-core/drugresponseeval -r dev -profile test --models YourModel
+```
+
+Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set.
+
+> [!IMPORTANT]
+> Because the model only exists in your local `drevalpy` installation, run Nextflow **without** a container or conda
+> profile (no `-profile docker/singularity/conda`), so that the processes use the `drevalpy` installed in your
+> environment. The container images contain the released `drevalpy` and do not know your model. Cluster profiles that do not
+> start a container are fine.
+
+#### 2. Get the splits and the leaderboard results
+
+Download the following from [Zenodo](https://doi.org/10.5281/zenodo.12633909) and unzip them:
+
+- `splits.zip`: the CV splits used for the leaderboard. It contains a folder `splits` with
+  `cv_split_<i>_{train,validation,test}.csv` (and optionally `_validation_es.csv` and `_early_stopping.csv`) files.
+- `leaderboard_Oct26.zip`: the results of the models that are already on the leaderboard
+  (`evaluation_results.csv` and `true_vs_pred.csv`).
+
+#### 3. Run your model on the leaderboard splits
+
+The pipeline can use your own splits via `--custom_splitter_path` (see [Custom CV splits](#custom-cv-splits)). The file
+`assets/custom_splitter_from_csvs.py` loads exactly the CSV format of `splits.zip`.
+
+Copy it and set the path to the unzipped splits **inside the file**:
+
+```bash
+cp assets/custom_splitter_from_csvs.py my_splitter.py
+# edit my_splitter.py: SPLITS_DIR = Path("/path/to/splits")
+```
+
+> [!WARNING]
+> The splitter runs inside the `CV_SPLIT` process, so `SPLITS_DIR` must be an absolute path that is reachable from where
+> the process runs (on a cluster: a shared file system).
+
+Then run the pipeline:
+
+```bash
+nextflow run nf-core/drugresponseeval \
+   -profile <your cluster profile, no container profile> \
+   --run_id my_model \
+   --test_mode LCO \
+   --dataset_name CTRPv2 \
+   --custom_splitter_path my_splitter.py \
+   --models YourModel \
+   --baselines NaiveMeanEffectsPredictor
+```
+
+- `--n_cv_splits` is ignored, the number of splits is read from the files.
+- `--models` takes your model; `--baselines` are tuned and compared as well but skip randomization and robustness tests.
+  The `NaiveMeanEffectsPredictor` is always run.
+- Add `-profile gpu` (together with your cluster profile) if your model should train on a GPU.
+- If the run is interrupted, restart it with the same command plus `-resume`.
+
+When the run is finished, the results are in `results/my_model/`:
+
+```
+results/my_model/
+├── evaluation_results.csv         # metrics per model and CV split
+├── evaluation_results_per_drug.csv
+├── evaluation_results_per_cl.csv
+├── true_vs_pred.csv               # true and predicted responses
+├── LCO/                           # predictions per model
+└── index.html, LCO.html, ...      # report with all plots
+```
+
+Open `results/my_model/index.html` to look at your model on its own (critical difference diagram, violin plots, heatmaps, ...).
+
+#### 4. Compare against the leaderboard
+
+Append your model's lines (without the header line) to the leaderboard files. The `NaiveMeanEffectsPredictor` is
+already part of the leaderboard results, so it is left out:
+
+```bash
+tail -n +2 results/my_model/evaluation_results.csv | grep -v NaiveMeanEffectsPredictor >> leaderboard_Oct26/evaluation_results.csv
+tail -n +2 results/my_model/true_vs_pred.csv | grep -v NaiveMeanEffectsPredictor >> leaderboard_Oct26/true_vs_pred.csv
+```
+
+Make sure that the downloaded files end with a line break before you append.
+
+Create the leaderboard with `drevalpy` (install it with `pip install drevalpy` if it is not in your environment already):
+
+```bash
+python -m drevalpy.visualization.create_leaderboard \
+    --results_path leaderboard_Oct26/evaluation_results.csv \
+    --true_vs_pred_path leaderboard_Oct26/true_vs_pred.csv \
+    --test_mode LCO \
+    --dataset CTRPv2 \
+    --output_dir my_leaderboard
+```
+
+This creates in `my_leaderboard/`:
+
+- `leaderboard_light.png` / `leaderboard_dark.png`: normalized Pearson, RMSE and raw Pearson per model, plus per-drug Pearson.
+- `critical_difference_algorithms_LCO.svg` and `.html`: the critical difference diagram and the table of p-values,
+  i.e., whether your model is significantly better or worse than the others over the CV splits.
+
+Models starting with `Naive` are marked as baselines. To compare only against the baselines you ran yourself, pass
+`results/my_model/evaluation_results.csv` and `true_vs_pred.csv` directly instead of the merged files.
+
+##### How to read the result
+
+- Rank and **normalized Pearson** show whether your model learns something beyond the drug and cell line means that the
+  `NaiveMeanEffectsPredictor` already captures.
+- In the critical difference diagram, models that are connected by a bar are **not** significantly different. It needs
+  several CV splits, the leaderboard splits provide enough.
+
+#### Troubleshooting
+
+| Problem                                       | Likely cause                                                                                                                                      |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The pipeline does not find `YourModel`        | The model is not registered in `drevalpy/models/__init__.py`, or the clone is not installed (`pip install -e .`), or a container profile is used. |
+| The splitter finds no folds                   | `SPLITS_DIR` in your splitter copy is wrong or not visible to the process.                                                                        |
+| Splitter validation error (shared cell lines) | The splits do not match `--test_mode`; use the LCO splits with `--test_mode LCO`.                                                                 |
+| No critical difference diagram                | Too few CV splits (at least 7 are recommended).                                                                                                   |
+| Your model is missing in the leaderboard plot | The appended lines have a different test mode or dataset than `--test_mode` / `--dataset`.                                                        |
 
 ### Running an existing model with different input
 
