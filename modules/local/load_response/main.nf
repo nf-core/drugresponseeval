@@ -8,6 +8,8 @@ process LOAD_RESPONSE {
     input:
     tuple val(measure), path(response)
     val cross_study_dataset
+    val clean_min_responders
+    val clean_min_responder_frac
 
     output:
     path 'response_dataset.pkl',    emit: response_dataset, optional: true
@@ -19,7 +21,9 @@ process LOAD_RESPONSE {
     drevalpy load-response \\
         --response_dataset ${response} \\
         --measure ${measure} \\
-        ${cross_study_dataset ? '--cross_study_dataset' : ''}
+        ${cross_study_dataset ? '--cross_study_dataset' : ''} \\
+        ${clean_min_responders != null ? "--clean_min_responders ${clean_min_responders}" : ''} \\
+        ${clean_min_responder_frac != null ? "--clean_min_responder_frac ${clean_min_responder_frac}" : ''}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

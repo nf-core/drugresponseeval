@@ -29,6 +29,12 @@ input:
   - cross_study_dataset:
       type: boolean
       description: Whether the loaded dataset will be used for cross-study prediction.
+  - clean_min_responders:
+      type: integer
+      description: If set, keep only drugs with at least this many reproducible responder curves. Requires curve-curated data.
+  - clean_min_responder_frac:
+      type: float
+      description: Fraction-based alternative to clean_min_responders, in (0, 1].
 
 output:
   response_dataset:
