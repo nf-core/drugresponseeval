@@ -411,17 +411,20 @@ new_dataset.to_csv('path/to/predictions.csv')
 
 The following datasets are available and can be supplied via `--dataset_name`:
 
-| Dataset Name | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                                         |
-| ------------ | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| CTRPv1       | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                                   |
-| CTRPv2       | 395,025              | 546             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                                   |
-| CCLE         | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                                   |
-| GDSC1        | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                |
-| GDSC2        | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                |
-| TOYv1        | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
-| TOYv2        | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv1.                    |
-| BeatAML2     | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
-| PDX_Bruna    | 2,559                | 104             | 37 (mouse passages)  | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
+| Dataset Name    | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                                         |
+| --------------- | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| CTRPv1          | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                                   |
+| CTRPv2          | 395,024              | 545             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                                   |
+| CTRPv2_clean    | 363,810              | 477             | 886                  | CTRPv2 keeping only drugs with at least 15 reproducible responder curves.                                           |
+| CTRPv2_cleaner  | 353,176              | 458             | 886                  | CTRPv2 keeping only drugs with at least 30 reproducible responder curves.                                           |
+| CTRPv2_cleanest | 343,219              | 444             | 886                  | CTRPv2 keeping only drugs with at least 50 reproducible responder curves.                                           |
+| CCLE            | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                                   |
+| GDSC1           | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                |
+| GDSC2           | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                |
+| TOYv1           | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
+| TOYv2           | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv1.                    |
+| BeatAML2        | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
+| PDX_Bruna       | 2,559                | 104             | 37 (mouse passages)  | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
 
 Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
 others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
@@ -475,6 +478,23 @@ variant of the dataset given via `--dataset_name`, use one of the following (set
 - `--clean_min_responders N`: keep only drugs with at least `N` reproducible (curve-curated) responder curves. This absolute
   count is recommended, as it is independent of screen size.
 - `--clean_min_responder_frac F`: keep only drugs whose fraction of significant responder curves is at least `F` (in `(0, 1]`).
+
+Three ready-made tiers of CTRPv2 are also available directly via `--dataset_name`: `CTRPv2_clean` (at least 15 responder
+curves per drug), `CTRPv2_cleaner` (at least 30), and `CTRPv2_cleanest` (at least 50).
+
+To clean any other curve-curated dataset with your own threshold, keep `--dataset_name` on the base dataset, e.g., to keep
+only GDSC2 drugs with at least 30 responder curves:
+
+```bash
+nextflow run nf-core/drugresponseeval \
+  --dataset_name GDSC2 \
+  --clean_min_responders 30 \
+  --outdir results/ \
+  -profile docker
+```
+
+The cleaned variant is created once as `<dataset_name>_clean_min<N>` (or `<dataset_name>_clean_frac<F>`) next to the base
+dataset in `--path_data`, reusing the base dataset's feature files, and results are written under that name.
 
 Whole drugs are removed, never individual measurements. The cleaning is applied when the response data is loaded, only to
 the main dataset (not to `--cross_study_datasets`), and requires curve-curated data, i.e., do not combine it with `--no_refitting`

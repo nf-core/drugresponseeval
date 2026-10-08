@@ -8,10 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - `--custom_splitter_path` to provide a Python script defining custom CV splits instead of the built-in splitting.
+- `--clean_min_responders` and `--clean_min_responder_frac` to clean the dataset by removing responders with fewer than a certain number of responses.
+- New models: EnsembleMF, PaccMann, SparseGO
 
 ### `Changed`
 
 - Support for new models: EnsembleMF, PaccMann, SparseGO
+- Updated Zenodo link to latest dataset release
 
 ### `Removed`
 
@@ -20,17 +23,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - The `NONE.csv` placeholder for `PREDICT_FULL` is now a real file (`assets/NONE.csv`), so staging no longer fails when inputs are copied instead of symlinked.
+- Fixed a bug for training the final model on the full dataset: didn't work correctly for single drug models.
 
 ### `Dependencies`
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-|            |             |             |
+| Dependency        | Old version | New version |
+| ----------------- | ----------- | ----------- |
+| drevalpy          | 1.5.1       | 1.6.0       |
+| numpy             | 2.4.6       | 2.5.3       |
+| scikit-learn      | 1.9.0       | 1.9.1       |
+| scikit-posthocs   | 0.14.0      | 0.17.0      |
+| scipy             | 1.17.1      | 1.18.1      |
+| torch             | 2.12.0      | 2.14.0      |
+| pytorch-lightning | 2.6.5       | 2.6.6       |
+| Nextflow          | >= 25.10.4  | >= 26.04.0  |
 
 ### `Parameters`
 
-| Params | Status |
-| ------ | ------ |
+| Params                     | Status |
+| -------------------------- | ------ |
+| --custom_splitter_path     | Added  |
+| --clean_min_responders     | Added  |
+| --clean_min_responder_frac | Added  |
 
 ## v1.2.2: Pretty Psyduck - 23.06.2026
 
