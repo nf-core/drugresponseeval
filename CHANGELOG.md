@@ -3,7 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.2.3dev: Adjective Pokémon - [unreleased<!-- TODO nf-core: replace with date on release -->]
+## v1.3.1dev: Adjective Pokémon - [unreleased<!-- TODO nf-core: replace with date on release -->]
+
+## v1.3.0: Bubbly Blastoise - 9.10.2026
+
+_Blastoise is a blue Pokémon whose body is mostly hidden by its tough, brown shell. The two powerful water cannons on its back can produce water blasts that can pierce steel and concrete and be used for high-speed charges and propelling itself in the air. The speed of Blastoise's charges is similar to the force of a rocket._
 
 ### `Added`
 
@@ -13,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- Support for new models: EnsembleMF, PaccMann, SparseGO
 - Updated Zenodo link to latest dataset release
+- Simplified documentation and README
 
 ### `Removed`
 
