@@ -1,5 +1,5 @@
 process ROBUSTNESS_TEST {
-    tag { "${model_name}_${robustness_iteration}_gpu:${task.ext.use_gpu}" }
+    tag { "${model_name}_${robustness_iteration}" }
     label 'process_high'
     label 'process_gpu'
 

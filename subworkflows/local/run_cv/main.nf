@@ -72,18 +72,22 @@ workflow RUN_CV {
 
     ch_response = measure.combine(ch_response)
     ch_cross_study_datasets = measure.combine(ch_cross_study_datasets)
-    LOAD_RESPONSE(ch_response, false)
+    LOAD_RESPONSE(ch_response, false, params.clean_min_responders ?: '', params.clean_min_responder_frac ?: '')
     ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
-    LOAD_CS_RESPONSE(ch_cross_study_datasets, true)
+    LOAD_CS_RESPONSE(ch_cross_study_datasets, true, '', '')
     ch_versions = ch_versions.mix(LOAD_CS_RESPONSE.out.versions)
 
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
 
+    custom_splitter = params.custom_splitter_path
+        ? file(params.custom_splitter_path, checkIfExists: true)
+        : file("${projectDir}/assets/NO_FILE", checkIfExists: true)
     CV_SPLIT (
         ch_data,
-        params.n_cv_splits
+        params.n_cv_splits,
+        custom_splitter
     )
     ch_versions = ch_versions.mix(CV_SPLIT.out.versions)
     // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]

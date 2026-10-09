@@ -131,7 +131,10 @@ workflow PIPELINE_INITIALISATION {
                         'MOLIR',
                         'SuperFELTR',
                         'DIPK',
-                        'Precily'
+                        'Precily',
+                        'EnsembleMF',
+                        'PaccMann',
+                        'SparseGO'
                         ]
     ch_models = channel.from(models.split(',').collect { it.trim() })
     def baseline_list = baselines.split(",")

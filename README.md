@@ -11,7 +11,7 @@
 
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
@@ -24,7 +24,7 @@
 
 ## Introduction
 
-# ![drevalpy_summary](assets/dreval_summary.svg)
+# ![drevalpy_summary](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/overview.png)
 
 **DrEval** is a bioinformatics framework that includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
@@ -62,6 +62,22 @@ nextflow run nf-core/drugresponseeval \
    --baselines <NaiveMeanEffectsPredictor,baseline2,...> \
    --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|BeatAML2|PDX_Bruna|TOYv1|TOYv2|custom_dataset>
 ```
+
+## Leaderboard
+
+This is the current leaderboard of DrEval models:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_light.png?v=4">
+  <img alt="DrEvalPy Leaderboard" src="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+</picture>
+
+In the critical difference diagram, you can see which models outperform which other models significantly. The diagram is based on the average ranks of the models across all datasets and metrics, and the critical difference is calculated using the Nemenyi test. If model A is outside the bar corresponding to model B, it is significantly better (if it lies to the left) or worse (if it lies to the right) than model B.
+
+# ![drevalpy_cd_diagram](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/critical_difference_algorithms_LCO.svg)
+
+For integrating your own model into DrEval, and to see how it compares to the other models, please refer to the [usage documentation: Benchmark your own model](https://nf-co.re/drugresponseeval/usage#benchmark-your-own-model).
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
