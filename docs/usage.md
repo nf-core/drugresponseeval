@@ -6,51 +6,15 @@
 
 ## Introduction
 
-DrugResponseEval is a workflow designed to ensure that drug response prediction models are evaluated in a consistent and
-reproducible manner. We offer four settings:
+DrugResponseEval is a Nextflow pipeline around [drevalpy](https://drevalpy.readthedocs.io/en/latest/) that benchmarks
+drug response prediction models in a consistent and reproducible way. It finds the best hyperparameters for all models in
+cross-validation, trains the final models, evaluates them on the test set, and optionally runs randomization and
+robustness tests.
 
-- **Leave-Pair-Out (LPO)**: Random pairs of cell lines and drugs are left out for testing but both the drug and the
-  cell line might already be present in the training set. This is the **easiest setting** for your model but also the
-  most uninformative one. The only application scenario for this setting is when you want to test whether your model
-  can **complete the missing values in the training set**.
-- **Leave-Cell-Line-Out (LCO)**: Random cell lines are left out for testing but the drugs might already be present in
-  the training set. This setting is **more challenging** than LPO but still relatively easy. The application scenario
-  for this setting is when you want to test whether your model can **predict the response of a new cell line**. This
-  is very relevant for **personalized medicine**.
-- **Leave-Tissue-Out (LTO)**: Random tissues of origin are left out for testing but the drugs and cell lines might already be
-  present in the training set. This setting is **more challenging** than LCO because for LCO, very similar cell lines might
-  end up in the test dataset. Because it can still leverage drug means, it is still relatively easy, though. The application
-  scenario for this setting is when you want to test whether your model can **predict the response of a new tissue**.
-  This is very relevant for **drug repurposing**.
-- **Leave-Drug-Out (LDO)**: Random drugs are left out for testing but the cell lines might already be present in the
-  training set. This setting is the **most challenging** one. The application scenario for this setting is when you
-  want to test whether your model can **predict the response of a new drug**. This is very relevant for **drug
-  development**.
-
-An underlying issue is that drugs have a rather unique IC50/EC50 range. That means that by just predicting the mean response
-that a drug has in the training set (aggregated over all cell lines), you can already achieve a rather good
-prediction. This is why we also offer the possibility to compare your model to a **NaivePredictor** that predicts
-the mean response of all drugs in the training set. We also offer five more advanced naive predictors:
-**NaiveCellLineMeanPredictor**, **NaiveTissueMeanPredictor**, **NaiveDrugMeanPredictor**, **NaiveTissueDrugMeanPredictor**, and **NaiveMeanEffectsPredictor**.
-The NaiveCellLineMeanPredictor predicts the mean response of a cell line in the training set, the NaiveTissueMeanPredictor
-the mean response of a tissue of origin in the training set, the NaiveDrugMeanPredictor
-predicts the mean response of a drug in the training set. The NaiveMeanEffectsPredictor combines both sources of variation
-and predicts responses as the sum of the overall mean (NaivePredictor) + cell line + drug-specific means.
-The NaiveTissueDrugMeanPredictor predicts the mean response per tissue-drug combination.
-**The NaiveMeanEffectsPredictor is always run.**
-In LDO and LCO, the NaiveMeanEffectsPredictor is equivalent to the NaiveCellLineMeanPredictor and the
-NaiveDrugMeanPredictor, respectively, because test cell line effects and drug effects are unknown in these settings.
-In LCO, the NaiveTissueDrugMeanPredictor is the strongest baseline, in all other settings it is the NaiveMeanEffectsPredictor.
-
-Furthermore, we offer a variety of more advanced **baseline models** and some **state-of-the-art models** to compare
-your model against. Similarly, we provide commonly used datasets to evaluate your model on (GDSC1, GDSC2, CCLE,
-CTRPv1, CTRPv2, BeatAML2, PDX data from Bruna et al.). You can also provide your **own dataset or your own model by contributing to our PyPI package
-[drevalpy](https://github.com/daisybio/drevalpy.git)** Before contributing, you can pull our respective repositories.
-More information can be found in the [drevalpy readthedocs](https://drevalpy.readthedocs.io/en/latest/).
-
-We first identify the best hyperparameters for all models and baselines in a cross-validation setting. Then, we
-train the models on the whole training set and evaluate them on the test set. Furthermore, we offer randomization
-and robustness tests.
+Choose how your data is split with `--test_mode` (`LPO`, `LCO`, `LTO` or `LDO`; see
+[Available Settings](https://drevalpy.readthedocs.io/en/latest/usage.html#available-settings)). The
+`NaiveMeanEffectsPredictor` baseline is always run (see
+[Available Models](https://drevalpy.readthedocs.io/en/latest/usage.html#available-models)).
 
 ## Running the pipeline
 
@@ -64,22 +28,18 @@ nextflow run nf-core/drugresponseeval \
    --models <model1,model2,...> \
    --baselines <baseline1,baseline2,...> \
    --dataset_name <dataset_name> \
-   --path_data <path_data>
+   --path_data <path_data> \
+   --outdir results
 ```
 
 This will launch the pipeline with the `docker/singularity/.../institute` configuration profile. See below for more information about profiles.
 
-In your `outdir`, a folder named `myRun` will be created containing the results of the pipeline run.
+In your `outdir`, a folder named `myRun` will be created containing the results of the pipeline run. For all available
+parameters, see the [parameter documentation](https://nf-co.re/drugresponseeval/parameters). Models, baselines and
+datasets are described below.
 
-The `test_mode` parameter specifies the evaluation setting, e.g., `--test_mode LCO`.
-
-The `models` and `baselines` parameters are lists of models and baselines to be evaluated, e.g.,
-`--models ElasticNet,RandomForest --baselines NaivePredictor,NaiveCellLineMeanPredictor,NaiveDrugMeanPredictor`.
-
-The `dataset_name` parameter specifies the dataset to be used for evaluation, e.g., `--dataset_name CTRPv2`.
-
-If you do not want to re-download the data every time you run the pipeline, you can specify the path to the data with
-the `path_data` parameter, e.g., `--path_data /path/to/data`.
+If you do not want to re-download the data every time you run the pipeline, point `--path_data` to a persistent folder,
+e.g., `--path_data /path/to/data`.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -118,62 +78,42 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 ### Available Models
 
-**Single-Drug Models** fit one model for each drug in the training set. They also cannot generalize to new drugs,
-hence those models cannot be used in the LDO setting. **Multi-Drug Models** fit one model for all drugs in the training
-set. They can be used in all four settings.
+Pass model names to `--models` and baselines to `--baselines` (comma-separated). **Single-Drug Models** (marked with \*)
+fit one model per drug and cannot generalize to new drugs, so they cannot be used with `--test_mode LDO`. All other
+models are **Multi-Drug Models** and work in all four settings.
 
-The following models are available:
+- **Baselines:** `NaivePredictor`, `NaiveCellLineMeanPredictor`, `NaiveDrugMeanPredictor`, `NaiveMeanEffectsPredictor`,
+  `NaiveTissueMeanPredictor`, `NaiveTissueDrugMeanPredictor`, `AdaBoostDecisionTree`, `ElasticNet`, `Lasso`,
+  `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `RandomForest`,
+  `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
+- **Custom models:** `SimpleNeuralNetwork`, `MultiViewNeuralNetwork`, `DrugGNN`, `EnsembleMF`
+- **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `DIPK`, `Precily`, `PaccMann`, `SparseGO`
 
-| Model Name                   | Baseline / Published / Custom Model | Multi-Drug Model / Single-Drug Model | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ---------------------------- | ----------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| NaivePredictor               | Baseline Method                     | Multi-Drug Model                     | Most simple method. Predicts the mean response of all drugs in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| NaiveCellLineMeanPredictor   | Baseline Method                     | Multi-Drug Model                     | Predicts the mean response of a cell line in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| NaiveDrugMeanPredictor       | Baseline Method                     | Multi-Drug Model                     | Predicts the mean response of a drug in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| NaiveMeanEffectsPredictor    | Baseline Method                     | Multi-Drug Model                     | Predicts the drug- and cell-line specific mean effects.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| NaiveTissueMeanPredictor     | Baseline Method                     | Multi-Drug Model                     | Predicts the mean response of a tissue in the training set.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| NaiveTissueDrugMeanPredictor | Baseline Method                     | Multi-Drug Model                     | Predicts the mean response per tissue-drug combination in the training set (aggregated across all cell lines with that tissue-drug pair). Falls back to the overall dataset mean for unseen combinations.                                                                                                                                                                                                                                                                                                                                                                                 |
-| AdaBoostDecisionTree         | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn AdaBoost Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html) with Decision Tree base estimators. Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                                   |
-| ElasticNet                   | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn Elastic Net](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html), [Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html), or [Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html) model. Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                               |
-| Lasso                        | Baseline Method                     | Multi-Drug Model                     | Explicitly fits an [Sklearn Lasso](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html) model. Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                                                                          |
-| SingleDrugElasticNet         | Baseline Method                     | Single-Drug Model                    | Fits an ElasticNet model for each drug separately. Supports flexible inputs (default: gene expression).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| GradientBoosting             | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn Histogram-based Gradient Boosting Regression Tree](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html). Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                           |
-| MultiViewXGBoost             | Baseline Method                     | Multi-Drug Model                     | Fits an [XGBoost XGBRegressor](https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBRegressor) on a single or multiple cell line views. Supports flexible inputs (default: gene expression + mutations, or gene expression only, + fingerprints).                                                                                                                                                                                                                                                                                                                   |
-| MultiViewLightGBM            | Baseline Method                     | Multi-Drug Model                     | Fits a [LightGBM LGBMRegressor](https://lightgbm.readthedocs.io/en/latest/pythonapi/lightgbm.LGBMRegressor.html) on a single or multiple cell line views. Supports flexible inputs (default: gene expression + mutations, or gene expression only, + fingerprints).                                                                                                                                                                                                                                                                                                                       |
-| KNNRegressor                 | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn KNNRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html). Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                                                                         |
-| RandomForest                 | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html). Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                                                             |
-| MultiViewRandomForest        | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) on multiple cell line views (default: gene expression + mutations) and drug fingerprints. If methylation is used, its dimensionality is reduced with PCA.                                                                                                                                                                                                                                                                                        |
-| SingleDrugRandomForest       | Baseline Method                     | Single-Drug Model                    | Fits an [Sklearn Random Forest Regressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html) for each drug separately. Supports flexible inputs (default: gene expression).                                                                                                                                                                                                                                                                                                                                                                   |
-| SVR                          | Baseline Method                     | Multi-Drug Model                     | Fits an [Sklearn Support Vector Regressor](https://scikit-learn.org/1.5/modules/generated/sklearn.svm.SVR.html). Supports flexible inputs (default: gene expression + fingerprints).                                                                                                                                                                                                                                                                                                                                                                                                      |
-| SimpleNeuralNetwork          | Custom Model                        | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on flexible cell line and drug input (concatenated input) with 3 layers of varying dimensions and Dropout layers. Default: gene expression + fingerprints or drug_chemberta_embeddings.                                                                                                                                                                                                                                                                        |
-| MultiViewNeuralNetwork       | Custom Model                        | Multi-Drug Model                     | Fits a simple feedforward neural network (implemented with [Pytorch Lightning](https://lightning.ai/docs/pytorch/stable/)) on flexible omic inputs (default: gene expression + mutations), and drug fingerprints (concatenated input) with 3 layers of varying dimensions and Dropout layers. The dimensionality of the methylation data, if supplied, is reduced with a PCA to the first 100 components before it is fed to the model.                                                                                                                                                   |
-| DrugGNN                      | Custom Model                        | Multi-Drug Model                     | Represents drugs as graph, encodes their structure with a 3-layer GNN. Uses a 2-layer MLP for encoding gene expression. Concatenates the representations and feeds them through 2 more MLP layers.                                                                                                                                                                                                                                                                                                                                                                                        |
-| EnsembleMF                   | Custom Model                        | Multi-Drug Model                     | Ensembled two-tower matrix factorization. Cell-line and drug latent factors are produced by small residual MLPs over gene expression and Morgan fingerprints, combined by a dot product with per-cell/per-drug/global biases, a free per-drug embedding and a small interaction head. Averaged over N independently seeded members.                                                                                                                                                                                                                                                       |
-| PharmaFormer                 | Published Model                     | Multi-Drug Model                     | Transformer-based model using byte-pair encoded drug SMILES and gene expression features for drug response prediction.                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| SRMF                         | Published Model                     | Multi-Drug Model                     | [Similarity Regularization Matrix Factorization](https://doi.org/10.1186/s12885-017-3500-5) model by Wang et al. on gene expression data and drug fingerprints. Re-implemented Matlab code into Python. The basic idea is represent each drug and each cell line by their respective similarities to all other drugs/cell lines. Those similarities are mapped into a shared latent low-dimensional space from which responses are predicted.                                                                                                                                             |
-| MOLIR                        | Published Model                     | Single-Drug Model                    | Regression extension of [MOLI: multi-omics late integration deep neural network.](https://doi.org/10.1093/bioinformatics/btz318) by Sharifi-Noghabi et al. Takes somatic mutation, copy number variation and gene expression data as input. MOLI reduces the dimensionality of each omics type with a hidden layer, concatenates them into one representation and optimizes this representation via a combined cost function consisting of a triplet loss and a binary cross-entropy loss. We implemented a regression adaption with MSE loss and an adapted triplet loss for regression. |
-| SuperFELTR                   | Published Model                     | Single-Drug Model                    | Regression extension of [SuperFELT: supervised feature extraction learning using triplet loss for drug response](https://doi.org/10.1186/s12859-021-04146-z) by Park et al. Very similar to MOLI(R). In MOLI(R), encoders and the classifier were trained jointly. Super.FELT(R) trains them independently. MOLI(R) was trained without feature selection (except for the Variance Threshold on the gene expression). Super.FELT(R) uses feature selection for all omics data.                                                                                                            |
-| DIPK                         | Published Model                     | Multi-Drug Model                     | [Deep neural network Integrating Prior Knowledge](https://doi.org/10.1093/bib/bbae153) from Li et al. Uses gene interaction relationships (encoded by a graph auto-encoder), gene expression profiles (encoded by a denoising auto-encoder), and molecular topologies (encoded by MolGNet). Those features are integrated using multi-head attention layers.                                                                                                                                                                                                                              |
-| Precily                      | Published Model                     | Multi-Drug Model                     | [Precily](https://doi.org/10.1038/s41467-022-33291-z) from Chawla et al. Uses GSVA pathway-activity scores with SMILESVec drug embeddings. Features are concatenated and passed through multiple linear layers with ReLU and Dropout.                                                                                                                                                                                                                                                                                                                                                     |
-| PaccMann                     | Published Model                     | Multi-Drug Model                     | [PaccMann](https://doi.org/10.1021/acs.molpharmaceut.9b00520) from Manica et al. Embeds tokenized drug SMILES and encodes them with multi-scale convolutional layers, while cell line gene expression of a curated gene panel serves as biological context. Contextual attention layers connect the gene and molecule representations, which are concatenated and passed through stacked dense layers to predict the response.                                                                                                                                                            |
-| SparseGO                     | Published Model                     | Multi-Drug Model                     | [SparseGO](https://doi.org/10.1016/j.ebiom.2023.104767) from Del Real et al. Takes fingerprints and gene expression as input. The gene expression is processed via a sparse VNN, representing the GO term hierarchy. Each gene is connected to its annotated GO terms.                                                                                                                                                                                                                                                                                                                    |
+For a description of every model, see
+[Available Models](https://drevalpy.readthedocs.io/en/latest/usage.html#available-models) in the drevalpy documentation.
 
 ### Custom models
 
-If you want to compare your own model to the models on the leaderboard, see [Benchmark your own model](#benchmark-your-own-model).
+To use your own model, it must be part of the `drevalpy` Python package, because the pipeline calls all models through
+it. Follow the drevalpy guide
+[Implement your model](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html) (see also
+[a complete example](https://drevalpy.readthedocs.io/en/latest/example_tinynn.html)). Optionally, you can
+[contribute](https://drevalpy.readthedocs.io/en/latest/contributing.html) it to drevalpy via a pull request.
 
-If you want to use your own model, you must contribute it to drevalpy. Please follow the following steps:
+Install your clone into the environment you will start Nextflow from (`pip install -e .`) and check that the pipeline
+works with your model on the small toy data before using real data:
 
-1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
-2. Create a mamba environment: `mamba create -n drevalpy python=3.13`
-3. Install the dependencies:
-   - Run: `pip install poetry`
-   - Then run: `poetry install`
-4. Implement your model (for more information on that, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html))
-5. Test your model with the tests in `tests/`. Also, implement your own tests.
-6. (You can then open a PR to the main repository for contributing your model)
-7. Install drevalpy into your environment: `pip install -e .`
-8. From your environment, try to run the pipeline: `nextflow run nf-core/drugresponseeval -r dev -profile test`
-9. If everything works, try running your model: `nextflow run nf-core/drugresponseeval -r dev --models <your_model> --dataset_name <dataset_name>`
+```bash
+nextflow run nf-core/drugresponseeval -r dev -profile test --models YourModel
+```
+
+Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set.
+
+> [!IMPORTANT]
+> Because the model only exists in your local `drevalpy` installation, run Nextflow **without** a container or conda
+> profile (no `-profile docker/singularity/conda`), so that the processes use the `drevalpy` installed in your
+> environment. The container images contain the released `drevalpy` and do not know your model. Cluster profiles that do not
+> start a container are fine.
 
 ### Benchmark your own model
 
@@ -195,42 +135,7 @@ You need to do four things:
 
 #### 1. Implement your model
 
-Your model has to live in the `drevalpy` Python package, because the pipeline calls models through `drevalpy`.
-
-```bash
-git clone https://github.com/daisybio/drevalpy.git
-cd drevalpy
-mamba create -n drevalpy python=3.13
-mamba activate drevalpy
-pip install poetry && poetry install
-```
-
-Then:
-
-1. Create `drevalpy/models/your_model_name/your_model.py` with a class `YourModel` that inherits from `DRPModel`.
-2. Register it in `drevalpy/models/__init__.py` (add it to `MULTI_DRUG_MODEL_FACTORY`, or to `SINGLE_DRUG_MODEL_FACTORY`
-   if it is trained per drug).
-3. If your model has tunable hyperparameters, list the values to test in `drevalpy/models/your_model_name/hyperparameters.yaml`.
-   The pipeline runs a grid search over them in every CV split.
-4. Install your clone into the environment you will start Nextflow from: `pip install -e .`
-
-The full walkthrough, including a complete example, is in the drevalpy docs:
-[Implement your model](https://drevalpy.readthedocs.io/en/latest/runyourmodel.html) and
-[a complete example](https://drevalpy.readthedocs.io/en/latest/example_tinynn.html).
-
-Check that the pipeline works with your model on the small toy data before using the real data:
-
-```bash
-nextflow run nf-core/drugresponseeval -r dev -profile test --models YourModel
-```
-
-Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set.
-
-> [!IMPORTANT]
-> Because the model only exists in your local `drevalpy` installation, run Nextflow **without** a container or conda
-> profile (no `-profile docker/singularity/conda`), so that the processes use the `drevalpy` installed in your
-> environment. The container images contain the released `drevalpy` and do not know your model. Cluster profiles that do not
-> start a container are fine.
+Implement and install your model as described in [Custom models](#custom-models) and check that it runs on the toy data.
 
 #### 2. Get the splits and the leaderboard results
 
@@ -292,42 +197,11 @@ Open `results/my_model/index.html` to look at your model on its own (critical di
 
 #### 4. Compare against the leaderboard
 
-Append your model's lines (without the header line) to the leaderboard files. The `NaiveMeanEffectsPredictor` is
-already part of the leaderboard results, so it is left out:
-
-```bash
-tail -n +2 results/my_model/evaluation_results.csv | grep -v NaiveMeanEffectsPredictor >> leaderboard_Oct26/evaluation_results.csv
-tail -n +2 results/my_model/true_vs_pred.csv | grep -v NaiveMeanEffectsPredictor >> leaderboard_Oct26/true_vs_pred.csv
-```
-
-Make sure that the downloaded files end with a line break before you append.
-
-Create the leaderboard with `drevalpy` (install it with `pip install drevalpy` if it is not in your environment already):
-
-```bash
-python -m drevalpy.visualization.create_leaderboard \
-    --results_path leaderboard_Oct26/evaluation_results.csv \
-    --true_vs_pred_path leaderboard_Oct26/true_vs_pred.csv \
-    --test_mode LCO \
-    --dataset CTRPv2 \
-    --output_dir my_leaderboard
-```
-
-This creates in `my_leaderboard/`:
-
-- `leaderboard_light.png` / `leaderboard_dark.png`: normalized Pearson, RMSE and raw Pearson per model, plus per-drug Pearson.
-- `critical_difference_algorithms_LCO.svg` and `.html`: the critical difference diagram and the table of p-values,
-  i.e., whether your model is significantly better or worse than the others over the CV splits.
-
-Models starting with `Naive` are marked as baselines. To compare only against the baselines you ran yourself, pass
-`results/my_model/evaluation_results.csv` and `true_vs_pred.csv` directly instead of the merged files.
-
-##### How to read the result
-
-- Rank and **normalized Pearson** show whether your model learns something beyond the drug and cell line means that the
-  `NaiveMeanEffectsPredictor` already captures.
-- In the critical difference diagram, models that are connected by a bar are **not** significantly different. It needs
-  several CV splits, the leaderboard splits provide enough.
+Add the lines of your model from `results/my_model/evaluation_results.csv` and `true_vs_pred.csv` to the existing
+leaderboard results (`leaderboard_Oct26.zip`) and create the leaderboard plots and critical difference diagram. The
+commands are described in the drevalpy guide
+[Create the leaderboard](https://drevalpy.readthedocs.io/en/latest/leaderboard.html). Use `--test_mode LCO` and
+`--dataset CTRPv2` there.
 
 #### Troubleshooting
 
@@ -341,15 +215,11 @@ Models starting with `Naive` are marked as baselines. To compare only against th
 
 ### Running an existing model with different input
 
-We now offer to run our existing sklearn baseline models with flexible inputs. This, however, requires a bit of work (for now). The following steps are required:
-
-1. Fork the [drevalpy repository](https://github.com/daisybio/drevalpy)
-2. Create a mamba environment: `mamba create -n drevalpy python=3.13`
-3. Install the dependencies:
-   - Run: `pip install poetry`
-   - Then run: `poetry install`
-4. Adjust `drevalpy/models/baselines/hyperparameters.yaml`: In the yaml, each baseline model defines its cell line input and drug input via `cell_line_views` and `drug_views`. Just insert the name of your input. For more information, check the [ReadTheDocs](https://drevalpy.readthedocs.io/en/latest/example_flexible_inputs.html)
-5. Install drevalpy into your environment: `pip install -e .` and run the pipeline (without specifying conda, docker or singularity in -profile, of course)
+The sklearn and neural network baseline models can run on other input data than their defaults. Set the `cell_line_views`
+and `drug_views` of the model in `drevalpy/models/baselines/hyperparameters.yaml` to the name of your input, as described
+in the drevalpy guide
+[Custom input with drevalpy's baselines](https://drevalpy.readthedocs.io/en/latest/example_flexible_inputs.html). Then
+install your clone as described in [Custom models](#custom-models) and run the pipeline without a container profile.
 
 ### Custom CV splits
 
@@ -409,38 +279,29 @@ new_dataset.to_csv('path/to/predictions.csv')
 
 ### Available Datasets
 
-The following datasets are available and can be supplied via `--dataset_name`:
+Supply a dataset via `--dataset_name`:
 
-| Dataset Name    | Number of DRP curves | Number of drugs | Number of Cell Lines | Description                                                                                                         |
-| --------------- | -------------------- | --------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| CTRPv1          | 60,758               | 354             | 243                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 1.                                                   |
-| CTRPv2          | 395,024              | 545             | 886                  | The Cancer Therapeutics Response Portal (CTRP) dataset version 2.                                                   |
-| CTRPv2_clean    | 363,810              | 477             | 886                  | CTRPv2 keeping only drugs with at least 15 reproducible responder curves.                                           |
-| CTRPv2_cleaner  | 353,176              | 458             | 886                  | CTRPv2 keeping only drugs with at least 30 reproducible responder curves.                                           |
-| CTRPv2_cleanest | 343,219              | 444             | 886                  | CTRPv2 keeping only drugs with at least 50 reproducible responder curves.                                           |
-| CCLE            | 11,670               | 24              | 503                  | The Cancer Cell Line Encyclopedia (CCLE) dataset.                                                                   |
-| GDSC1           | 316,506              | 378             | 970                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 1.                                                |
-| GDSC2           | 234,437              | 287             | 969                  | The Genomics of Drug Sensitivity in Cancer (GDSC) dataset version 2.                                                |
-| TOYv1           | 2,711                | 36              | 90                   | A toy dataset for testing purposes subsetted from CTRPv2.                                                           |
-| TOYv2           | 2,784                | 36              | 90                   | A second toy dataset for cross study testing purposes. 80 cell lines and 32 drugs overlap TOYv1.                    |
-| BeatAML2        | 62,487               | 166             | 569 (patients)       | Ex vivo drug sensitivity screening for a cohort of acute myeloid leukemia (AML) patients.                           |
-| PDX_Bruna       | 2,559                | 104             | 37 (mouse passages)  | Ex vivo drug sensitivity screening for short-term cultures of PDTX-derived tumor cells from breast cancer patients. |
+- **Cell line screens:** `CTRPv1`, `CTRPv2`, `CCLE`, `GDSC1`, `GDSC2`
+- **Drug-cleaned CTRPv2 variants:** `CTRPv2_clean`, `CTRPv2_cleaner`, `CTRPv2_cleanest` (see [Cleaner datasets](#cleaner-datasets))
+- **Clinically more relevant:** `BeatAML2` (AML patients), `PDX_Bruna` (breast cancer PDX)
+- **For testing:** `TOYv1`, `TOYv2` (small datasets, used by `-profile test`)
 
-Our pipeline also supports cross-study prediction, i.e., training on one dataset and testing on another (or multiple
-others) to assess the generalization of the model. This dataset name can be supplied via `--cross_study_datasets`.
+The number of curves, drugs and cell lines per dataset is listed in
+[Available Datasets](https://drevalpy.readthedocs.io/en/latest/usage.html#available-datasets) in the drevalpy
+documentation.
 
-The drug response measure that you want to use as the target variable can be specified via the `--measure` parameter.
-Available measures are `[“AUC”, “pEC50”, “EC50”, “IC50”, "LN_IC50", "response"]`.
+To test generalization to other datasets, supply them via `--cross_study_datasets`. The drug response measure used as the
+prediction target is set with `--measure` (`AUC`, `pEC50`, `EC50`, `IC50`, `LN_IC50` or `response`).
 
-We have re-fitted all the curves in the available datasets with <b>CurveCurator</b> to ensure that the data is processed
-well. By default, we use those measures. If you do not want to use those measures, enable the `--no_refitting` flag. This is not recommended: the originally
-published measures were fitted with different procedures, which makes cross-study comparisons hard.
+By default, the pipeline uses measures that were re-fitted with CurveCurator for all datasets, which makes them comparable
+across studies. Only set `--no_refitting` if you want the originally published measures instead.
 
 #### Custom datasets
 
-You can also provide your own custom dataset via the `--dataset_name` parameter by specifying a name that is not in the list of the available datasets.
-This can be prefit data (not recommended for comparability reasons) or raw viability data that is automatically fit
-with the exact same procedure that was used to refit the available datasets in the previous section.
+To use your own dataset, give `--dataset_name` a name that is not in the list above. You can provide raw viability data,
+which the pipeline fits automatically with CurveCurator, or prefit data (not recommended for comparability reasons). More
+details are in the drevalpy documentation on
+[Custom Datasets](https://drevalpy.readthedocs.io/en/latest/usage.html#custom-datasets).
 
 <i>Raw viability data</i>
 
@@ -449,18 +310,8 @@ We expect a csv-formatted file in the location `<path_data>/<dataset>/<dataset_n
 with the columns `[“dose”, “response”, “sample”, “drug”]` and an optional “replicate” column.
 If replicates are provided, the procedure will fit one curve per sample / drug pair using all replicates.
 
-**All dosages have to be provided in µM!** Drevalpy will compute the following response measures:
-
-| Measure              | Computation                                                                       |
-| -------------------- | --------------------------------------------------------------------------------- |
-| pEC50_curvecurator   | Computed internally by CurveCurator. Is computed as -log10(EC50_curvecurator[M]). |
-| EC50_curvecurator    | Given in µM.                                                                      |
-| IC50_curvecurator    | Given in µM.                                                                      |
-| LN_IC50_curvecurator | Computed from IC50_curvecurator                                                   |
-| AUC_curvecurator     | (unitless; computed as integral)                                                  |
-
-The pipeline then fits the curves using CurveCurator and saves the processed file to `<path_data>/<dataset>/<dataset_name>.csv`
-For individual results, look in the work directories.
+**All dosages have to be provided in µM!** The pipeline fits the curves using CurveCurator and saves the processed file
+to `<path_data>/<dataset>/<dataset_name>.csv`. For individual results, look in the work directories.
 
 <i>Prefit viability data</i>
 
@@ -501,53 +352,20 @@ the main dataset (not to `--cross_study_datasets`), and requires curve-curated d
 on non-curated measures. Because inactive drugs are removed, LDO results on cleaned datasets are optimistic and should be
 read as an upper bound.
 
-### Available Randomization Tests
+### Optional settings
 
-We have several randomization modes and types available.
+Details on all settings are in the drevalpy documentation.
 
-The modes are supplied via `--randomization_mode` and the types via `--randomization_type`.:
-
-- **SVCC: Single View Constant for Cell Lines:** A single cell line view (e.g., gene expression) is held unperturbed
-  while the others are randomized.
-- **SVCD: Single View Constant for Drugs:** A single drug view (e.g., drug fingerprints) is held unperturbed while the
-  others are randomized.
-- **SVRC: Single View Random for Cell Lines:** A single cell line view (e.g., gene expression) is randomized while the
-  others are held unperturbed.
-- **SVRD: Single View Random for Drugs:** A single drug view (e.g., drug fingerprints) is randomized while the others
-  are held unperturbed.
-
-Currently, we support two ways of randomizing the data. The default is permutation.
-
-- **Permutation**: Permutes the features over the instances, keeping the distribution of the features the same but
-  dissolving the relationship to the target.
-- **Invariant**: The randomization is done in a way that a key characteristic of the feature is preserved. In case
-  of matrices, this is the mean and standard deviation of the feature view for this instance, for networks it is the
-  degree distribution.
-
-### Robustness Tests
-
-The robustness test is a test where the model is trained with varying seeds. This is done multiple times to see how
-stable the model is. Via `--n_trials_robustness`, you can specify the number of trials for the robustness tests.
-
-### Available Metrics
-
-The metric used to select the best hyperparameters is RMSE by default and can be changed via `--optim_metric`
-(`RMSE`, `MSE`, `MAE`, `R^2`, `Pearson`, `Spearman`, `Kendall`). All of these are also reported in the evaluation, together with
-normalized versions of R^2, Pearson, Spearman and Kendall in which true and predicted values are normalized by the
-predictions of the NaiveMeanEffectsPredictor.
-
-### Available Response Transformations
-
-The response can be transformed before training via `--response_transformation` and is retransformed after prediction:
-
-- **None**: No transformation (default).
-- **standard**: sklearn `StandardScaler`.
-- **minmax**: sklearn `MinMaxScaler`.
-- **robust**: sklearn `RobustScaler`.
-- **drug_mean**: The per-drug mean response of the training fold is subtracted from the response and added back to the
-  predictions. Drugs not in the training fold (LDO, cross-study) fall back to the global training mean.
-- **drug_tissue_mean**: Like `drug_mean`, but per drug and tissue. Unseen (drug, tissue) combinations fall back to the drug
-  mean, unknown drugs to the global training mean. In LTO this degenerates to `drug_mean`. Requires a `tissue` column.
+- `--randomization_mode` (`SVCC`, `SVCD`, `SVRC`, `SVRD`) and `--randomization_type` (`permutation`, `invariant`): check
+  how much the performance drops when the input data is randomized. See
+  [Available Randomization Tests](https://drevalpy.readthedocs.io/en/latest/usage.html#available-randomization-tests).
+- `--n_trials_robustness`: train the model repeatedly with different seeds to check how stable it is. See
+  [Robustness Test](https://drevalpy.readthedocs.io/en/latest/usage.html#robustness-test).
+- `--optim_metric` (default `RMSE`; also `MSE`, `MAE`, `R^2`, `Pearson`, `Spearman`, `Kendall`): the metric used to select
+  the best hyperparameters. See [Available Metrics](https://drevalpy.readthedocs.io/en/latest/usage.html#available-metrics).
+- `--response_transformation` (default `None`; also `standard`, `minmax`, `robust`, `drug_mean`, `drug_tissue_mean`):
+  transform the response before training. See
+  [Available Response Transformations](https://drevalpy.readthedocs.io/en/latest/usage.html#available-response-transformations).
 
 ### Updating the pipeline
 
