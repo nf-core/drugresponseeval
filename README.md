@@ -11,8 +11,8 @@
 
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.2)
+[![Nextflow](https://img.shields.io/badge/version-%E2%89%A526.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.1.0-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.1.0)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -24,7 +24,7 @@
 
 ## Introduction
 
-# ![drevalpy_summary](assets/dreval_summary.svg)
+# ![drevalpy_summary](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/overview.png)
 
 **DrEval** is a bioinformatics framework that includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
@@ -63,6 +63,22 @@ nextflow run nf-core/drugresponseeval \
    --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|BeatAML2|PDX_Bruna|TOYv1|TOYv2|custom_dataset>
 ```
 
+## Leaderboard
+
+This is the current leaderboard of DrEval models:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_light.png?v=4">
+  <img alt="DrEvalPy Leaderboard" src="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+</picture>
+
+In the critical difference diagram, you can see which models outperform which other models significantly. The diagram is based on the average ranks of the models across all datasets and metrics, and the critical difference is calculated using the Nemenyi test. If model A is outside the bar corresponding to model B, it is significantly better (if it lies to the left) or worse (if it lies to the right) than model B.
+
+# ![drevalpy_cd_diagram](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/critical_difference_algorithms_LCO.svg)
+
+For integrating your own model into DrEval, and to see how it compares to the other models, please refer to the [usage documentation: Benchmark your own model](https://nf-co.re/drugresponseeval/usage#benchmark-your-own-model).
+
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
@@ -95,15 +111,15 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 ## Citations
 
-If you use nf-core/drugresponseeval for your analysis, please cite it using the following doi: [10.5281/zenodo.14779984](https://doi.org/10.5281/zenodo.14779984)
+If you use nf-core/drugresponseeval for your analysis, please cite it using the following DOI: [10.5281/zenodo.14779984](https://doi.org/10.5281/zenodo.14779984)
 
-> Our corresponding publication is at doi [10.1101/2025.05.26.655288](doi.org/10.1101/2025.05.26.655288)
+> Our corresponding publication is at DOI [10.1038/s41467-026-72903-w](https://doi.org/10.1038/s41467-026-72903-w)
 >
-> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **From Hype to Health Check: Critical Evaluation of Drug Response Prediction Models with DrEval.**
+> Bernett, J., Iversen, P., Picciani, M., Wilhelm, M., Baum, K., & List, M. **Critical Evaluation of Drug Response Prediction Models with DrEval.**
 >
-> _bioRxiv_, 2025-05.
+> _Nature Communications_ 17, 4238 (2026).
 
-The underlying data is available at doi: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
+The underlying data is available at DOI: [10.5281/zenodo.12633909](https://doi.org/10.5281/zenodo.12633909).
 
 The underlying python package is drevalpy, availably on [PyPI](https://pypi.org/project/drevalpy/) as standalone, for which we also have an extensive [ReadTheDocs Documentation](https://drevalpy.readthedocs.io/en/latest/).
 

@@ -3,6 +3,54 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.3.1dev: Adjective Pokémon - [unreleased<!-- TODO nf-core: replace with date on release -->]
+
+## v1.3.0: Bubbly Blastoise - 9.10.2026
+
+_Blastoise is a blue Pokémon whose body is mostly hidden by its tough, brown shell. The two powerful water cannons on its back can produce water blasts that can pierce steel and concrete and be used for high-speed charges and propelling itself in the air. The speed of Blastoise's charges is similar to the force of a rocket._
+
+### `Added`
+
+- `--custom_splitter_path` to provide a Python script defining custom CV splits instead of the built-in splitting.
+- `--clean_min_responders` and `--clean_min_responder_frac` to clean the dataset by removing responders with fewer than a certain number of responses.
+- New models: EnsembleMF, PaccMann, SparseGO
+
+### `Changed`
+
+- Updated Zenodo link to latest dataset release
+- Simplified documentation and README
+
+### `Removed`
+
+- Unnecessary ext.use_gpu parameter
+
+### `Fixed`
+
+- The `NONE.csv` placeholder for `PREDICT_FULL` is now a real file (`assets/NONE.csv`), so staging no longer fails when inputs are copied instead of symlinked.
+- Fixed a bug for training the final model on the full dataset: didn't work correctly for single drug models.
+- Defined parameter types for boolean, integer, and float parameters because of Nextflow 26.04.0.
+
+### `Dependencies`
+
+| Dependency        | Old version | New version |
+| ----------------- | ----------- | ----------- |
+| drevalpy          | 1.5.1       | 1.6.0       |
+| numpy             | 2.4.6       | 2.5.3       |
+| scikit-learn      | 1.9.0       | 1.9.1       |
+| scikit-posthocs   | 0.14.0      | 0.17.0      |
+| scipy             | 1.17.1      | 1.18.1      |
+| torch             | 2.12.0      | 2.14.0      |
+| pytorch-lightning | 2.6.5       | 2.6.6       |
+| Nextflow          | >= 25.10.4  | >= 26.04.0  |
+
+### `Parameters`
+
+| Params                     | Status |
+| -------------------------- | ------ |
+| --custom_splitter_path     | Added  |
+| --clean_min_responders     | Added  |
+| --clean_min_responder_frac | Added  |
+
 ## v1.2.2: Pretty Psyduck - 23.06.2026
 
 _Psyduck is a Water-type Pokémon, usually living in freshwater lakes and small ponds. It is constantly stunned by its headache and is unable to think very clearly. It usually stands immobile, trying to calm its headache. However, when its headache becomes too severe, Psyduck releases tension in the form of strong psychic powers._

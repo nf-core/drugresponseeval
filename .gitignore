@@ -11,3 +11,5 @@ null/
 .nf-test.log
 nf-test
 .nf-test*
+.idea
+CLAUDE.md

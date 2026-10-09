@@ -26,7 +26,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Evaluate and find max](#evaluate-and-find-max): For each CV split, the best hyperparameters are determined
      using a grid search per model
 3. `MODEL_TESTING` subworkflow: The best hyperparameters are used to train the models on the full training set
-   and predict the test set. Optionally, randomization and robustness testes are performed.
+   and predict the test set. Optionally, randomization and robustness tests are performed.
    - [Predict full](#predict-full): The model is trained on the full training set (train & validation) with the best
      hyperparameters to predict the test set.
    - [Randomization split](#randomization-split): Makes a channel per randomization to be tested.
@@ -44,7 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
    - [Evaluate final](#evaluate-final): The performance of the models is calculated on the test set results.
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
-4. `VISUALIZATION` subworkflow: Plots are created summarizing the results.
+4. `VISUALIZE_RESULTS` process: Plots are created summarizing the results.
 5. [Pipeline information](#pipeline-information): Report metrics generated during the workflow execution
 
 ### Subworkflow `PREPROCESS_CUSTOM`
@@ -105,7 +105,8 @@ This step is necessary to provide the pipeline with the response data that will 
 The response data is split into as many cross-validation folds as specified over the `--n_cv_splits` parameter.
 The data is split into training, validation, and test sets for each fold. For models using early stopping, the early
 stopping dataset is split from the validation set. This ensures that all models are trained and evaluated on the
-same dataset.
+same dataset. Alternatively, a Python script passed via `--custom_splitter_path` can define the splits, see
+[usage](usage.md).
 
 #### Make model channel
 
@@ -124,8 +125,9 @@ can be tested in parallel.
 A model is trained in the specified test mode, on the specific cross-validation split with the specified
 hyperparameter combination.
 
-As soon as the GPU support is available, the training and prediction will be done on the GPU for the models
-SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
+If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
+that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
+EnsembleMF, PaccMann, and SparseGO.
 
 #### Evaluate and find max
 
@@ -160,8 +162,9 @@ Trains the model on the randomized training + validation set with the best hyper
 unperturbed test set of the specified CV split. How the data is randomized is determined by the
 `--randomization_type`.
 
-As soon as GPU support is available, the training and prediction will be done on the GPU for
-the models SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
+If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
+that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
+EnsembleMF, PaccMann, and SparseGO.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -204,12 +207,11 @@ results of the Multi-Drug Models.
 #### Evaluate final
 
 Calculates various performance metrics on the given test set results, including RMSE, MSE, MAE, R^2, Pearson
-Correlation, Spearman Correlation, Kendall Correlation, and Partial Correlation.
+Correlation, Spearman Correlation, and Kendall Correlation.
 
 #### Collect results
 
-Collapses the results from above into four overview tables: `evaluation_results.csv`, `evaluation_results_per_drug.
-csv`, `evaluation_results_per_cell_line.csv`, and `true_vs_pred.csv`.
+Collapses the results from above into four overview tables: `evaluation_results.csv`, `evaluation_results_per_drug.csv`, `evaluation_results_per_cl.csv`, and `true_vs_pred.csv`.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -217,14 +219,14 @@ csv`, `evaluation_results_per_cell_line.csv`, and `true_vs_pred.csv`.
 - `evaluation_results.csv`: Overall performance metrics. One value per model per CV fold and setting (LPO/LCO/LDO,
   full predictions, randomizations, robustness, cross-study predictions).
 - `evaluation_results_per_drug.csv`: Performance metrics calculated per drug.
-- `evaluation_results_per_cell_line.csv`: Performance metrics calculated per cell line.
+- `evaluation_results_per_cl.csv`: Performance metrics calculated per cell line.
 - `true_vs_pred.csv`: true vs predicted values for each model.
 
 </details>
 
-### Subworkflow `VISUALIZATION`
+### Process `VISUALIZE_RESULTS`
 
-All plots are created in the `visualization` subworkflow. They are saved in the results/report directory.
+All plots are created in the `VISUALIZE_RESULTS` process. They are saved in the results/report directory.
 
 <details markdown="1">
 <summary>Output files</summary>
@@ -239,9 +241,10 @@ All plots are created in the `visualization` subworkflow. They are saved in the 
   different models.
 - `regression_lines*.html`: Plots in which the y_true and y_predicted values are compared between different models (not rendered for Naive Predictors).
 - `table*.html`: Saves the cross-study performance metrics of the models in an html table.
-- `{LPO,LCO,LTO,LPO}.html`: Creates a summary HTML file per setting (LPO/LCO/LTO/LDO) that contains all the plots and tables.
+- `{LPO,LCO,LTO,LDO}.html`: Creates a summary HTML file per setting (LPO/LCO/LTO/LDO) that contains all the plots and tables.
 - `index.html`: HTML file that links to all the HTML files.
 - `*.png`: Some png files for the logo, etc.
+
 </details>
 
 ### Pipeline information
@@ -257,4 +260,4 @@ All plots are created in the `visualization` subworkflow. They are saved in the 
 
 </details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times, and resource usage.
+[Nextflow](https://docs.seqera.io/platform-cloud/reports/overview) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.

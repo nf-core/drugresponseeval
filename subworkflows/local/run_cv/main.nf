@@ -28,7 +28,6 @@ workflow RUN_CV {
                             .fromPath("${params.zenodo_link}meta.zip")
                             .map { file -> [[id:"meta"], file] }
         UNZIP_META(ch_unzip_meta)
-        ch_versions = ch_versions.mix(UNZIP_META.out.versions)
     }
     if (!response_path.exists()) {
         log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
@@ -36,7 +35,6 @@ workflow RUN_CV {
                         .fromPath("${params.zenodo_link}${params.dataset_name}.zip")
                         .map { file -> [[id:params.dataset_name], file] }
         UNZIP_RESPONSE(ch_unzip)
-        ch_versions = ch_versions.mix(UNZIP_RESPONSE.out.versions)
         ch_response = UNZIP_RESPONSE.out.unzipped_csv
     } else {
         log.info "Using existing response dataset ${params.dataset_name} from ${response_path}"
@@ -66,7 +64,6 @@ workflow RUN_CV {
                                     [[id:dataset_name], "${params.zenodo_link}${dataset_path.baseName}.zip"]
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
-        ch_versions = ch_versions.mix(UNZIP_CS_RESPONSE.out.versions)
         ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_csv
         ch_cross_study_datasets = ch_cs_cached.concat(ch_cs_loaded)
     } else {
@@ -75,18 +72,22 @@ workflow RUN_CV {
 
     ch_response = measure.combine(ch_response)
     ch_cross_study_datasets = measure.combine(ch_cross_study_datasets)
-    LOAD_RESPONSE(ch_response, false)
+    LOAD_RESPONSE(ch_response, false, params.clean_min_responders ?: '', params.clean_min_responder_frac ?: '')
     ch_versions = ch_versions.mix(LOAD_RESPONSE.out.versions)
-    LOAD_CS_RESPONSE(ch_cross_study_datasets, true)
+    LOAD_CS_RESPONSE(ch_cross_study_datasets, true, '', '')
     ch_versions = ch_versions.mix(LOAD_CS_RESPONSE.out.versions)
 
 
     ch_test_modes = channel.from(test_modes)
     ch_data = ch_test_modes.combine(LOAD_RESPONSE.out.response_dataset)
 
+    custom_splitter = params.custom_splitter_path
+        ? file(params.custom_splitter_path, checkIfExists: true)
+        : file("${projectDir}/assets/NO_FILE", checkIfExists: true)
     CV_SPLIT (
         ch_data,
-        params.n_cv_splits
+        params.n_cv_splits,
+        custom_splitter
     )
     ch_versions = ch_versions.mix(CV_SPLIT.out.versions)
     // [test_mode, [split_1.pkl, split_2.pkl, ..., split_n.pkl]]

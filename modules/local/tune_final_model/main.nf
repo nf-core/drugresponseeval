@@ -1,5 +1,5 @@
 process TUNE_FINAL_MODEL {
-    tag { "${model_name}_${test_mode}_gpu:${task.ext.use_gpu}" }
+    tag { "${model_name}_${test_mode}" }
     label 'process_high'
     label 'process_gpu'
 
