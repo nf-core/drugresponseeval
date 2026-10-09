@@ -67,6 +67,18 @@ params {
     // Train final model on full data.
     final_model_on_full_data: Boolean = false
 
+    // Number of repeated trainings for the robustness test.
+    n_trials_robustness: Integer = 0
+
+    // Number of cross-validation splits.
+    n_cv_splits: Integer = 10
+
+    // Keep only drugs with at least this many reproducible responder curves.
+    clean_min_responders: Integer?
+
+    // Keep only drugs whose fraction of significant responder curves is at least this value.
+    clean_min_responder_frac: Float?
+
     // Display version and exit.
     version: Boolean
 

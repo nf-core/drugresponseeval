@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The `NONE.csv` placeholder for `PREDICT_FULL` is now a real file (`assets/NONE.csv`), so staging no longer fails when inputs are copied instead of symlinked.
 - Fixed a bug for training the final model on the full dataset: didn't work correctly for single drug models.
+- Defined parameter types for boolean, integer, and float parameters because of Nextflow 26.04.0.
 
 ### `Dependencies`
 
