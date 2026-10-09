@@ -24,7 +24,7 @@
 
 ## Introduction
 
-# ![drevalpy_summary](assets/dreval_summary.svg)
+# ![drevalpy_summary](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/overview.png)
 
 **DrEval** is a bioinformatics framework that includes a PyPI package (drevalpy) and a Nextflow
 pipeline (this repo). DrEval ensures that evaluations are statistically sound, biologically
@@ -62,6 +62,22 @@ nextflow run nf-core/drugresponseeval \
    --baselines <NaiveMeanEffectsPredictor,baseline2,...> \
    --dataset_name <CTRPv2|CTRPv1|CCLE|GDSC1|GDSC2|BeatAML2|PDX_Bruna|TOYv1|TOYv2|custom_dataset>
 ```
+
+## Leaderboard
+
+This is the current leaderboard of DrEval models:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_light.png?v=4">
+  <img alt="DrEvalPy Leaderboard" src="https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/leaderboard_dark.png?v=4">
+</picture>
+
+In the critical difference diagram, you can see which models outperform which other models significantly. The diagram is based on the average ranks of the models across all datasets and metrics, and the critical difference is calculated using the Nemenyi test. If model A is outside the bar corresponding to model B, it is significantly better (if it lies to the left) or worse (if it lies to the right) than model B.
+
+# ![drevalpy_cd_diagram](https://raw.githubusercontent.com/daisybio/drevalpy/development/docs/_static/img/critical_difference_algorithms_LCO.svg)
+
+For integrating your own model into DrEval, and to see how it compares to the other models, please refer to the [usage documentation: Benchmark your own model](https://nf-co.re/drugresponseeval/usage#benchmark-your-own-model).
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
