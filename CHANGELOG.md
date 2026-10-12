@@ -19,7 +19,7 @@ _Blastoise is a blue Pokémon whose body is mostly hidden by its tough, brown sh
 
 - Updated Zenodo link to latest dataset release
 - Simplified documentation and README
-- Switched to topics channel
+- Switched local modules to topics channel
 
 ### `Removed`
 
