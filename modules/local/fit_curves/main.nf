@@ -12,15 +12,10 @@ process FIT_CURVES {
     output:
     path("curves.tsv"),                         emit: path_to_curvecurator_out
     tuple path("mad.txt"), path("dashboard.html"), path("curveCurator.log") // other output
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('curve_curator'), eval("python -c \"import curve_curator; print(curve_curator.__version__)\""), topic: versions, emit: versions_curve_curator
 
     script:
     """
     CurveCurator ${toml} --mad
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        curve_curator: \$(python -c "import curve_curator; print(curve_curator.__version__)")
-    END_VERSIONS
     """
 }

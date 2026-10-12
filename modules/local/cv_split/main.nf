@@ -12,7 +12,10 @@ process CV_SPLIT {
 
     output:
     tuple val(test_mode), path("split*.pkl")    , emit: response_cv_splits
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
+    tuple val("${task.process}"), val('numpy'), eval("python -c \"import numpy; print(numpy.__version__)\""), topic: versions, emit: versions_numpy
 
 
     script:
@@ -23,14 +26,6 @@ process CV_SPLIT {
         --n_cv_splits $n_cv_splits \\
         --test_mode $test_mode \\
         $splitter_arg
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-    END_VERSIONS
     """
 
 }

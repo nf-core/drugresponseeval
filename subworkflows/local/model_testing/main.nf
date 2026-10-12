@@ -44,7 +44,6 @@ workflow MODEL_TESTING {
         params.response_transformation,
         params.model_checkpoint_dir
     )
-    ch_versions = ch_versions.mix(PREDICT_FULL.out.versions)
     ch_vis = PREDICT_FULL.out.ch_vis.concat(PREDICT_FULL.out.ch_cross)
 
     if (params.randomization_mode != 'None') {
@@ -57,7 +56,6 @@ workflow MODEL_TESTING {
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
-        ch_versions = ch_versions.mix(RANDOMIZATION_SPLIT.out.versions)
         ch_rand_views = ch_models
                         .combine(RANDOMIZATION_SPLIT.out.randomization_test_views.transpose(), by: 0)
                         .map{ model_class, model_name, rand_file -> [model_name, rand_file] }
@@ -95,7 +93,6 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
         )
-        ch_versions = ch_versions.mix(RANDOMIZATION_TEST.out.versions)
         ch_vis = ch_vis.concat(RANDOMIZATION_TEST.out.ch_vis)
     }
 
@@ -118,7 +115,6 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
         )
-        ch_versions = ch_versions.mix(ROBUSTNESS_TEST.out.versions)
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
 
@@ -135,7 +131,6 @@ workflow MODEL_TESTING {
         FINAL_SPLIT(
             ch_final_split
         )
-        ch_versions = ch_versions.mix(FINAL_SPLIT.out.versions)
 
         ch_tune_final_model = ch_models
                             .map{it -> it[1] }
@@ -149,14 +144,12 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
         )
-        ch_versions = ch_versions.mix(TUNE_FINAL_MODEL.out.versions)
         ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])
 
         EVALUATE_FIND_MAX_FINAL(
             ch_combined_hpams,
             params.optim_metric
         )
-        ch_versions = ch_versions.mix(EVALUATE_FIND_MAX_FINAL.out.versions)
         ch_final_model = EVALUATE_FIND_MAX_FINAL.out.best_combis
                             .map{ model_name, final_constant, test_mode, best_hpam_combi ->
                                 [model_name, test_mode, best_hpam_combi] }
@@ -167,7 +160,6 @@ workflow MODEL_TESTING {
             params.response_transformation,
             params.model_checkpoint_dir
        )
-       ch_versions = ch_versions.mix(TRAIN_FINAL_MODEL.out.versions)
     }
 
     ch_consolidate = ch_vis
@@ -179,7 +171,6 @@ workflow MODEL_TESTING {
         randomizations,
         ch_vis.count() // wait for ch_vis to finish
     )
-    ch_versions = ch_versions.mix(CONSOLIDATE_RESULTS.out.versions)
     ch_consolidate = CONSOLIDATE_RESULTS.out.ch_vis.transpose()
     // filter out SingleDrugModels that have been consolidated
     ch_vis = ch_vis
@@ -192,7 +183,6 @@ workflow MODEL_TESTING {
     EVALUATE_FINAL (
         ch_vis
     )
-    ch_versions = ch_versions.mix(EVALUATE_FINAL.out.versions)
 
     ch_collapse = EVALUATE_FINAL.out.ch_individual_results.collect()
 
@@ -200,7 +190,6 @@ workflow MODEL_TESTING {
         ch_collapse,
         work_path
     )
-    ch_versions = ch_versions.mix(COLLECT_RESULTS.out.versions)
 
     // evaluation_results_per_cl and evaluation_results_per_drug are optional
     evaluation_results_per_drug = COLLECT_RESULTS.out.evaluation_results_per_drug.ifEmpty(file("${projectDir}/assets/NO_FILE", checkIfExists: true))
@@ -215,7 +204,6 @@ workflow MODEL_TESTING {
         ch_input_vis,
         work_path
     )
-    ch_versions = ch_versions.mix(VISUALIZE_RESULTS.out.versions)
 
     emit:
     versions = ch_versions

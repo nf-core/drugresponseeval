@@ -42,13 +42,27 @@ output:
         description: |
           Contains fitted curves.
         pattern: "curves.tsv"
+  versions_curve_curator:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - curve_curator:
+          type: string
+          description: The name of the tool
+      - 'python -c "import curve_curator; print(curve_curator.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - tool:
+          type: string
+          description: The name of the tool
+      - version:
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@JudithBernett"
 maintainers:

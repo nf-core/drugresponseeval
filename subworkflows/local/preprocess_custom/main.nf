@@ -24,7 +24,6 @@ workflow PREPROCESS_CUSTOM {
                 throw new Exception("Raw data file not found: ${raw_file}. You want to refit a custom dataset with CurveCurator which requires raw viability data to be located at ${raw_file} but the file does not exist. Please provide the raw data in the correct format or set `no_refitting` to true in your parameters.")
             }else{
                 PREPROCESS_RAW_VIABILITY(dataset_name, work_path)
-                ch_versions = ch_versions.mix(PREPROCESS_RAW_VIABILITY.out.versions)
                 ch_toml_files = PREPROCESS_RAW_VIABILITY.out.path_to_toml
                                 .flatten()
                                 .map { file -> [file.parent.name, file] }
@@ -34,10 +33,8 @@ workflow PREPROCESS_CUSTOM {
                 // [dose_dir_name, config.toml, curvecurator_input.tsv]
                 ch_fit_curves = ch_toml_files.combine(ch_curvecurator_input, by: 0)
                 FIT_CURVES(dataset_name, ch_fit_curves)
-                ch_versions = ch_versions.mix(FIT_CURVES.out.versions)
                 ch_curves = FIT_CURVES.out.path_to_curvecurator_out.collect()
                 POSTPROCESS_CURVECURATOR_DATA(dataset_name, ch_curves, measure)
-                ch_versions = ch_versions.mix(POSTPROCESS_CURVECURATOR_DATA.out.versions)
                 ch_measure = POSTPROCESS_CURVECURATOR_DATA.out.measure
             }
         }

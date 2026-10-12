@@ -10,24 +10,18 @@ process RANDOMIZATION_SPLIT {
 
     output:
     tuple val(model_name), path('randomization_test_view*.yaml'),     emit: randomization_test_views
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
+    tuple val("${task.process}"), val('numpy'), eval("python -c \"import numpy; print(numpy.__version__)\""), topic: versions, emit: versions_numpy
+    tuple val("${task.process}"), val('pandas'), eval("python -c \"import pandas; print(pandas.__version__)\""), topic: versions, emit: versions_pandas
+    tuple val("${task.process}"), val('pytorch_lightning'), eval("python -c \"import pytorch_lightning; print(pytorch_lightning.__version__)\""), topic: versions, emit: versions_pytorch_lightning
+    tuple val("${task.process}"), val('torch'), eval("python -c \"import torch; print(torch.__version__)\""), topic: versions, emit: versions_torch
+    tuple val("${task.process}"), val('yaml'), eval("python -c \"import yaml; print(yaml.__version__)\""), topic: versions, emit: versions_yaml
 
     script:
     """
     drevalpy make-randomization-yamls --model_name "${model_name}" --randomization_mode ${randomization_mode}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-        pandas: \$(python -c "import pandas; print(pandas.__version__)")
-        pytorch_lightning: \$(python -c "import pytorch_lightning; print(pytorch_lightning.__version__)")
-        torch: \$(python -c "import torch; print(torch.__version__)")
-        platform: \$(python -c "import platform; print(platform.__version__)")
-        yaml: \$(python -c "import yaml; print(yaml.__version__)")
-    END_VERSIONS
     """
 
 }

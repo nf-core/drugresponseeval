@@ -11,7 +11,9 @@ process HPAM_SPLIT {
 
     output:
     tuple val(model_name), path("*.yaml")    , emit: hpam_combi
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('yaml'), eval("python -c \"import yaml; print(yaml.__version__)\""), topic: versions, emit: versions_yaml
 
 
     script:
@@ -19,12 +21,6 @@ process HPAM_SPLIT {
     drevalpy make-hpam-yamls \\
         --model_name "${model_name}" \\
         ${no_hyperparameter_tuning ? '' : '--hyperparameter_tuning'}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        yaml: \$(python -c "import yaml; print(yaml.__version__)")
     """
 
 }
