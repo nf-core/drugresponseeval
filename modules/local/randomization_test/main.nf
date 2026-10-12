@@ -1,5 +1,5 @@
 process RANDOMIZATION_TEST {
-    tag { "${test_mode}_${model_name}_${randomization_type}_gpu:${task.ext.use_gpu}" }
+    tag { "${test_mode}_${model_name}_${randomization_type}" }
     label 'process_high'
     label 'process_gpu'
 
@@ -14,7 +14,13 @@ process RANDOMIZATION_TEST {
 
     output:
     tuple val(test_mode), val(model_name), path('**randomization*.csv'),     emit: ch_vis
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
+    tuple val("${task.process}"), val('numpy'), eval("python -c \"import numpy; print(numpy.__version__)\""), topic: versions, emit: versions_numpy
+    tuple val("${task.process}"), val('pandas'), eval("python -c \"import pandas; print(pandas.__version__)\""), topic: versions, emit: versions_pandas
+    tuple val("${task.process}"), val('pytorch_lightning'), eval("python -c \"import pytorch_lightning; print(pytorch_lightning.__version__)\""), topic: versions, emit: versions_pytorch_lightning
+    tuple val("${task.process}"), val('torch'), eval("python -c \"import torch; print(torch.__version__)\""), topic: versions, emit: versions_torch
 
     script:
     """
@@ -30,18 +36,6 @@ process RANDOMIZATION_TEST {
         --randomization_views_path $randomization_views \\
         --randomization_type $randomization_type \\
         --model_checkpoint_dir $model_checkpoint_dir \\
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-        pandas: \$(python -c "import pandas; print(pandas.__version__)")
-        pytorch_lightning: \$(python -c "import pytorch_lightning; print(pytorch_lightning.__version__)")
-        torch: \$(python -c "import torch; print(torch.__version__)")
-        platform: \$(python -c "import platform; print(platform.__version__)")
-    END_VERSIONS
     """
 
 }

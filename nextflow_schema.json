@@ -70,7 +70,7 @@
             "properties": {
                 "test_mode": {
                     "type": "string",
-                    "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), or LDO (Leave-Drug-Out).",
+                    "description": "Run the pipeline in test mode LPO (Leave-random-Pairs-Out), LCO (Leave-Cell-line-Out), LTO (Leave-Tissue-Out), or LDO (Leave-Drug-Out).",
                     "default": "LCO",
                     "help_text": "Which tests to run (LPO=Leave-random-Pairs-Out, LCO=Leave-Cell-line-Out, LTO=Leave-Tissue-Out, LDO=Leave-Drug-Out). Can be a list of test runs e.g. 'LPO,LCO,LTO,LDO' to run all tests. Default is LCO.",
                     "pattern": "^((LPO|LCO|LTO|LDO)?,?)*(?<!,)$"
@@ -145,7 +145,7 @@
                 "zenodo_link": {
                     "type": "string",
                     "description": "Link to the latest Zenodo version of the dataset.",
-                    "default": "https://zenodo.org/records/20624451/files/",
+                    "default": "https://zenodo.org/records/23159774/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
                     "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://github.com/nf-core/test-datasets/raw/refs/heads/drugresponseeval/test_data/)"
                 }
@@ -163,6 +163,19 @@
                     "help_text": "By default, measures calculated by CurveCurator (by re-fitting the response curves, see 'measure' option for details) are used for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), we expect a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option) containing the raw response data. We fit the curves by default with CurveCurator to provide fair comparison to our other available datasets. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv. If you want to disable this option, set the flag.",
                     "default": false
                 },
+                "clean_min_responders": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Keep only drugs with at least this many reproducible responder curves.",
+                    "help_text": "Cleans the response dataset on the fly by keeping only drugs that have at least this many reproducible (curve-curated) responder curves. Whole drugs are removed. Requires curve-curated data (do not combine with no_refitting on non-curated measures). Applies to the main dataset only, not to cross-study datasets. Set at most one of clean_min_responders and clean_min_responder_frac."
+                },
+                "clean_min_responder_frac": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1,
+                    "description": "Keep only drugs whose fraction of significant responder curves is at least this value.",
+                    "help_text": "Fraction-based alternative to clean_min_responders, a value in (0, 1]. Requires curve-curated data. Applies to the main dataset only. Set at most one of clean_min_responders and clean_min_responder_frac."
+                },
                 "optim_metric": {
                     "type": "string",
                     "description": "Optimization metric for the pipeline.",
@@ -177,12 +190,20 @@
                     "help_text": "Number of cross-validation splits. Default is 10.",
                     "minimum": 2
                 },
+                "custom_splitter_path": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "pattern": "^\\S+\\.py$",
+                    "description": "Path to a Python script with a custom CV splitter.",
+                    "help_text": "Path to a Python script defining `create_splits(response_data, params)` which returns a list of folds, each a dict with the keys `train`, `validation` and `test` (optionally `validation_es` and `early_stopping`) holding DrugResponseDatasets. If set, the built-in CV splitting is skipped and the script is used for every test mode in `--test_mode`; `params.test_mode` tells the script which mode it is called for. The output is validated against that test mode. The script runs inside the CV_SPLIT container, so it can only use the packages available there and must be able to reach any files it reads."
+                },
                 "response_transformation": {
                     "type": "string",
                     "description": "Response transformation",
-                    "help_text": "Transformation to apply to the response variable possible values: None, standard, minmax, robust",
+                    "help_text": "Transformation to apply to the response variable possible values: None, standard, minmax, robust, drug_mean, drug_tissue_mean",
                     "default": "None",
-                    "enum": ["None", "standard", "minmax", "robust"]
+                    "enum": ["None", "standard", "minmax", "robust", "drug_mean", "drug_tissue_mean"]
                 },
                 "model_checkpoint_dir": {
                     "type": "string",
