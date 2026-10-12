@@ -57,10 +57,10 @@ topics:
     - - ${task.process}:
           type: string
           description: The name of the process
-      - tool:
+      - curve_curator:
           type: string
           description: The name of the tool
-      - version:
+      - 'python -c "import curve_curator; print(curve_curator.__version__)"':
           type: eval
           description: The expression to obtain the version of the tool
 authors:

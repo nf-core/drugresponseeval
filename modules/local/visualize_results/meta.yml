@@ -121,10 +121,64 @@ topics:
     - - ${task.process}:
           type: string
           description: The name of the process
-      - tool:
+      - python:
           type: string
           description: The name of the tool
-      - version:
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - matplotlib:
+          type: string
+          description: The name of the tool
+      - 'python -c "import matplotlib; print(matplotlib.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - scikit_posthocs:
+          type: string
+          description: The name of the tool
+      - 'python -c "import scikit_posthocs; print(scikit_posthocs.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - scipy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import scipy; print(scipy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
           type: eval
           description: The expression to obtain the version of the tool
 authors:

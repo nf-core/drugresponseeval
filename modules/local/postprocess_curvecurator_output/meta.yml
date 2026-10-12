@@ -65,10 +65,19 @@ topics:
     - - ${task.process}:
           type: string
           description: The name of the process
-      - tool:
+      - python:
           type: string
           description: The name of the tool
-      - version:
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
           type: eval
           description: The expression to obtain the version of the tool
 authors:

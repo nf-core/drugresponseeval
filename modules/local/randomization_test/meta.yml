@@ -147,10 +147,64 @@ topics:
     - - ${task.process}:
           type: string
           description: The name of the process
-      - tool:
+      - python:
           type: string
           description: The name of the tool
-      - version:
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pytorch_lightning:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pytorch_lightning; print(pytorch_lightning.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - torch:
+          type: string
+          description: The name of the tool
+      - 'python -c "import torch; print(torch.__version__)"':
           type: eval
           description: The expression to obtain the version of the tool
 authors:
