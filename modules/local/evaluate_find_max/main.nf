@@ -11,7 +11,13 @@ process EVALUATE_FIND_MAX {
 
     output:
     tuple val(model_name), val(split_id), val(test_mode), path('best_hpam_combi_*.yaml'), emit: best_combis
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('pandas'), eval("python -c \"import pandas; print(pandas.__version__)\""), topic: versions, emit: versions_pandas
+    tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
+    tuple val("${task.process}"), val('numpy'), eval("python -c \"import numpy; print(numpy.__version__)\""), topic: versions, emit: versions_numpy
+    tuple val("${task.process}"), val('scipy'), eval("python -c \"import scipy; print(scipy.__version__)\""), topic: versions, emit: versions_scipy
+    tuple val("${task.process}"), val('yaml'), eval("python -c \"import yaml; print(yaml.__version__)\""), topic: versions, emit: versions_yaml
 
     script:
     """
@@ -21,17 +27,6 @@ process EVALUATE_FIND_MAX {
         --hpam_yamls $hpam_yamls \\
         --pred_datas $pred_datas \\
         --optim_metric $metric
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        pandas: \$(python -c "import pandas; print(pandas.__version__)")
-        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-        scipy: \$(python -c "import scipy; print(scipy.__version__)")
-        yaml: \$(python -c "import yaml; print(yaml.__version__)")
-    END_VERSIONS
     """
 
 }

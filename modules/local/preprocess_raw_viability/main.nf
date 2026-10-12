@@ -11,16 +11,11 @@ process PREPROCESS_RAW_VIABILITY {
     output:
     path "${dataset_name}/*/config.toml", emit: path_to_toml
     path "${dataset_name}/*/curvecurator_input.tsv", emit: curvecurator_input
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
 
     script:
     """
     drevalpy viability-preprocess --path_data ${work_path} --dataset_name ${dataset_name} --cores ${task.cpus}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-    END_VERSIONS
     """
 }

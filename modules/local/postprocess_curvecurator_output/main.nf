@@ -12,16 +12,11 @@ process POSTPROCESS_CURVECURATOR_DATA {
     output:
     path "${dataset_name}.csv", emit: path_to_dataset
     val "${measure}" + "_curvecurator", emit: measure
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
 
     script:
     """
     drevalpy viability-postprocess --dataset_name ${dataset_name}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-    END_VERSIONS
     """
 }

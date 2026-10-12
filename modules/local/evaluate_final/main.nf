@@ -10,7 +10,12 @@ process EVALUATE_FINAL {
 
     output:
     path('*.csv'), emit: ch_individual_results, optional: true
-    path("versions.yml"),                       emit: versions
+    tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
+    tuple val("${task.process}"), val('pandas'), eval("python -c \"import pandas; print(pandas.__version__)\""), topic: versions, emit: versions_pandas
+    tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
+    tuple val("${task.process}"), val('numpy'), eval("python -c \"import numpy; print(numpy.__version__)\""), topic: versions, emit: versions_numpy
+    tuple val("${task.process}"), val('scipy'), eval("python -c \"import scipy; print(scipy.__version__)\""), topic: versions, emit: versions_scipy
 
 
     script:
@@ -19,16 +24,6 @@ process EVALUATE_FINAL {
         --test_mode $test_mode \\
         --model_name "${model_name}" \\
         --pred_file $pred_file
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
-        drevalpy: \$(drevalpy --version | sed 's/drevalpy //')
-        pandas: \$(python -c "import pandas; print(pandas.__version__)")
-        sklearn: \$(python -c "import sklearn; print(sklearn.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-        scipy: \$(python -c "import scipy; print(scipy.__version__)")
-    END_VERSIONS
     """
 
 }

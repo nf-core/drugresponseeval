@@ -49,13 +49,65 @@ output:
         description: |
           Pickled DrugResponseDataset, contains the data for cross-study generalization if cross_study_dataset was true.
         pattern: "cross_study_*.pkl"
+  versions_python:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_drevalpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pandas:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
   versions:
-    - versions.yml:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: http://edamontology.org/format_3750 # YAML
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@JudithBernett"
 maintainers:
