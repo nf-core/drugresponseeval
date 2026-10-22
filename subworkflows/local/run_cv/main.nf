@@ -22,17 +22,24 @@ workflow RUN_CV {
     ch_versions = channel.empty()
     File response_path = new File("${params.path_data}/${params.dataset_name}/${params.dataset_name}.csv")
     File meta_path = new File("${params.path_data}/meta/gene_lists/landmark_genes.csv")
-    if (!meta_path.exists()) {
-        log.info "Downloading meta information including gene lists from Zenodo: ${params.zenodo_link}meta.zip"
+    // The TOY meta has a landmark gene list with 13 genes (+ header), the real one has more.
+    // Redownload if the meta on disk belongs to the other kind of dataset.
+    def is_toy_dataset = params.dataset_name.startsWith('TOY')
+    // TOY datasets are no longer on Zenodo, they always come from the nf-core test-datasets repository
+    def toy_link = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/drugresponseeval/test_data/'
+    def data_link = is_toy_dataset ? toy_link : params.zenodo_link
+    def meta_is_toy = meta_path.exists() ? meta_path.readLines().size() <= 14 : null
+    if (meta_is_toy == null || meta_is_toy != is_toy_dataset) {
+        log.info "Downloading meta information including gene lists from: ${data_link}meta.zip"
         ch_unzip_meta = channel
-                            .fromPath("${params.zenodo_link}meta.zip")
+                            .fromPath("${data_link}meta.zip")
                             .map { file -> [[id:"meta"], file] }
         UNZIP_META(ch_unzip_meta)
     }
     if (!response_path.exists()) {
-        log.info "Downloading response dataset ${params.dataset_name} from Zenodo: ${params.zenodo_link}${params.dataset_name}.zip"
+        log.info "Downloading response dataset ${params.dataset_name} from: ${data_link}${params.dataset_name}.zip"
         ch_unzip = channel
-                        .fromPath("${params.zenodo_link}${params.dataset_name}.zip")
+                        .fromPath("${data_link}${params.dataset_name}.zip")
                         .map { file -> [[id:params.dataset_name], file] }
         UNZIP_RESPONSE(ch_unzip)
         ch_response = UNZIP_RESPONSE.out.unzipped_csv
@@ -61,7 +68,7 @@ workflow RUN_CV {
                                     !dataset_path.exists()
                                 }
                                 .map { dataset_name, dataset_path ->
-                                    [[id:dataset_name], "${params.zenodo_link}${dataset_path.baseName}.zip"]
+                                    [[id:dataset_name], "${dataset_name.startsWith('TOY') ? toy_link : params.zenodo_link}${dataset_path.baseName}.zip"]
                                 }
         UNZIP_CS_RESPONSE(ch_cs_to_be_loaded)
         ch_cs_loaded = UNZIP_CS_RESPONSE.out.unzipped_csv
