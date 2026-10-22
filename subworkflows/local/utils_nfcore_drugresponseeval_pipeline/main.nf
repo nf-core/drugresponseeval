@@ -119,6 +119,7 @@ workflow PIPELINE_INITIALISATION {
                         'GradientBoosting',
                         'MultiViewXGBoost',
                         'KNNRegressor',
+                        'SingleDrugKNN',
                         'RandomForest',
                         'MultiViewRandomForest',
                         'SingleDrugRandomForest',

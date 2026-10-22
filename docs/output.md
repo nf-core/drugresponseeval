@@ -160,10 +160,6 @@ Trains the model on the randomized training + validation set with the best hyper
 unperturbed test set of the specified CV split. How the data is randomized is determined by the
 `--randomization_type`.
 
-If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
-that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
-EnsembleMF, PaccMann, and SparseGO.
-
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -175,9 +171,6 @@ EnsembleMF, PaccMann, and SparseGO.
 
 Trains the model `--n_trials_robustness` times on the full training set with the best hyperparameters to predict the test set of the
 specific CV split.
-
-As soon as GPU support is available, the training and prediction will be done on the GPU for the models
-SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
 
 <details markdown="1">
 <summary>Output files</summary>

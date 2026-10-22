@@ -84,8 +84,8 @@ models are **Multi-Drug Models** and work in all four settings.
 
 - **Baselines:** `NaivePredictor`, `NaiveCellLineMeanPredictor`, `NaiveDrugMeanPredictor`, `NaiveMeanEffectsPredictor`,
   `NaiveTissueMeanPredictor`, `NaiveTissueDrugMeanPredictor`, `AdaBoostDecisionTree`, `ElasticNet`, `Lasso`,
-  `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `RandomForest`,
-  `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
+  `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `SingleDrugKNN`\*,
+  `RandomForest`, `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
 - **Custom models:** `SimpleNeuralNetwork`, `MultiViewNeuralNetwork`, `DrugGNN`, `EnsembleMF`
 - **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `DIPK`, `Precily`, `PaccMann`, `SparseGO`
 
