@@ -6,7 +6,6 @@ include { FINAL_SPLIT                                   } from '../../../modules
 include { TUNE_FINAL_MODEL                              } from '../../../modules/local/tune_final_model'
 include { EVALUATE_FIND_MAX as EVALUATE_FIND_MAX_FINAL  } from '../../../modules/local/evaluate_find_max'
 include { TRAIN_FINAL_MODEL                             } from '../../../modules/local/train_final_model'
-include { CONSOLIDATE_RESULTS                           } from '../../../modules/local/consolidate_results'
 include { EVALUATE_FINAL                                } from '../../../modules/local/evaluate_final'
 include { COLLECT_RESULTS                               } from '../../../modules/local/collect_results'
 include { VISUALIZE_RESULTS                             } from '../../../modules/local/visualize_results'
@@ -14,12 +13,12 @@ include { VISUALIZE_RESULTS                             } from '../../../modules
 
 workflow MODEL_TESTING {
     take:
-    ch_models_baselines         // from input [model_class, model_name]
+    ch_models_baselines         // from input: model and baseline names
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
     response_dataset            // from LOAD_RESPONSE
     cross_study_datasets        // from LOAD_RESPONSE
-    ch_models                  // from RUN_CV [model_class, model_name]
+    ch_models                  // from RUN_CV: model names
     work_path                  // from input
     test_modes                 // e.g., ['LPO', 'LCO']
     ch_hpam_combis              // from RUN_CV [model_name, hpam_X.yaml]
@@ -50,15 +49,12 @@ workflow MODEL_TESTING {
         ch_randomization = channel.from(randomizations)
         // randomizations only for models, not for baselines
         ch_models_rand = ch_models
-                            .map{it -> it[0]}
-                            .unique()
                             .combine(ch_randomization)
         RANDOMIZATION_SPLIT (
             ch_models_rand
         )
-        ch_rand_views = ch_models
-                        .combine(RANDOMIZATION_SPLIT.out.randomization_test_views.transpose(), by: 0)
-                        .map{ model_class, model_name, rand_file -> [model_name, rand_file] }
+        // [model_name, randomization_test_view_X.yaml]
+        ch_rand_views = RANDOMIZATION_SPLIT.out.randomization_test_views.transpose()
 
         ch_best_hpams_per_split_rand = best_hpam_per_split.map {
             split_id, test_mode, path_to_split, model_name, path_to_hpams ->
@@ -72,12 +68,16 @@ workflow MODEL_TESTING {
                             .filter { model_name, test_mode, split_id, split_dataset, best_hpams, randomization_views, path_data ->
                                 def yaml = new org.yaml.snakeyaml.Yaml()
                                 def hpam_data = yaml.load(best_hpams.text)
-                                def best_hpam = hpam_data[hpam_data.keySet().first()]["best_hpam_combi"]
-                                def cl_views  = best_hpam["cell_line_views"]
-                                def dr_views  = best_hpam["drug_views"]
-                                if (cl_views instanceof String)  cl_views  = [cl_views]
-                                if (dr_views instanceof String)  dr_views  = [dr_views]
-                                def all_views = (cl_views ?: []) + (dr_views ?: [])
+                                def best = hpam_data[hpam_data.keySet().first()]
+                                // single drug models have one best hyperparameter combination per drug
+                                def best_hpams_list = best.containsKey("best_hpam_combi_per_drug") ? best["best_hpam_combi_per_drug"].values() : [best["best_hpam_combi"]]
+                                def all_views = best_hpams_list.collectMany { best_hpam ->
+                                    def cl_views  = best_hpam["cell_line_views"]
+                                    def dr_views  = best_hpam["drug_views"]
+                                    if (cl_views instanceof String)  cl_views  = [cl_views]
+                                    if (dr_views instanceof String)  dr_views  = [dr_views]
+                                    (cl_views ?: []) + (dr_views ?: [])
+                                }.unique()
                                 def rand_data = yaml.load(randomization_views.text)
                                 def view      = rand_data["view"]
                                 def keep = all_views.contains(view)
@@ -99,7 +99,6 @@ workflow MODEL_TESTING {
     if (params.n_trials_robustness > 0) {
         ch_trials_robustness = channel.from(1..params.n_trials_robustness)
         ch_trials_robustness = ch_models
-                                .map{it -> it[1]}
                                 .combine(ch_trials_robustness)
 
         ch_best_hpams_per_split_rob = best_hpam_per_split.map {
@@ -122,8 +121,6 @@ workflow MODEL_TESTING {
         // we only do this for models, not for baselines
         ch_test_modes = channel.from(test_modes)
         ch_final_split = ch_models
-                            .map{it -> it[1]}
-                            .unique()
                             .combine(response_dataset)
                             .combine(ch_test_modes)
                             .combine(work_path)
@@ -133,7 +130,6 @@ workflow MODEL_TESTING {
         )
 
         ch_tune_final_model = ch_models
-                            .map{it -> it[1] }
                             .combine(FINAL_SPLIT.out.final_datasets, by: 0)
                             .combine(ch_test_modes)
                             .combine(work_path)
@@ -162,19 +158,7 @@ workflow MODEL_TESTING {
        )
     }
 
-    ch_consolidate = ch_vis
-                        .map{ test_mode, model, pred_file -> [test_mode, model.split("\\.")[0]] }
-                        .unique()
-
-    CONSOLIDATE_RESULTS (
-        ch_consolidate,
-        randomizations,
-        ch_vis.count() // wait for ch_vis to finish
-    )
-    ch_consolidate = CONSOLIDATE_RESULTS.out.ch_vis.transpose()
-    // filter out SingleDrugModels that have been consolidated
     ch_vis = ch_vis
-                .concat(ch_consolidate)
                 .transpose()
                 .map{ test_mode, model, pred_file -> [model, test_mode, pred_file] }
                 .combine(ch_models_baselines, by: 0)

@@ -10,7 +10,6 @@ keywords:
 components:
   - unzip
   - load/response
-  - make/model/channel
   - cv/split
   - hpam/split
   - train/and/predict/cv
@@ -21,10 +20,10 @@ input:
       description: e.g., LPO, LCO
   - ch_models:
       type: list
-      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
+      description: Channel containing the model names (used for randomization, ...)
   - ch_baselines:
       type: list
-      description: Channel only containing [model_class, model_name] for baselines (used for comparison)
+      description: Channel containing the baseline names (used for comparison)
   - work_path:
       type: file
       description: path to the data channel.fromPath(params.path_data)
@@ -43,9 +42,6 @@ output:
   - cross_study_datasets:
       type: list
       description: List of pickled datasets containing the pickled cross-study datasets.
-  - ch_models:
-      type: list
-      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
   - ch_hpam_combis:
       type: list
       description: channel containing the optimal hyperparameter combinations [model_name, hpam_X.yaml]

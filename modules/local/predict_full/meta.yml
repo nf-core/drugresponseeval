@@ -63,11 +63,11 @@ output:
       - model_name:
           type: string
           description: See input.
-      - "**predictions*.csv":
+      - "*/predictions/predictions*.csv":
           type: file
           description: |
             All predicted values for the specified dataset.
-          pattern: "**predictions*.csv"
+          pattern: "*/predictions/predictions*.csv"
   ch_cross:
     - - test_mode:
           type: string
@@ -75,11 +75,18 @@ output:
       - model_name:
           type: string
           description: See input.
-      - "**cross_study/cross_study*.csv":
+      - "*/cross_study/cross_study*.csv":
           type: file
           description: |
             All predicted values for the specified cross-study datasets.
-          pattern: "**cross_study/cross_study*.csv"
+          pattern: "*/cross_study/cross_study*.csv"
+  per_drug:
+    - "*/drugs/**.csv":
+        type: file
+        description: |
+          Single drug models only: the predictions per drug, in <model_name>/drugs/<drug_id>/.
+          The consolidated predictions over all drugs are in the other outputs.
+        pattern: "*/drugs/**.csv"
   ch_hpams:
     - "**best_hpams*.json":
         type: file

@@ -61,11 +61,18 @@ output:
       - model_name:
           type: string
           description: See input.
-      - "**robustness*.csv":
+      - "*/robustness/robustness*.csv":
           type: file
           description: |
             All predicted values for the specified dataset for the robustness test.
-          pattern: "**robustness*.csv"
+          pattern: "*/robustness/robustness*.csv"
+  per_drug:
+    - "*/drugs/**.csv":
+        type: file
+        description: |
+          Single drug models only: the predictions per drug, in <model_name>/drugs/<drug_id>/.
+          The consolidated predictions over all drugs are in the other outputs.
+        pattern: "*/drugs/**.csv"
   versions_python:
     - - ${task.process}:
           type: string

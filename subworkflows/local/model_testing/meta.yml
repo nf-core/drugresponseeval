@@ -20,14 +20,13 @@ components:
   - tune/final/model
   - evaluate/find/max
   - train/final/model
-  - consolidate/results
   - evaluate/final
   - collect/results
   - visualize/results
 input:
   - ch_models_baselines:
       type: list
-      description: Channel containing [model_class, model_name], concatenated for models and baselines.
+      description: Channel containing the model names, concatenated for models and baselines.
   - best_hpam_per_split:
       type: list
       description: |
@@ -44,7 +43,7 @@ input:
       description: List of pickled datasets containing the pickled cross-study datasets.
   - ch_models:
       type: list
-      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
+      description: Channel containing the model names (used for randomization, ...)
   - work_path:
       type: file
       description: path to the data channel.fromPath(params.path_data)

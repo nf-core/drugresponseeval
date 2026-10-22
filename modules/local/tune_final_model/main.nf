@@ -31,6 +31,7 @@ process TUNE_FINAL_MODEL {
         --hpam_combi $hpam_combi \\
         --response_transformation $response_transformation \\
         --path_data $path_data \\
-        --model_checkpoint_dir $model_checkpoint_dir
+        --model_checkpoint_dir $model_checkpoint_dir \\
+        --n_jobs ${task.cpus}
     """
 }

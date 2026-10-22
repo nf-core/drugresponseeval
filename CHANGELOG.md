@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- Single-Drug Models no longer submit one task per drug, hyperparameter combination, and CV split. All drugs are trained within one task, with `task.cpus` drugs in parallel (sequentially on the GPU). The best hyperparameters are still selected per drug. These tasks get the `high_cpu_low_mem` resources.
+
 ### `Removed`
+
+- `MAKE_MODEL_CHANNEL` and `bin/make_model_channel.py`: Single-Drug Models are no longer expanded into one model per drug, so the model names are used directly.
+- `CONSOLIDATE_RESULTS`: the predictions of Single-Drug Models are now consolidated over all drugs in the task that produces them.
 
 ### `Fixed`
 

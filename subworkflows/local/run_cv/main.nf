@@ -3,8 +3,6 @@ include { UNZIP as UNZIP_CS_RESPONSE           } from '../../../modules/nf-core/
 include { UNZIP as UNZIP_META                  } from '../../../modules/nf-core/unzip/main'
 include { LOAD_RESPONSE as LOAD_RESPONSE       } from '../../../modules/local/load_response'
 include { LOAD_RESPONSE as LOAD_CS_RESPONSE    } from '../../../modules/local/load_response'
-include { MAKE_MODEL_CHANNEL as MAKE_MODELS    } from '../../../modules/local/make_model_channel'
-include { MAKE_MODEL_CHANNEL as MAKE_BASELINES } from '../../../modules/local/make_model_channel'
 include { CV_SPLIT                             } from '../../../modules/local/cv_split'
 include { HPAM_SPLIT                           } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV                 } from '../../../modules/local/train_and_predict_cv'
@@ -98,47 +96,17 @@ workflow RUN_CV {
     ch_cv_splits = CV_SPLIT.out.response_cv_splits
 
     ch_models_baselines = ch_models.concat(ch_baselines)
-    ch_input_models = ch_models
-                        .collect()
-                        .map { models -> [models] }
-                        .combine(LOAD_RESPONSE.out.response_dataset)
-    ch_input_baselines = ch_baselines
-                        .collect()
-                        .map { models -> [models] }
-                        .combine(LOAD_RESPONSE.out.response_dataset)
-
-    MAKE_MODELS (
-        ch_input_models,
-        "models"
-    )
-
-    MAKE_BASELINES (
-        ch_input_baselines,
-        "baselines"
-    )
-
-    ch_models_expanded = MAKE_MODELS.out.all_models
-                        .splitCsv(strip: true)
-    ch_baselines_expanded = MAKE_BASELINES.out.all_models
-                        .splitCsv(strip: true)
-    ch_models_baselines_expanded = ch_models_expanded.concat(ch_baselines_expanded)
 
     HPAM_SPLIT (
         ch_models_baselines,
         params.no_hyperparameter_tuning
     )
-    // [model_name, [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml]]
-    ch_hpam_combis = ch_models_baselines_expanded
-        .combine(HPAM_SPLIT.out.hpam_combi, by: 0)
-        .map { model_class, model_name, hpam_combis -> [model_name, hpam_combis] }
-
     // [model_name, hpam_X.yaml]
-    ch_hpam_combis = ch_hpam_combis.transpose()
+    ch_hpam_combis = HPAM_SPLIT.out.hpam_combi.transpose()
 
     // [model_name, test_mode, split_X.pkl]
-    ch_model_cv = ch_models_baselines_expanded
+    ch_model_cv = ch_models_baselines
         .combine(ch_cv_splits.transpose())
-        .map { model_class, model_name, test_mode, split -> [model_name, test_mode, split] }
     // [model_name, test_mode, split_X.pkl, hpam_X.yaml, path/to/data]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
     ch_test_combis = ch_test_combis.combine(work_path)
@@ -165,7 +133,6 @@ workflow RUN_CV {
     best_hpam_per_split = ch_best_hpams_per_split
     response_dataset = LOAD_RESPONSE.out.response_dataset.collect()
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
-    ch_models = MAKE_MODELS.out.all_models.splitCsv(strip: true)
     ch_hpam_combis = ch_hpam_combis
     versions = ch_versions
 }
