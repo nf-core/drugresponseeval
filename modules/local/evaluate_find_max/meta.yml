@@ -1,0 +1,230 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: evaluate_find_max
+description: |
+  Evaluates the results of all cross-validation splits to find
+  the best-performing hyperparameter combination.
+keywords:
+  - collection
+  - results
+  - single-drug
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model. Used to find out whether the model is a single-drug model.
+    - test_mode:
+        type: string
+        description: Specifies the test mode. One of LPO, LCO, LTO, LDO.
+    - split_id:
+        type: string
+        description: Cross-validation split being evaluated, e.g., "split_0".
+    - hpam_yamls:
+        type: file
+        description: Contain the individual hyperparameter configurations.
+        pattern: "*.yaml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+    - pred_datas:
+        type: file
+        description: |
+          Pickled DrugResponseDataset containing the true and predicted drug responses for the models in their
+          hyperparameter configurations. Used to evaluate the performance of each hyperparameter configuration
+          to identify the best one.
+  - metric:
+      type: string
+      description: |
+        Hyperparameter optimization metric used to evaluate the performance
+        (e.g., MSE, RMSE, MAE, R^2, Pearson).
+
+output:
+  best_combis:
+    - - model_name:
+          type: string
+          description: See input.
+      - split_id:
+          type: string
+          description: See input.
+      - test_mode:
+          type: string
+          description: See input.
+      - "best_hpam_combi_*.yaml":
+          type: file
+          description: |
+            Yaml containing the best hyperparameter combination. Structure:
+            "{model_name}_{split_id}": {"best_hpam_combi": best_hpam_combi, "best_result": best_result}
+          pattern: "best_hpam_combi_*.yaml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+  versions_python:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_drevalpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pandas:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_sklearn:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_numpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_scipy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - scipy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import scipy; print(scipy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_yaml:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - yaml:
+          type: string
+          description: The name of the tool
+      - 'python -c "import yaml; print(yaml.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - scipy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import scipy; print(scipy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - yaml:
+          type: string
+          description: The name of the tool
+      - 'python -c "import yaml; print(yaml.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-15b789664f3bd82d_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-3e0785b5b12ace5a_1/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:15b789664f3bd82d
+      build_id: bd-e3225eb976969752_3
+    linux/arm64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:3e0785b5b12ace5a
+      build_id: bd-3e0785b5b12ace5a_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:3a2daab6f1669afe
+      build_id: bd-15b789664f3bd82d_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/6d/6dd942756556d881b3522aef53f63d24a977606d6dc629d23228f462c76a0dc6/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:de41fc123c6283bd
+      build_id: bd-e1fbe7eefaa8d0b7_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e4/e44bca044cacb8ef8eec56fc6414832e3c6f4c65e98546ceb827c7ac9d5392a5/data

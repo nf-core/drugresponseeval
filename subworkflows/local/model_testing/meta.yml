@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "MODEL_TESTING"
+description: |
+  Subworkflow after identification of the optimal hyperparameter configurations. Used for training a final model
+  per CV split, randomization tests, robustness tests, and training a final model on the whole dataset for future
+  predictions of unseen datasets.
+keywords:
+  - train
+  - predict
+  - randomization
+  - ablation
+  - robustness
+  - final model
+components:
+  - predict/full
+  - randomization/split
+  - randomization/test
+  - robustness/test
+  - final/split
+  - tune/final/model
+  - evaluate/find/max
+  - train/final/model
+  - consolidate/results
+  - evaluate/final
+  - collect/results
+  - visualize/results
+input:
+  - ch_models_baselines:
+      type: list
+      description: Channel containing [model_class, model_name], concatenated for models and baselines.
+  - best_hpam_per_split:
+      type: list
+      description: |
+        Channel containing the best hyperparameters per split in the form
+        [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
+  - randomizations:
+      type: string
+      description: List of randomizations
+  - response_dataset:
+      type: file
+      description: Pickled dataset containing the response data.
+  - cross_study_datasets:
+      type: list
+      description: List of pickled datasets containing the pickled cross-study datasets.
+  - ch_models:
+      type: list
+      description: Channel only containing [model_class, model_name] for models (used for randomization, ...)
+  - work_path:
+      type: file
+      description: path to the data channel.fromPath(params.path_data)
+  - test_modes:
+      type: list
+      description: e.g., LPO, LCO
+  - ch_hpam_combis:
+      type: list
+      description: channel containing the optimal hyperparameter combinations [model_name, hpam_X.yaml]
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

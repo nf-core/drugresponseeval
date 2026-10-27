@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "PREPROCESS_CUSTOM"
+description: |
+  Subworkflow for preprocessing custom data with CurveCurator, if supplied. Otherwise checks validity of data.
+keywords:
+  - preprocessing
+  - curve refitting
+  - custom data
+  - quality checks
+components:
+  - fit/curves
+  - preprocess/raw/viability
+  - postprocess/curvecurator/data
+input:
+  - work_path:
+      type: file
+      description: path to the data channel.fromPath(params.path_data)
+  - dataset_name:
+      type: string
+      description: Name of the dataset
+  - measure:
+      type: string
+      description: Response measure of choice, e.g., LN_IC50
+output:
+  - measure:
+      type: string
+      description: Updated response measure, e.g., appended with _curvecurator.
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

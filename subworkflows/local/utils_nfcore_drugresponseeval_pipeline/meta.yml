@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "PIPELINE_INITIALISATION"
+description: Subworkflow with utility functions for initializing the pipeline
+keywords:
+  - utility
+  - pipeline
+  - initialise
+  - version
+components:
+  - utils_nfschema_plugin
+  - plugin/nf-schema
+  - utils_nfcore_pipeline
+  - utils_nextflow_pipeline
+  - completionemail
+  - completionsummary
+  - imnotification
+input:
+  - version:
+      type: boolean
+      description: Display version and exit
+  - validate_params:
+      type: boolean
+      description: Boolean whether to validate parameters against the schema at runtime
+  - monochrome_logs:
+      type: boolean
+      description: Do not use coloured log outputs
+  - nextflow_cli_args:
+      type: list
+      description: List of positional nextflow CLI args
+  - outdir:
+      type: string
+      description: The output directory where the results will be saved
+  - help:
+      type: boolean
+      description: Display help message and exit
+  - help_full:
+      type: boolean
+      description: Show the full help message
+  - show_hidden:
+      type: boolean
+      description: Show hidden parameters in the help message
+  - models:
+      type: string
+      description: Comma-separated list of models to run
+  - baselines:
+      type: string
+      description: Comma-separated list of baseline models to run
+  - path_data:
+      type: string
+      description: Path to the data directory containing the input data
+output:
+  - models:
+      type: list
+      description: Channel of models
+  - baselines:
+      type: list
+      description: Channel of baselines
+  - work_path:
+      type: string
+      description: channel.fromPath(path_data)
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"

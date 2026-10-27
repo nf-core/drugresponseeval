@@ -179,4 +179,4 @@ If you update images or graphics, follow the nf-core [style guidelines](https://
 
 ## Pipeline specific contribution guidelines
 
-<!-- TODO nf-core: Add any pipeline specific contribution guidelines here, such as coding styles, procedures, checklists etc. -->
+If you want to contribute a drug response model or a new feature, please do so in the underlying PyPI package [drevalpy](https://drevalpy.readthedocs.io/en/latest/index.html).

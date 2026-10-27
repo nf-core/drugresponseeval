@@ -28,25 +28,75 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_drug
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
 workflow NFCORE_DRUGRESPONSEEVAL {
-
     take:
-    samplesheet // channel: samplesheet read in from --input
+    models          // channel: [ string(models) ]
+    baselines       // channel: [ string(baselines) ]
+    work_path       // channel: path to the data channel.fromPath(params.path_data)
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
+    ch_versions = channel.empty()
     DRUGRESPONSEEVAL (
-        samplesheet,
-        params.outdir,
+        models,
+        baselines,
+        work_path,
+        params.outdir
     )
+
+    ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)
+
+    emit:
+    versions = ch_versions
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
+params {
+    // False by default (=refitting). By default, we use measures calculated with CurveCurator instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data with CurveCurator. Set this flag to disable this option.
+    no_refitting: Boolean = false
+
+    // Disable hyperparameter tuning.
+    no_hyperparameter_tuning: Boolean = false
+
+    // Train final model on full data.
+    final_model_on_full_data: Boolean = false
+
+    // Number of repeated trainings for the robustness test.
+    n_trials_robustness: Integer = 0
+
+    // Number of cross-validation splits.
+    n_cv_splits: Integer = 10
+
+    // Keep only drugs with at least this many reproducible responder curves.
+    clean_min_responders: Integer?
+
+    // Keep only drugs whose fraction of significant responder curves is at least this value.
+    clean_min_responder_frac: Float?
+
+    // Display version and exit.
+    version: Boolean
+
+    // Send plain-text email instead of HTML.
+    plaintext_email: Boolean
+
+    // Do not use coloured log outputs.
+    monochrome_logs: Boolean
+
+    // Boolean whether to validate parameters against the schema at runtime
+    validate_params: Boolean = true
+
+    // Display the full detailed help message.
+    help_full: Boolean
+
+    // Display hidden parameters in the help message (only works when --help or --help_full are provided).
+    show_hidden: Boolean
+}
 
 workflow {
 
@@ -60,17 +110,22 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input,
         params.help,
         params.help_full,
-        params.show_hidden
+        params.show_hidden,
+        // pipeline-specific input
+        params.models,
+        params.baselines,
+        params.path_data
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_DRUGRESPONSEEVAL (
-        PIPELINE_INITIALISATION.out.samplesheet
+        PIPELINE_INITIALISATION.out.models,
+        PIPELINE_INITIALISATION.out.baselines,
+        PIPELINE_INITIALISATION.out.work_path,
     )
     //
     // SUBWORKFLOW: Run completion tasks
