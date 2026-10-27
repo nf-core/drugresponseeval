@@ -6,7 +6,6 @@ lint:
   files_unchanged:
     - .github/CONTRIBUTING.md
     - assets/sendmail_template.txt
-    - .github/workflows/linting.yml
   multiqc_config: false
   nextflow_config:
     - params.input
