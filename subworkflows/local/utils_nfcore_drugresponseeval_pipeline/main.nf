@@ -90,7 +90,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        false
+        null
     )
 
     //
