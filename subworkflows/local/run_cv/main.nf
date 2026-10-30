@@ -7,6 +7,7 @@ include { CV_SPLIT                             } from '../../../modules/local/cv
 include { HPAM_SPLIT                           } from '../../../modules/local/hpam_split'
 include { TRAIN_AND_PREDICT_CV                 } from '../../../modules/local/train_and_predict_cv'
 include { EVALUATE_FIND_MAX                    } from '../../../modules/local/evaluate_find_max'
+include { WRITE_BEST_HPAM                      } from '../../../modules/local/write_best_hpam'
 
 workflow RUN_CV {
     take:
@@ -107,27 +108,36 @@ workflow RUN_CV {
     // [model_name, test_mode, split_X.pkl]
     ch_model_cv = ch_models_baselines
         .combine(ch_cv_splits.transpose())
-    // [model_name, test_mode, split_X.pkl, hpam_X.yaml, path/to/data]
+    // [model_name, test_mode, split_X.pkl, hpam_X.yaml]
     ch_test_combis = ch_model_cv.combine(ch_hpam_combis, by: 0)
-    ch_test_combis = ch_test_combis.combine(work_path)
 
-    TRAIN_AND_PREDICT_CV(ch_test_combis, params.response_transformation, params.model_checkpoint_dir)
+    if (params.no_hyperparameter_tuning) {
+        // only one hyperparameter combination: no need to train and evaluate it on the CV splits
+        WRITE_BEST_HPAM (
+            ch_test_combis.map { model_name, test_mode, split, hpam_yaml -> [model_name, test_mode, split.baseName, hpam_yaml] }
+        )
+        ch_best_combis = WRITE_BEST_HPAM.out.best_combis
+    } else {
+        // [model_name, test_mode, split_X.pkl, hpam_X.yaml, path/to/data]
+        TRAIN_AND_PREDICT_CV(ch_test_combis.combine(work_path), params.response_transformation, params.model_checkpoint_dir)
 
-    // [model_name, test_mode, split_id,
-    // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
-    // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
-    ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.pred_data.groupTuple(by: [0,1,2])
+        // [model_name, test_mode, split_id,
+        // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
+        // [prediction_dataset_0.pkl, ..., prediction_dataset_n.pkl] ]
+        ch_combined_hpams = TRAIN_AND_PREDICT_CV.out.pred_data.groupTuple(by: [0,1,2])
 
-    EVALUATE_FIND_MAX (
-        ch_combined_hpams,
-        params.optim_metric
-    )
+        EVALUATE_FIND_MAX (
+            ch_combined_hpams,
+            params.optim_metric
+        )
+        ch_best_combis = EVALUATE_FIND_MAX.out.best_combis
+    }
 
     // [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     ch_best_hpams_per_split = ch_cv_splits
     .map { test_mode, it -> [it, it.baseName, test_mode]}
     .transpose()
-    .combine(EVALUATE_FIND_MAX.out.best_combis, by: [1, 2])
+    .combine(ch_best_combis, by: [1, 2])
 
     emit:
     best_hpam_per_split = ch_best_hpams_per_split

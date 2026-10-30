@@ -5,6 +5,7 @@ include { ROBUSTNESS_TEST                               } from '../../../modules
 include { FINAL_SPLIT                                   } from '../../../modules/local/final_split'
 include { TUNE_FINAL_MODEL                              } from '../../../modules/local/tune_final_model'
 include { EVALUATE_FIND_MAX as EVALUATE_FIND_MAX_FINAL  } from '../../../modules/local/evaluate_find_max'
+include { WRITE_BEST_HPAM as WRITE_BEST_HPAM_FINAL      } from '../../../modules/local/write_best_hpam'
 include { TRAIN_FINAL_MODEL                             } from '../../../modules/local/train_final_model'
 include { EVALUATE_FINAL                                } from '../../../modules/local/evaluate_final'
 include { COLLECT_RESULTS                               } from '../../../modules/local/collect_results'
@@ -129,24 +130,36 @@ workflow MODEL_TESTING {
             ch_final_split
         )
 
-        ch_tune_final_model = ch_models
-                            .combine(FINAL_SPLIT.out.final_datasets, by: 0)
-                            .combine(ch_test_modes)
-                            .combine(work_path)
-                            .combine(ch_hpam_combis, by: 0)
+        if (params.no_hyperparameter_tuning) {
+            // only one hyperparameter combination: no need to tune the final model
+            WRITE_BEST_HPAM_FINAL(
+                ch_models
+                    .combine(ch_test_modes)
+                    .combine(ch_hpam_combis, by: 0)
+                    .map { model_name, test_mode, hpam_yaml -> [model_name, test_mode, 'final', hpam_yaml] }
+            )
+            ch_best_combis_final = WRITE_BEST_HPAM_FINAL.out.best_combis
+        } else {
+            ch_tune_final_model = ch_models
+                                .combine(FINAL_SPLIT.out.final_datasets, by: 0)
+                                .combine(ch_test_modes)
+                                .combine(work_path)
+                                .combine(ch_hpam_combis, by: 0)
 
-        TUNE_FINAL_MODEL(
-            ch_tune_final_model,
-            params.response_transformation,
-            params.model_checkpoint_dir
-        )
-        ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])
+            TUNE_FINAL_MODEL(
+                ch_tune_final_model,
+                params.response_transformation,
+                params.model_checkpoint_dir
+            )
+            ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])
 
-        EVALUATE_FIND_MAX_FINAL(
-            ch_combined_hpams,
-            params.optim_metric
-        )
-        ch_final_model = EVALUATE_FIND_MAX_FINAL.out.best_combis
+            EVALUATE_FIND_MAX_FINAL(
+                ch_combined_hpams,
+                params.optim_metric
+            )
+            ch_best_combis_final = EVALUATE_FIND_MAX_FINAL.out.best_combis
+        }
+        ch_final_model = ch_best_combis_final
                             .map{ model_name, final_constant, test_mode, best_hpam_combi ->
                                 [model_name, test_mode, best_hpam_combi] }
                             .combine(FINAL_SPLIT.out.final_datasets, by: 0)

@@ -108,7 +108,8 @@ works with your model on the small toy data before using real data:
 nextflow run nf-core/drugresponseeval -r dev -profile test --models YourModel
 ```
 
-Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set.
+Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set. The hyperparameter
+tuning steps on the CV splits and for the final model are then skipped.
 
 > [!IMPORTANT]
 > Because the model only exists in your local `drevalpy` installation, run Nextflow **without** a container or conda
