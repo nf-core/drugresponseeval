@@ -123,6 +123,7 @@ workflow PIPELINE_INITIALISATION {
                         'RandomForest',
                         'MultiViewRandomForest',
                         'SingleDrugRandomForest',
+                        'SingleDrugMorgoth',
                         'SVR',
                         'SimpleNeuralNetwork',
                         'MultiViewNeuralNetwork',

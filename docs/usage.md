@@ -87,7 +87,8 @@ models are **Multi-Drug Models** and work in all four settings.
   `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `SingleDrugKNN`\*,
   `RandomForest`, `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
 - **Custom models:** `SimpleNeuralNetwork`, `MultiViewNeuralNetwork`, `DrugGNN`, `EnsembleMF`
-- **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `DIPK`, `Precily`, `PaccMann`, `SparseGO`
+- **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `SingleDrugMorgoth`\*, `DIPK`, `Precily`,
+  `PaccMann`, `SparseGO`
 
 For a description of every model, see
 [Available Models](https://drevalpy.readthedocs.io/en/latest/usage.html#available-models) in the drevalpy documentation.
