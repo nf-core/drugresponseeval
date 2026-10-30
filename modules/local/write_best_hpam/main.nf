@@ -3,7 +3,8 @@ process WRITE_BEST_HPAM {
     label 'process_single'
 
     input:
-    tuple val(model_name), val(test_mode), val(split_id), path(hpam_yaml)
+    // val, not path: exec processes do not stage inputs, a path would only be the file name
+    tuple val(model_name), val(test_mode), val(split_id), val(hpam_yaml)
 
     output:
     tuple val(model_name), val(split_id), val(test_mode), path('best_hpam_combi_*.yaml'), emit: best_combis
