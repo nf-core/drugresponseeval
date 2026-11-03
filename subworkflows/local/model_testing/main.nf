@@ -139,9 +139,9 @@ workflow MODEL_TESTING {
             )
             ch_best_combis_final = WRITE_BEST_HPAM_FINAL.out.best_combis
         } else {
-            ch_tune_final_model = ch_models
-                                .combine(FINAL_SPLIT.out.final_datasets, by: 0)
-                                .combine(ch_test_modes)
+            ch_tune_final_model = FINAL_SPLIT.out.final_datasets
+                                .map{ model_name, test_mode, train_ds, val_ds, early_stop_ds ->
+                                    [model_name, train_ds, val_ds, early_stop_ds, test_mode] }
                                 .combine(work_path)
                                 .combine(ch_hpam_combis, by: 0)
 
@@ -161,7 +161,7 @@ workflow MODEL_TESTING {
         ch_final_model = ch_best_combis_final
                             .map{ model_name, final_constant, test_mode, best_hpam_combi ->
                                 [model_name, test_mode, best_hpam_combi] }
-                            .combine(FINAL_SPLIT.out.final_datasets, by: 0)
+                            .combine(FINAL_SPLIT.out.final_datasets, by: [0, 1])
                             .combine(work_path)
         TRAIN_FINAL_MODEL (
             ch_final_model,

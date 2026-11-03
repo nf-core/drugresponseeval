@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- With `--final_model_on_full_data` and more than one test mode, the final model of each test mode was also tuned and trained on the final splits of the other test modes. The final splits are now matched by model and test mode.
 - The meta folder needs to match the datasets. It was not properly redownloaded from either Zenodo or GitHub when switching between the Toy datasets and the real ones.
 
 ### `Dependencies`

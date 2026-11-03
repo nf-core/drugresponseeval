@@ -41,6 +41,9 @@ output:
     - - model_name:
           type: string
           description: See input.
+      - test_mode:
+          type: string
+          description: See input.
       - "training_dataset.pkl":
           type: file
           description: Pickled training dataset.
