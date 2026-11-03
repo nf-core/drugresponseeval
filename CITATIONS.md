@@ -30,6 +30,10 @@
 
   > Sharifi-Noghabi H, Zolotareva O, Collins CC, Ester M. MOLI: multi-omics late integration with deep neural networks for drug response prediction. Bioinformatics. 2019 Jul;35(14):i501-9.
 
+- [MORGOTH](https://doi.org/10.1039/D5DD00284B): Implemented model in the pipeline (`SingleDrugMorgoth`).
+
+  > Rolli, L. M., Eckhart, L., Herrmann, L., Volkamer, A., Lenhof, H. P., & Lenhof, K. (2026). Increasing trustworthiness of machine learning-based drug sensitivity prediction with a multivariate random forest approach. Digital Discovery, 5(4), 1746-1764.
+
 - [SRMF](https://doi.org/10.1186/s12885-017-3500-5): Implemented model in the pipeline.
 
   > Wang L, Li X, Zhang L, Gao Q. Improved anticancer drug response prediction in cell lines using matrix factorization with similarity regularization. BMC cancer. 2017 Dec;17:1-2.
