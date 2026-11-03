@@ -14,7 +14,6 @@ include { VISUALIZE_RESULTS                             } from '../../../modules
 
 workflow MODEL_TESTING {
     take:
-    ch_models_baselines         // from input: model and baseline names
     best_hpam_per_split         // from RUN_CV: [split_id, test_mode, split_dataset, model_name, best_hpam_combi_X.yaml]
     randomizations              // from input
     response_dataset            // from LOAD_RESPONSE
@@ -171,11 +170,7 @@ workflow MODEL_TESTING {
        )
     }
 
-    ch_vis = ch_vis
-                .transpose()
-                .map{ test_mode, model, pred_file -> [model, test_mode, pred_file] }
-                .combine(ch_models_baselines, by: 0)
-                .map{ model, test_mode, pred_file -> [test_mode, model, pred_file] }
+    ch_vis = ch_vis.transpose()
 
     EVALUATE_FINAL (
         ch_vis

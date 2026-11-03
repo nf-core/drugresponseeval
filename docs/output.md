@@ -115,12 +115,13 @@ A model is trained in the specified test mode, on the specific cross-validation 
 hyperparameter combination.
 
 Single-Drug Models fit one model per drug. All drugs are trained within the same task, with as many drugs in parallel
-as the task has CPUs. With the `gpu` profile, the drugs are trained one after another on the GPU. The same holds for
-all following training steps. Tasks of Single-Drug Models get the resources of the `high_cpu_low_mem` label.
+as the task has CPUs. Single-Drug Models always run on the CPU, also with the `gpu` profile. The same holds for all
+following training steps. Tasks of Single-Drug Models get 36 CPUs and 10 h instead of the 12 CPUs and 16 h of the
+other models; the memory is the same.
 
 If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
-that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
-EnsembleMF, PaccMann, and SparseGO.
+that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, DIPK, DrugGNN, PharmaFormer, Precily, EnsembleMF,
+PaccMann, and SparseGO.
 
 #### Evaluate and find max
 
@@ -143,9 +144,9 @@ predicted.
 - `**cross_study/cross_study*.csv`: CSV file with the predicted response values for the cross-study datasets.
 - `**best_hpams*.json`: JSON file with the best hyperparameters for the model.
 
-For Single-Drug Models, these files are written per drug to `<model>/drugs/<drug>/` and consolidated over all drugs
-to `<model>/`, such that their results look like the results of the Multi-Drug Models. The same holds for the
-randomization and robustness tests.
+For Single-Drug Models, these files are written per drug to `<model>/drugs/<drug>/`. The predictions are consolidated
+over all drugs to `<model>/`, such that they look like the results of the Multi-Drug Models. The best hyperparameters
+stay per drug in `<model>/drugs/<drug>/best_hpams/`. The same holds for the randomization and robustness tests.
 
 </details>
 

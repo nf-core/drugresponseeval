@@ -24,9 +24,6 @@ components:
   - collect/results
   - visualize/results
 input:
-  - ch_models_baselines:
-      type: list
-      description: Channel containing the model names, concatenated for models and baselines.
   - best_hpam_per_split:
       type: list
       description: |
