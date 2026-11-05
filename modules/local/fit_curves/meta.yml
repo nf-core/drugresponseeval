@@ -70,22 +70,22 @@ maintainers:
 containers:
   conda:
     linux/amd64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-8f275bea1867edfd_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-2d99d1f3c69513fe_1/condalock
     linux/arm64:
-      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-160cb0a74a2355bd_1/condalock
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-777f8328b6e0fc50_1/condalock
   docker:
     linux/amd64:
-      name: community.wave.seqera.io/library/python_pip_curve-curator:8f275bea1867edfd
-      build_id: bd-8f275bea1867edfd_1
+      name: community.wave.seqera.io/library/python_pip_curve_curator:2d99d1f3c69513fe
+      build_id: bd-2d99d1f3c69513fe_1
     linux/arm64:
-      name: community.wave.seqera.io/library/python_pip_curve-curator:160cb0a74a2355bd
-      build_id: bd-160cb0a74a2355bd_1
+      name: community.wave.seqera.io/library/python_pip_curve_curator:777f8328b6e0fc50
+      build_id: bd-777f8328b6e0fc50_1
   singularity:
     linux/amd64:
-      name: oras://community.wave.seqera.io/library/python_pip_curve-curator:ca21c8b99edf33f1
-      build_id: bd-ca21c8b99edf33f1_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/e7/e7b10d877585cdfd383daf38494baf81e52793282aeb3393088cf612e26a27b9/data
+      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:2718d9f1018755f9
+      build_id: bd-2718d9f1018755f9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/42/42f7c00ddbe6320c0c19b1206beec7949b6d46440020c0d7a0fa93e7717e6284/data
     linux/arm64:
-      name: oras://community.wave.seqera.io/library/python_pip_curve-curator:43a2fee2721524e8
-      build_id: bd-43a2fee2721524e8_1
-      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/8e/8ecce0dbba7b794a89b5b221dcf2321a6a0e1942bc50b51429bdf81fb35731f4/data
+      name: oras://community.wave.seqera.io/library/python_pip_curve_curator:ab8e2f018d9340dd
+      build_id: bd-ab8e2f018d9340dd_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/45/4592ab2f41b6416d6ecab43144fc8920ba4913f6e294c77d3a067e815829c5e4/data
