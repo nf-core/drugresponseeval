@@ -3,11 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.3.1dev: Adjective Pokémon - [unreleased<!-- TODO nf-core: replace with date on release -->]
+## v1.4.0: Dazzling Dugtrio - 5.11.2026
 
 ### `Added`
 
 - `SingleDrugMorgoth`: Single-Drug Model wrapping [MORGOTH](https://doi.org/10.1039/D5DD00284B), available via drevalpy v1.7.0.
+- `SingleDrugKNN`
 
 ### `Changed`
 
