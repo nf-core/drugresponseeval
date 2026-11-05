@@ -31,6 +31,7 @@ process TRAIN_AND_PREDICT_CV {
         --hyperparameters $hyperparameters \\
         --cv_data $cv_data \\
         --response_transformation $response_transformation \\
-        --model_checkpoint_dir $model_checkpoint_dir
+        --model_checkpoint_dir $model_checkpoint_dir \\
+        --n_jobs ${task.cpus}
     """
 }

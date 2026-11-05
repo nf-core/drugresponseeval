@@ -7,15 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- `SingleDrugMorgoth`: Single-Drug Model wrapping [MORGOTH](https://doi.org/10.1039/D5DD00284B), available via drevalpy v1.7.0.
+
 ### `Changed`
+
+- Single-Drug Models no longer submit one task per drug, hyperparameter combination, and CV split. All drugs are trained within one task, with `task.cpus` drugs in parallel. All Single-Drug Models run on the CPU, also with the `gpu` profile. The best hyperparameters are still selected per drug. These tasks get 36 CPUs and 10 h instead of 12 CPUs and 16 h (memory as `process_high`).
 
 ### `Removed`
 
+- `MAKE_MODEL_CHANNEL` and `bin/make_model_channel.py`: Single-Drug Models are no longer expanded into one model per drug, so the model names are used directly.
+- `CONSOLIDATE_RESULTS`: the predictions of Single-Drug Models are now consolidated over all drugs in the task that produces them.
+
 ### `Fixed`
 
+- With `--final_model_on_full_data` and more than one test mode, the final model of each test mode was also tuned and trained on the final splits of the other test modes. The final splits are now matched by model and test mode.
 - The meta folder needs to match the datasets. It was not properly redownloaded from either Zenodo or GitHub when switching between the Toy datasets and the real ones.
 
 ### `Dependencies`
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| drevalpy   | 1.6.0       | 1.7.0       |
 
 ### `Parameters`
 

@@ -84,10 +84,11 @@ models are **Multi-Drug Models** and work in all four settings.
 
 - **Baselines:** `NaivePredictor`, `NaiveCellLineMeanPredictor`, `NaiveDrugMeanPredictor`, `NaiveMeanEffectsPredictor`,
   `NaiveTissueMeanPredictor`, `NaiveTissueDrugMeanPredictor`, `AdaBoostDecisionTree`, `ElasticNet`, `Lasso`,
-  `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `RandomForest`,
-  `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
+  `SingleDrugElasticNet`\*, `GradientBoosting`, `MultiViewXGBoost`, `MultiViewLightGBM`, `KNNRegressor`, `SingleDrugKNN`\*,
+  `RandomForest`, `MultiViewRandomForest`, `SingleDrugRandomForest`\*, `SVR`
 - **Custom models:** `SimpleNeuralNetwork`, `MultiViewNeuralNetwork`, `DrugGNN`, `EnsembleMF`
-- **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `DIPK`, `Precily`, `PaccMann`, `SparseGO`
+- **Published models:** `PharmaFormer`, `SRMF`, `MOLIR`\*, `SuperFELTR`\*, `SingleDrugMorgoth`\*, `DIPK`, `Precily`,
+  `PaccMann`, `SparseGO`
 
 For a description of every model, see
 [Available Models](https://drevalpy.readthedocs.io/en/latest/usage.html#available-models) in the drevalpy documentation.
@@ -107,7 +108,8 @@ works with your model on the small toy data before using real data:
 nextflow run nf-core/drugresponseeval -r dev -profile test --models YourModel
 ```
 
-Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set.
+Use `--no_hyperparameter_tuning` while debugging to only train with the first hyperparameter set. The hyperparameter
+tuning steps on the CV splits and for the final model are then skipped.
 
 > [!IMPORTANT]
 > Because the model only exists in your local `drevalpy` installation, run Nextflow **without** a container or conda

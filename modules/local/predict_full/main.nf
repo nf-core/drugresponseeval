@@ -12,8 +12,9 @@ process PREDICT_FULL {
     val(model_checkpoint_dir)
 
     output:
-    tuple val(test_mode), val(model_name), path('**predictions*.csv'), emit: ch_vis
-    tuple val(test_mode), val(model_name), path('**cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
+    tuple val(test_mode), val(model_name), path('*/predictions/predictions*.csv'), emit: ch_vis
+    tuple val(test_mode), val(model_name), path('*/cross_study/cross_study*.csv'),   emit: ch_cross, optional: true
+    path('*/drugs/**.csv'),                   emit: per_drug, optional: true
     path('**best_hpams*.json'),             emit: ch_hpams
     tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
@@ -36,6 +37,7 @@ process PREDICT_FULL {
         --path_data $path_data \\
         --cross_study_datasets $cross_study_datasets \\
         --model_checkpoint_dir $model_checkpoint_dir \\
+        --n_jobs ${task.cpus}
     """
 
 }

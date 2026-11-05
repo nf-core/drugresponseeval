@@ -33,8 +33,6 @@ workflow DRUGRESPONSEEVAL {
 
     def ch_versions = channel.empty()
 
-    ch_models_baselines = models.concat(baselines)
-
     PREPROCESS_CUSTOM (
         work_path,
         params.dataset_name,
@@ -55,12 +53,11 @@ workflow DRUGRESPONSEEVAL {
     ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
     MODEL_TESTING (
-        ch_models_baselines,
         RUN_CV.out.best_hpam_per_split,
         randomizations,
         RUN_CV.out.response_dataset,
         RUN_CV.out.cross_study_datasets,
-        RUN_CV.out.ch_models,
+        models,
         work_path,
         test_modes,
         RUN_CV.out.ch_hpam_combis
