@@ -26,13 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-| Dependency      | Old version | New version |
-| --------------- | ----------- | ----------- |
-| drevalpy        | 1.6.0       | 1.7.0       |
-| python          | 3.13.3      | 3.13.8      |
-| numpy           | 2.5.3       | 2.5.4       |
-| torch           | 2.14.0      | 2.15.0      |
-| scikit-posthocs | 0.17.0      | 0.17.1      |
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| drevalpy   | 1.6.0       | 1.7.0       |
 
 ### `Parameters`
 
