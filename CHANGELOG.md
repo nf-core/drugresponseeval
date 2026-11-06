@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `nf-schema` plugin version in the AWS full test workflow and the `utils_nfschema_plugin` test config is now 2.7.3, matching the pipeline.
 - More memory for test profile
 - Full test profile: including LPO and LCO now; switched from ElasticNet to RandomForest,SingleDrugRandomForest
+- Nextflow syntax v2 parser for AWS
 
 ### `Removed`
 
