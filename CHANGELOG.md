@@ -9,12 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `SingleDrugMorgoth`: Single-Drug Model wrapping [MORGOTH](https://doi.org/10.1039/D5DD00284B), available via drevalpy v1.7.0.
 - `SingleDrugKNN`
+- Test for single-drug models and no hyperparameter tuning
 
 ### `Changed`
 
 - Single-Drug Models no longer submit one task per drug, hyperparameter combination, and CV split. All drugs are trained within one task, with `task.cpus` drugs in parallel. All Single-Drug Models run on the CPU, also with the `gpu` profile. The best hyperparameters are still selected per drug. These tasks get 36 CPUs and 10 h instead of 12 CPUs and 16 h (memory as `process_high`).
 - Moved all `params.` out of the subworkflows and the `DRUGRESPONSEEVAL` workflow into `NFCORE_DRUGRESPONSEEVAL` in `main.nf`
 - The `nf-schema` plugin version in the AWS full test workflow and the `utils_nfschema_plugin` test config is now 2.7.3, matching the pipeline.
+- More memory for test profile
+- Full test profile: including LPO and LCO now; switched from ElasticNet to RandomForest,SingleDrugRandomForest
 
 ### `Removed`
 
@@ -32,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency      | Old version | New version |
 | --------------- | ----------- | ----------- |
 | drevalpy        | 1.6.0       | 1.7.0       |
-| python          | 3.13.3      | 3.13.8      |
+| python          | 3.13.13     | 3.13.18     |
 | numpy           | 2.5.3       | 2.5.4       |
 | torch           | 2.14.0      | 2.15.0      |
 | scikit-posthocs | 0.17.0      | 0.17.1      |
