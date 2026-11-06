@@ -10,7 +10,7 @@ keywords:
 components:
   - fit/curves
   - preprocess/raw/viability
-  - postprocess/curvecurator/data
+  - postprocess/curvecurator/output
 input:
   - work_path:
       type: file

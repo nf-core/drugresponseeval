@@ -14,6 +14,7 @@ components:
   - hpam/split
   - train/and/predict/cv
   - evaluate/find/max
+  - write/best/hpam
 input:
   - test_modes:
       type: list
@@ -44,10 +45,10 @@ input:
       description: Comma-separated names of cross-study datasets, empty string if none
   - clean_min_responders:
       type: integer
-      description: Minimum number of responders per drug, empty to disable
+      description: Minimum number of responders per drug, null to disable
   - clean_min_responder_frac:
       type: number
-      description: Minimum fraction of responders per drug, empty to disable
+      description: Minimum fraction of responders per drug, null to disable
   - custom_splitter_path:
       type: string
       description: Path to a custom CV splitter, empty to use the default

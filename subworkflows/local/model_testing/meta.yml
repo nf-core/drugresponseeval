@@ -19,6 +19,7 @@ components:
   - final/split
   - tune/final/model
   - evaluate/find/max
+  - write/best/hpam
   - train/final/model
   - evaluate/final
   - collect/results
@@ -43,7 +44,7 @@ input:
       description: Channel containing the model names (used for randomization, ...)
   - work_path:
       type: file
-      description: path to the data channel.fromPath(params.path_data)
+      description: path to the data, emitted once the meta information is available
   - test_modes:
       type: list
       description: e.g., LPO, LCO
