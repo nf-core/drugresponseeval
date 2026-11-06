@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - Single-Drug Models no longer submit one task per drug, hyperparameter combination, and CV split. All drugs are trained within one task, with `task.cpus` drugs in parallel. All Single-Drug Models run on the CPU, also with the `gpu` profile. The best hyperparameters are still selected per drug. These tasks get 36 CPUs and 10 h instead of 12 CPUs and 16 h (memory as `process_high`).
+- Moved all `params.` out of the subworkflows and the `DRUGRESPONSEEVAL` workflow into `NFCORE_DRUGRESPONSEEVAL` in `main.nf`
+- The `nf-schema` plugin version in the AWS full test workflow and the `utils_nfschema_plugin` test config is now 2.7.3, matching the pipeline.
 
 ### `Removed`
 
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - With `--final_model_on_full_data` and more than one test mode, the final model of each test mode was also tuned and trained on the final splits of the other test modes. The final splits are now matched by model and test mode.
 - The meta folder needs to match the datasets. It was not properly redownloaded from either Zenodo or GitHub when switching between the Toy datasets and the real ones.
+- Processes reading the meta folder from `path_data` now wait until a redownloaded meta folder has been unzipped, instead of possibly reading the outdated one.
 
 ### `Dependencies`
 

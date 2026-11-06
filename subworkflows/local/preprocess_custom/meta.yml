@@ -10,7 +10,7 @@ keywords:
 components:
   - fit/curves
   - preprocess/raw/viability
-  - postprocess/curvecurator/data
+  - postprocess/curvecurator/output
 input:
   - work_path:
       type: file
@@ -21,6 +21,12 @@ input:
   - measure:
       type: string
       description: Response measure of choice, e.g., LN_IC50
+  - no_refitting:
+      type: boolean
+      description: If true, skip refitting the curves with CurveCurator
+  - path_data:
+      type: string
+      description: Path to the data directory
 output:
   - measure:
       type: string

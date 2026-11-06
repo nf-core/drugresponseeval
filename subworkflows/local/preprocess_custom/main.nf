@@ -7,12 +7,14 @@ workflow PREPROCESS_CUSTOM {
     work_path
     dataset_name
     measure
+    no_refitting
+    path_data
 
     main:
     ch_versions = channel.empty()
     def preimplemented_datasets = ['GDSC1', 'GDSC2', 'CCLE', 'CTRPv1', 'CTRPv2', 'TOYv1', 'TOYv2', 'BeatAML2', 'PDX_Bruna']
-    if(!params.no_refitting){
-        File raw_file = new File("${params.path_data}/${dataset_name}/${dataset_name}_raw.csv")
+    if(!no_refitting){
+        File raw_file = new File("${path_data}/${dataset_name}/${dataset_name}_raw.csv")
         // refit with CurveCurator or use measures refitted with CurveCurator
         if (dataset_name in preimplemented_datasets) {
             // the dataset was already fit, use the pre-fitted curves and derived measure
@@ -40,7 +42,7 @@ workflow PREPROCESS_CUSTOM {
         }
     }else{
         log.warn "You have set `no_refitting` to true. We discourage this option for comparability to our pre-supplied datasets. If you want to use a custom dataset, please ensure it is processed in the correct format."
-        File processed_file = new File("${params.path_data}/${dataset_name}/${dataset_name}.csv")
+        File processed_file = new File("${path_data}/${dataset_name}/${dataset_name}.csv")
         if(dataset_name !in preimplemented_datasets){
             if (!processed_file.exists()){
                 throw new Exception("Processed data file not found: ${processed_file}. You want to use a custom dataset but the file does not exist. Please provide the processed data in the correct format or set `no_refitting` to false in your parameters.")
