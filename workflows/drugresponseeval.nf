@@ -72,7 +72,7 @@ workflow DRUGRESPONSEEVAL {
         RUN_CV.out.response_dataset,
         RUN_CV.out.cross_study_datasets,
         models,
-        work_path,
+        RUN_CV.out.work_path,
         test_modes,
         RUN_CV.out.ch_hpam_combis,
         params.cross_study_datasets,

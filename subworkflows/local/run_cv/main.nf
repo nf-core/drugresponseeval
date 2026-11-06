@@ -40,12 +40,17 @@ workflow RUN_CV {
     def toy_link = 'https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/drugresponseeval/test_data/'
     def data_link = is_toy_dataset ? toy_link : zenodo_link
     def meta_is_toy = meta_path.exists() ? meta_path.readLines().size() <= 14 : null
+    ch_work_path = work_path
     if (meta_is_toy == null || meta_is_toy != is_toy_dataset) {
         log.info "Downloading meta information including gene lists from: ${data_link}meta.zip"
         ch_unzip_meta = channel
                             .fromPath("${data_link}meta.zip")
                             .map { file -> [[id:"meta"], file] }
         UNZIP_META(ch_unzip_meta)
+        // drevalpy reads meta/ from path_data (filled via publishDir), so hold work_path until it is unzipped
+        ch_work_path = UNZIP_META.out.unzipped_archive
+                            .combine(work_path)
+                            .map { _meta, _meta_dir, data_dir -> data_dir }
     }
     if (!response_path.exists()) {
         log.info "Downloading response dataset ${dataset_name} from: ${data_link}${dataset_name}.zip"
@@ -131,7 +136,7 @@ workflow RUN_CV {
         ch_best_combis = WRITE_BEST_HPAM.out.best_combis
     } else {
         // [model_name, test_mode, split_X.pkl, hpam_X.yaml, path/to/data]
-        TRAIN_AND_PREDICT_CV(ch_test_combis.combine(work_path), response_transformation, model_checkpoint_dir)
+        TRAIN_AND_PREDICT_CV(ch_test_combis.combine(ch_work_path),response_transformation, model_checkpoint_dir)
 
         // [model_name, test_mode, split_id,
         // [hpam_0.yaml, hpam_1.yaml, ..., hpam_n.yaml],
@@ -156,5 +161,6 @@ workflow RUN_CV {
     response_dataset = LOAD_RESPONSE.out.response_dataset.collect()
     cross_study_datasets = LOAD_CS_RESPONSE.out.cross_study_datasets.collect()
     ch_hpam_combis = ch_hpam_combis
+    work_path = ch_work_path
     versions = ch_versions
 }
