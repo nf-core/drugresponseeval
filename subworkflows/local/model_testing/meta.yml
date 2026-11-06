@@ -50,6 +50,33 @@ input:
   - ch_hpam_combis:
       type: list
       description: channel containing the optimal hyperparameter combinations [model_name, hpam_X.yaml]
+  - cross_study_dataset_names:
+      type: string
+      description: Comma-separated names of cross-study datasets, empty string if none
+  - randomization_mode:
+      type: string
+      description: Comma-separated randomization modes, e.g., SVRC, or None
+  - randomization_type:
+      type: string
+      description: Randomization type, e.g., permutation or invariant
+  - n_trials_robustness:
+      type: integer
+      description: Number of robustness test trials, 0 to disable
+  - final_model_on_full_data:
+      type: boolean
+      description: If true, train a final model on the full dataset
+  - no_hyperparameter_tuning:
+      type: boolean
+      description: If true, use only the first hyperparameter combination without tuning
+  - response_transformation:
+      type: string
+      description: Response transformation, e.g., standard, minmax, robust, or None
+  - model_checkpoint_dir:
+      type: string
+      description: Directory for model checkpoints
+  - optim_metric:
+      type: string
+      description: Metric used to select the best hyperparameter combination, e.g., RMSE
 output:
   - versions:
       type: file

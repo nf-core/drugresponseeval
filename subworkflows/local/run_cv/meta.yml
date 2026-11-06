@@ -30,6 +30,42 @@ input:
   - measure:
       type: string
       description: Response measure of choice.
+  - path_data:
+      type: string
+      description: Path to the data directory
+  - dataset_name:
+      type: string
+      description: Name of the response dataset
+  - zenodo_link:
+      type: string
+      description: Base URL from which missing datasets are downloaded
+  - cross_study_dataset_names:
+      type: string
+      description: Comma-separated names of cross-study datasets, empty string if none
+  - clean_min_responders:
+      type: integer
+      description: Minimum number of responders per drug, empty to disable
+  - clean_min_responder_frac:
+      type: number
+      description: Minimum fraction of responders per drug, empty to disable
+  - custom_splitter_path:
+      type: string
+      description: Path to a custom CV splitter, empty to use the default
+  - n_cv_splits:
+      type: integer
+      description: Number of cross-validation splits
+  - no_hyperparameter_tuning:
+      type: boolean
+      description: If true, use only the first hyperparameter combination without tuning
+  - response_transformation:
+      type: string
+      description: Response transformation, e.g., standard, minmax, robust, or None
+  - model_checkpoint_dir:
+      type: string
+      description: Directory for model checkpoints
+  - optim_metric:
+      type: string
+      description: Metric used to select the best hyperparameter combination, e.g., RMSE
 output:
   - best_hpam_per_split:
       type: list

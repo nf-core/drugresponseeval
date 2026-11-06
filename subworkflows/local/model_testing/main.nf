@@ -22,10 +22,19 @@ workflow MODEL_TESTING {
     work_path                  // from input
     test_modes                 // e.g., ['LPO', 'LCO']
     ch_hpam_combis              // from RUN_CV [model_name, hpam_X.yaml]
+    cross_study_dataset_names   // comma-separated string, '' if none
+    randomization_mode
+    randomization_type
+    n_trials_robustness
+    final_model_on_full_data
+    no_hyperparameter_tuning
+    response_transformation
+    model_checkpoint_dir
+    optim_metric
 
     main:
     ch_versions = channel.empty()
-    if (params.cross_study_datasets == '') {
+    if (cross_study_dataset_names == '') {
         cross_study_datasets = channel.of(file("${projectDir}/assets/NONE.csv", checkIfExists: true))
     }
     ch_tmp = best_hpam_per_split.map{
@@ -40,12 +49,12 @@ workflow MODEL_TESTING {
 
     PREDICT_FULL (
         ch_predict_final,
-        params.response_transformation,
-        params.model_checkpoint_dir
+        response_transformation,
+        model_checkpoint_dir
     )
     ch_vis = PREDICT_FULL.out.ch_vis.concat(PREDICT_FULL.out.ch_cross)
 
-    if (params.randomization_mode != 'None') {
+    if (randomization_mode != 'None') {
         ch_randomization = channel.from(randomizations)
         // randomizations only for models, not for baselines
         ch_models_rand = ch_models
@@ -89,15 +98,15 @@ workflow MODEL_TESTING {
 
         RANDOMIZATION_TEST (
             ch_randomization,
-            params.randomization_type,
-            params.response_transformation,
-            params.model_checkpoint_dir
+            randomization_type,
+            response_transformation,
+            model_checkpoint_dir
         )
         ch_vis = ch_vis.concat(RANDOMIZATION_TEST.out.ch_vis)
     }
 
-    if (params.n_trials_robustness > 0) {
-        ch_trials_robustness = channel.from(1..params.n_trials_robustness)
+    if (n_trials_robustness > 0) {
+        ch_trials_robustness = channel.from(1..n_trials_robustness)
         ch_trials_robustness = ch_models
                                 .combine(ch_trials_robustness)
 
@@ -111,13 +120,13 @@ workflow MODEL_TESTING {
         ch_robustness = ch_best_hpams_per_split_rob.combine(ch_trials_robustness, by: 0).combine(work_path)
         ROBUSTNESS_TEST (
             ch_robustness,
-            params.response_transformation,
-            params.model_checkpoint_dir
+            response_transformation,
+            model_checkpoint_dir
         )
         ch_vis = ch_vis.concat(ROBUSTNESS_TEST.out.ch_vis)
     }
 
-    if (params.final_model_on_full_data) {
+    if (final_model_on_full_data) {
         // we only do this for models, not for baselines
         ch_test_modes = channel.from(test_modes)
         ch_final_split = ch_models
@@ -129,7 +138,7 @@ workflow MODEL_TESTING {
             ch_final_split
         )
 
-        if (params.no_hyperparameter_tuning) {
+        if (no_hyperparameter_tuning) {
             // only one hyperparameter combination: no need to tune the final model
             WRITE_BEST_HPAM_FINAL(
                 ch_models
@@ -147,14 +156,14 @@ workflow MODEL_TESTING {
 
             TUNE_FINAL_MODEL(
                 ch_tune_final_model,
-                params.response_transformation,
-                params.model_checkpoint_dir
+                response_transformation,
+                model_checkpoint_dir
             )
             ch_combined_hpams = TUNE_FINAL_MODEL.out.final_prediction.groupTuple(by: [0,1,2])
 
             EVALUATE_FIND_MAX_FINAL(
                 ch_combined_hpams,
-                params.optim_metric
+                optim_metric
             )
             ch_best_combis_final = EVALUATE_FIND_MAX_FINAL.out.best_combis
         }
@@ -165,8 +174,8 @@ workflow MODEL_TESTING {
                             .combine(work_path)
         TRAIN_FINAL_MODEL (
             ch_final_model,
-            params.response_transformation,
-            params.model_checkpoint_dir
+            response_transformation,
+            model_checkpoint_dir
        )
     }
 

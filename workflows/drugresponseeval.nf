@@ -36,7 +36,9 @@ workflow DRUGRESPONSEEVAL {
     PREPROCESS_CUSTOM (
         work_path,
         params.dataset_name,
-        params.measure
+        params.measure,
+        params.no_refitting,
+        params.path_data
     )
     ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
 
@@ -48,7 +50,19 @@ workflow DRUGRESPONSEEVAL {
         models,
         baselines,
         work_path,
-        PREPROCESS_CUSTOM.out.measure
+        PREPROCESS_CUSTOM.out.measure,
+        params.path_data,
+        params.dataset_name,
+        params.zenodo_link,
+        params.cross_study_datasets,
+        params.clean_min_responders,
+        params.clean_min_responder_frac,
+        params.custom_splitter_path,
+        params.n_cv_splits,
+        params.no_hyperparameter_tuning,
+        params.response_transformation,
+        params.model_checkpoint_dir,
+        params.optim_metric
     )
     ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
@@ -60,7 +74,16 @@ workflow DRUGRESPONSEEVAL {
         models,
         work_path,
         test_modes,
-        RUN_CV.out.ch_hpam_combis
+        RUN_CV.out.ch_hpam_combis,
+        params.cross_study_datasets,
+        params.randomization_mode,
+        params.randomization_type,
+        params.n_trials_robustness,
+        params.final_model_on_full_data,
+        params.no_hyperparameter_tuning,
+        params.response_transformation,
+        params.model_checkpoint_dir,
+        params.optim_metric
     )
     ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 
