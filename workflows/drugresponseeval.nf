@@ -28,42 +28,81 @@ workflow DRUGRESPONSEEVAL {
     baselines       // channel: [ string(baselines) ]
     work_path       // channel: path to the data channel.fromPath(params.path_data)
     outdir
+    path_data
+    dataset_name
+    measure
+    no_refitting
+    test_mode
+    zenodo_link
+    cross_study_datasets
+    clean_min_responders
+    clean_min_responder_frac
+    custom_splitter_path
+    n_cv_splits
+    no_hyperparameter_tuning
+    response_transformation
+    model_checkpoint_dir
+    optim_metric
+    randomization_mode
+    randomization_type
+    n_trials_robustness
+    final_model_on_full_data
 
     main:
 
     def ch_versions = channel.empty()
 
-    ch_models_baselines = models.concat(baselines)
-
     PREPROCESS_CUSTOM (
         work_path,
-        params.dataset_name,
-        params.measure
+        dataset_name,
+        measure,
+        no_refitting,
+        path_data
     )
     ch_versions = ch_versions.mix(PREPROCESS_CUSTOM.out.versions)
 
-    test_modes = params.test_mode.split(",")
-    randomizations = params.randomization_mode.split(",")
+    test_modes = test_mode.split(",")
+    randomizations = randomization_mode.split(",")
 
     RUN_CV (
         test_modes,
         models,
         baselines,
         work_path,
-        PREPROCESS_CUSTOM.out.measure
+        PREPROCESS_CUSTOM.out.measure,
+        path_data,
+        dataset_name,
+        zenodo_link,
+        cross_study_datasets,
+        clean_min_responders,
+        clean_min_responder_frac,
+        custom_splitter_path,
+        n_cv_splits,
+        no_hyperparameter_tuning,
+        response_transformation,
+        model_checkpoint_dir,
+        optim_metric
     )
     ch_versions = ch_versions.mix(RUN_CV.out.versions)
 
     MODEL_TESTING (
-        ch_models_baselines,
         RUN_CV.out.best_hpam_per_split,
         randomizations,
         RUN_CV.out.response_dataset,
         RUN_CV.out.cross_study_datasets,
-        RUN_CV.out.ch_models,
-        work_path,
+        models,
+        RUN_CV.out.work_path,
         test_modes,
-        RUN_CV.out.ch_hpam_combis
+        RUN_CV.out.ch_hpam_combis,
+        cross_study_datasets,
+        randomization_mode,
+        randomization_type,
+        n_trials_robustness,
+        final_model_on_full_data,
+        no_hyperparameter_tuning,
+        response_transformation,
+        model_checkpoint_dir,
+        optim_metric
     )
     ch_versions = ch_versions.mix(MODEL_TESTING.out.versions)
 

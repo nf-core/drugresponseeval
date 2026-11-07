@@ -90,7 +90,7 @@ workflow PIPELINE_INITIALISATION {
         before_text,
         after_text,
         command,
-        false
+        null
     )
 
     //
@@ -119,9 +119,11 @@ workflow PIPELINE_INITIALISATION {
                         'GradientBoosting',
                         'MultiViewXGBoost',
                         'KNNRegressor',
+                        'SingleDrugKNN',
                         'RandomForest',
                         'MultiViewRandomForest',
                         'SingleDrugRandomForest',
+                        'SingleDrugMorgoth',
                         'SVR',
                         'SimpleNeuralNetwork',
                         'MultiViewNeuralNetwork',

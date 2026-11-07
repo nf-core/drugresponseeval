@@ -3,7 +3,45 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.3.1dev: Adjective Pokémon - [unreleased<!-- TODO nf-core: replace with date on release -->]
+## v1.4.0: Dazzling Dugtrio - 5.11.2026
+
+### `Added`
+
+- `SingleDrugMorgoth`: Single-Drug Model wrapping [MORGOTH](https://doi.org/10.1039/D5DD00284B), available via drevalpy v1.7.0.
+- `SingleDrugKNN`
+- Test for single-drug models and no hyperparameter tuning
+
+### `Changed`
+
+- Single-Drug Models no longer submit one task per drug, hyperparameter combination, and CV split. All drugs are trained within one task, with `task.cpus` drugs in parallel. All Single-Drug Models run on the CPU, also with the `gpu` profile. The best hyperparameters are still selected per drug. These tasks get 36 CPUs and 10 h instead of 12 CPUs and 16 h (memory as `process_high`).
+- Moved all `params.` out of the subworkflows and the `DRUGRESPONSEEVAL` workflow into `NFCORE_DRUGRESPONSEEVAL` in `main.nf`
+- The `nf-schema` plugin version in the AWS full test workflow and the `utils_nfschema_plugin` test config is now 2.7.3, matching the pipeline.
+- More memory for test profile
+- Full test profile: including LPO and LCO now; switched from ElasticNet to RandomForest,SingleDrugRandomForest
+- Nextflow syntax v2 parser for AWS
+
+### `Removed`
+
+- `MAKE_MODEL_CHANNEL` and `bin/make_model_channel.py`: Single-Drug Models are no longer expanded into one model per drug, so the model names are used directly.
+- `CONSOLIDATE_RESULTS`: the predictions of Single-Drug Models are now consolidated over all drugs in the task that produces them.
+
+### `Fixed`
+
+- With `--final_model_on_full_data` and more than one test mode, the final model of each test mode was also tuned and trained on the final splits of the other test modes. The final splits are now matched by model and test mode.
+- The meta folder needs to match the datasets. It was not properly redownloaded from either Zenodo or GitHub when switching between the Toy datasets and the real ones.
+- Processes reading the meta folder from `path_data` now wait until a redownloaded meta folder has been unzipped, instead of possibly reading the outdated one.
+
+### `Dependencies`
+
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| drevalpy        | 1.6.0       | 1.7.0       |
+| python          | 3.13.13     | 3.13.18     |
+| numpy           | 2.5.3       | 2.5.4       |
+| torch           | 2.14.0      | 2.15.0      |
+| scikit-posthocs | 0.17.0      | 0.17.1      |
+
+### `Parameters`
 
 ## v1.3.0: Bubbly Blastoise - 9.10.2026
 

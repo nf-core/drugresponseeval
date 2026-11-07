@@ -43,7 +43,26 @@ workflow NFCORE_DRUGRESPONSEEVAL {
         models,
         baselines,
         work_path,
-        params.outdir
+        params.outdir,
+        params.path_data,
+        params.dataset_name,
+        params.measure,
+        params.no_refitting,
+        params.test_mode,
+        params.zenodo_link,
+        params.cross_study_datasets,
+        params.clean_min_responders,
+        params.clean_min_responder_frac,
+        params.custom_splitter_path,
+        params.n_cv_splits,
+        params.no_hyperparameter_tuning,
+        params.response_transformation,
+        params.model_checkpoint_dir,
+        params.optim_metric,
+        params.randomization_mode,
+        params.randomization_type,
+        params.n_trials_robustness,
+        params.final_model_on_full_data
     )
 
     ch_versions = ch_versions.mix(DRUGRESPONSEEVAL.out.versions)

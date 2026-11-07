@@ -145,9 +145,9 @@
                 "zenodo_link": {
                     "type": "string",
                     "description": "Link to the latest Zenodo version of the dataset.",
-                    "default": "https://zenodo.org/records/23159774/files/",
+                    "default": "https://zenodo.org/records/23916090/files/",
                     "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
-                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://github.com/nf-core/test-datasets/raw/refs/heads/drugresponseeval/test_data/)"
+                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/drugresponseeval/test_data/)"
                 }
             }
         },
@@ -331,7 +331,7 @@
                 },
                 "trace_report_suffix": {
                     "type": "string",
-                    "fa_icon": "far calendar",
+                    "fa_icon": "far fa-calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
                 },

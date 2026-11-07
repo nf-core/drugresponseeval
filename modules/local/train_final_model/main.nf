@@ -32,6 +32,7 @@ process TRAIN_FINAL_MODEL {
         --model_name "${model_name}" \\
         --path_data $path_data \\
         --model_checkpoint_dir $model_checkpoint_dir \\
-        --best_hpam_combi $best_hpam_combi
+        --best_hpam_combi $best_hpam_combi \\
+        --n_jobs ${task.cpus}
     """
 }

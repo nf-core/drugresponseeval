@@ -11,3 +11,7 @@ test_run/report/heatmaps/*.html
 test_run/report/html_tables/*.html
 test_run/report/violin_plots/*.html
 test_run/report/heatmaps/*.html
+test_run/LCO/SingleDrugRandomForest/predictions/predictions_split*.csv
+test_run/LCO/SingleDrugRandomForest/cross_study/cross_study_TOYv2_split*.csv
+test_run/LCO/SingleDrugRandomForest/drugs/**
+test_run/report/regression_plots/*.html

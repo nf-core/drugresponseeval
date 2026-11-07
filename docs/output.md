@@ -18,8 +18,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 2. `RUN_CV` subworkflow: Finds the optimal hyperparameters for each model in a cross-validation setting.
    - [Load response](#load-response): The response data is loaded.
    - [CV split](#cv-split): The response data is split into cross-validation folds.
-   - [Make model channel](#make-model-channel): From the input baseline and model names, channels are created. This
-     step is necessary because for the Single-Drug Models, one model has to be created per drug.
    - [HPAM split](#hyperparameter-split): One YAML file is created per model and hyperparameter combination to be
      tested.
    - [Train and predict CV](#train-and-predict-cv): All models are trained and evaluated in a cross-validation setting.
@@ -39,8 +37,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
      - [TUNE_FINAL_MODEL](#tune-final-model): The final model is tuned on the full dataset.
      - [EVALUATE_FIND_MAX_FINAL](#evaluate-and-find-max-final): The best hyperparameters for the final model are determined on the validation dataset.
      - [TRAIN_FINAL_MODEL](#train-final-model): The final model is trained on the full dataset (train+validation) with the best hyperparameters. The model is saved in the results directory.
-   - [Consolidate results](#consolidate-results): The results of the model testing are consolidated into a single
-     table for each model.
    - [Evaluate final](#evaluate-final): The performance of the models is calculated on the test set results.
    - [Collect results](#collect-results): The results of the evaluation metrics per model are collected into four
      overview tables.
@@ -108,13 +104,6 @@ stopping dataset is split from the validation set. This ensures that all models 
 same dataset. Alternatively, a Python script passed via `--custom_splitter_path` can define the splits, see
 [usage](usage.md).
 
-#### Make model channel
-
-From the input baseline and model names, channels are created. This step is necessary because for the
-Single-Drug Models, one model has to be created per drug. The model name then becomes the name of the model and the
-drug, separated by a dot, e.g., `MOLIR.Drug1`. All of these models should be able to be trained in parallel
-which is why they should be individual elements in the channel.
-
 #### Hyperparameter split
 
 One YAML file is created per model and hyperparameter combination to be tested. This ensures that all hyperparameter
@@ -125,14 +114,20 @@ can be tested in parallel.
 A model is trained in the specified test mode, on the specific cross-validation split with the specified
 hyperparameter combination.
 
+Single-Drug Models fit one model per drug. All drugs are trained within the same task, with as many drugs in parallel
+as the task has CPUs. Single-Drug Models always run on the CPU, also with the `gpu` profile. The same holds for all
+following training steps. Tasks of Single-Drug Models get 36 CPUs and 10 h instead of the 12 CPUs and 16 h of the
+other models; the memory is the same.
+
 If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
-that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
-EnsembleMF, PaccMann, and SparseGO.
+that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, DIPK, DrugGNN, PharmaFormer, Precily, EnsembleMF,
+PaccMann, and SparseGO.
 
 #### Evaluate and find max
 
 Over all hyperparameter combinations, the best hyperparameters for a specific cross-validation split are determined.
-The best hyperparameters are determined based on the optimization metric specified via `--optim_metric`.
+The best hyperparameters are determined based on the optimization metric specified via `--optim_metric`. For
+Single-Drug Models, the best hyperparameters are determined per drug.
 
 ### Subworkflow `MODEL_TESTING`
 
@@ -149,6 +144,10 @@ predicted.
 - `**cross_study/cross_study*.csv`: CSV file with the predicted response values for the cross-study datasets.
 - `**best_hpams*.json`: JSON file with the best hyperparameters for the model.
 
+For Single-Drug Models, these files are written per drug to `<model>/drugs/<drug>/`. The predictions are consolidated
+over all drugs to `<model>/`, such that they look like the results of the Multi-Drug Models. The best hyperparameters
+stay per drug in `<model>/drugs/<drug>/best_hpams/`. The same holds for the randomization and robustness tests.
+
 </details>
 
 #### Randomization split
@@ -162,10 +161,6 @@ Trains the model on the randomized training + validation set with the best hyper
 unperturbed test set of the specified CV split. How the data is randomized is determined by the
 `--randomization_type`.
 
-If the `gpu` profile is used (e.g., `-profile docker,gpu`), training and prediction are done on the GPU for the models
-that support it, e.g., SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, Precily,
-EnsembleMF, PaccMann, and SparseGO.
-
 <details markdown="1">
 <summary>Output files</summary>
 
@@ -178,29 +173,10 @@ EnsembleMF, PaccMann, and SparseGO.
 Trains the model `--n_trials_robustness` times on the full training set with the best hyperparameters to predict the test set of the
 specific CV split.
 
-As soon as GPU support is available, the training and prediction will be done on the GPU for the models
-SimpleNeuralNetwork, MultiViewNeuralNetwork, MOLIR, SuperFELTR, DIPK, DrugGNN, PharmaFormer, and Precily.
-
 <details markdown="1">
 <summary>Output files</summary>
 
 - `**robustness*.csv`: CSV file with the predicted response values for the robustness test.
-
-</details>
-
-#### Consolidate results
-
-For Single-Drug Models, the results of the model testing are consolidated such that their results look like the
-results of the Multi-Drug Models.
-
-<details markdown="1">
-<summary>Output files</summary>
-
-- `**predictions*.csv`: CSV file with the consolidated predicted response values for the test set.
-- `**cross_study/cross_study*.csv`: CSV file with the consolidated predicted response values for the cross-study
-  datasets.
-- `**randomization*.csv`: CSV file with the consolidated predicted response values for the randomization test.
-- `**robustness*.csv`: CSV file with the consolidated predicted response values for the robustness test.
 
 </details>
 

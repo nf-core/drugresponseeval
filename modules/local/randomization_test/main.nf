@@ -13,7 +13,8 @@ process RANDOMIZATION_TEST {
     val model_checkpoint_dir
 
     output:
-    tuple val(test_mode), val(model_name), path('**randomization*.csv'),     emit: ch_vis
+    tuple val(test_mode), val(model_name), path('*/randomization/randomization*.csv'),     emit: ch_vis
+    path('*/drugs/**.csv'),                   emit: per_drug, optional: true
     tuple val("${task.process}"), val('python'), eval("python --version | sed 's/Python //g'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/drevalpy //'"), topic: versions, emit: versions_drevalpy
     tuple val("${task.process}"), val('sklearn'), eval("python -c \"import sklearn; print(sklearn.__version__)\""), topic: versions, emit: versions_sklearn
@@ -36,6 +37,7 @@ process RANDOMIZATION_TEST {
         --randomization_views_path $randomization_views \\
         --randomization_type $randomization_type \\
         --model_checkpoint_dir $model_checkpoint_dir \\
+        --n_jobs ${task.cpus}
     """
 
 }

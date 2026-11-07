@@ -24,8 +24,10 @@ jobs:
               "outdir": "s3://${{ vars.AWS_S3_BUCKET }}/drugresponseeval/results-test-${{ github.sha }}"
             }
           profiles: test
+          # typed params block in main.nf needs the strict (v2) syntax parser
+          pre_run_script: "export NXF_SYNTAX_PARSER=v2"
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: Seqera Platform debug log file
           path: |
