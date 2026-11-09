@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
+- Switch to `action-seqera-launch` action for megatests like in [nf-core/tools, PR 4518](https://github.com/nf-core/tools/pull/4518)
+
 ### `Dependencies`
 
 | Dependency | Old version | New version |
