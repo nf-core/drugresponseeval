@@ -1,0 +1,220 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: randomization_split
+description: Creates yaml configuration files to spawn one process per randomization experiment.
+keywords:
+  - randomization
+  - preprocessing
+  - setup
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - model_name:
+        type: string
+        description: Name of the model for which the randomization experiments will be made.
+    - randomization_mode:
+        type: string
+        description: Could be SVRC, SVRD, SVCC, SVCD.
+
+output:
+  randomization_test_views:
+    - - model_name:
+          type: string
+          description: See input.
+      - "randomization_test_view*.yaml":
+          type: file
+          description: |
+            YAML files containing the different randomization experiments.
+          pattern: "randomization_test_view*.yaml"
+          ontologies:
+            - edam: http://edamontology.org/format_3750 # YAML
+  versions_python:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_drevalpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_sklearn:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_numpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pandas:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_pytorch_lightning:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pytorch_lightning:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pytorch_lightning; print(pytorch_lightning.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_torch:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - torch:
+          type: string
+          description: The name of the tool
+      - 'python -c "import torch; print(torch.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_yaml:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - yaml:
+          type: string
+          description: The name of the tool
+      - 'python -c "import yaml; print(yaml.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pandas:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pandas; print(pandas.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - pytorch_lightning:
+          type: string
+          description: The name of the tool
+      - 'python -c "import pytorch_lightning; print(pytorch_lightning.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - torch:
+          type: string
+          description: The name of the tool
+      - 'python -c "import torch; print(torch.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - yaml:
+          type: string
+          description: The name of the tool
+      - 'python -c "import yaml; print(yaml.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-860b03c191f46c82_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-50d921c518c578c4_1/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:860b03c191f46c82
+      build_id: bd-860b03c191f46c82_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:50d921c518c578c4
+      build_id: bd-50d921c518c578c4_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:1e55e92e5aef4c8c
+      build_id: bd-1e55e92e5aef4c8c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b7/b772a635908f86ef6ed69b10f63ee47595f9952e778781d42c92bdd705882f95/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:9f499c30703a8ee9
+      build_id: bd-9f499c30703a8ee9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/89/89a39dc8b5995bafc3a86803593233f202bdb064a15cc172e46c5d0e830e8e7a/data

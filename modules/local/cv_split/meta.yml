@@ -1,0 +1,151 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: cv_split
+description: Splits the input dataset into cross-validation folds.
+keywords:
+  - cross-validation
+  - data split
+  - machine learning
+tools:
+  - drevalpy:
+      description: |
+        drevalpy is the package underlying nf-core/drugresponseeval. It provides a framework for fair and
+        coherent training and evaluation of monotherapy drug response prediction models.
+      homepage: https://github.com/daisybio/drevalpy/
+      documentation: https://drevalpy.readthedocs.io/en/latest/index.html
+      tool_dev_url: https://github.com/daisybio/drevalpy/
+      doi: "10.1101/2025.05.26.655288"
+      licence: ["MIT"]
+      identifier: ""
+
+input:
+  - - test_mode:
+        type: string
+        description: Specifies the test mode. One of LPO, LCO, LTO, LDO.
+    - response:
+        type: file
+        description: Path to the pickled file containing the DrugResponseDataset (the whole drug response data).
+  - n_cv_splits:
+      type: integer
+      description: |
+        Number of cross-validation splits to be created.
+  - custom_splitter:
+      type: file
+      description: |
+        Python script defining `create_splits(response_data, params)`, used instead of the built-in splitting.
+        `assets/NO_FILE` if the built-in splitting is used.
+
+output:
+  response_cv_split:
+    - - test_mode:
+          type: string
+          description: See input.
+      - "split*.pkl":
+          type: file
+          description: |
+            Pickled datasets of the cross-validation splits.
+          pattern: "split*.pkl"
+  versions_python:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_drevalpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_sklearn:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+  versions_numpy:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - python:
+          type: string
+          description: The name of the tool
+      - "python --version | sed 's/Python //g'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - drevalpy:
+          type: string
+          description: The name of the tool
+      - "drevalpy --version | sed 's/drevalpy //'":
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - sklearn:
+          type: string
+          description: The name of the tool
+      - 'python -c "import sklearn; print(sklearn.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - numpy:
+          type: string
+          description: The name of the tool
+      - 'python -c "import numpy; print(numpy.__version__)"':
+          type: eval
+          description: The expression to obtain the version of the tool
+authors:
+  - "@JudithBernett"
+maintainers:
+  - "@JudithBernett"
+containers:
+  conda:
+    linux/amd64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-860b03c191f46c82_1/condalock
+    linux/arm64:
+      lock_file: https://wave.seqera.io/v1alpha1/builds/bd-50d921c518c578c4_1/condalock
+  docker:
+    linux/amd64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:860b03c191f46c82
+      build_id: bd-860b03c191f46c82_1
+    linux/arm64:
+      name: community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:50d921c518c578c4
+      build_id: bd-50d921c518c578c4_1
+  singularity:
+    linux/amd64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:1e55e92e5aef4c8c
+      build_id: bd-1e55e92e5aef4c8c_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b7/b772a635908f86ef6ed69b10f63ee47595f9952e778781d42c92bdd705882f95/data
+    linux/arm64:
+      name: oras://community.wave.seqera.io/library/matplotlib_numpy_pandas_python_pruned:9f499c30703a8ee9
+      build_id: bd-9f499c30703a8ee9_1
+      https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/89/89a39dc8b5995bafc3a86803593233f202bdb064a15cc172e46c5d0e830e8e7a/data
