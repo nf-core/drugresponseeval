@@ -9,21 +9,8 @@
             "title": "Model options",
             "type": "object",
             "fa_icon": "fa-solid fa-laptop-code",
-            "description": "Define the models and baselines to be tested.",
-            "required": ["models", "baselines"],
+            "description": "Define the reference model of the report.",
             "properties": {
-                "models": {
-                    "type": "string",
-                    "description": "Model to be tested.",
-                    "help_text": "Model to be tested. See the documentation for a list of pre-implemented models. Can be multiple models separated by ','.",
-                    "default": "NaiveDrugMeanPredictor"
-                },
-                "baselines": {
-                    "type": "string",
-                    "description": "Baselines to be tested.",
-                    "help_text": "Baselines to be tested. See documentation of a list of available models. For baselines, randomization and robustness tests are not run. The NaiveMeanEffectsPredictor will always be included.",
-                    "default": "NaiveMeanEffectsPredictor"
-                },
                 "normalization_reference": {
                     "type": "string",
                     "description": "Baseline model used as normalization reference in reports. Automatically added to the models list.",
@@ -135,33 +122,12 @@
             "fa_icon": "fa-solid fa-database",
             "description": "Options for data input.",
             "properties": {
-                "path_data": {
-                    "type": "string",
-                    "format": "directory-path",
-                    "description": "Path to the data directory.",
-                    "help_text": "Path to the data directory. The downloaded data will be exported here. If you supply custom data, it goes here, too.",
-                    "default": "data"
-                },
                 "measure": {
                     "type": "string",
                     "default": "pEC50",
                     "description": "The name of the drug response measure to use.",
                     "help_text": "Response measure models are trained and scored on: pEC50 (the main measure of the drevalpy datasets) or one of their response layers.",
                     "enum": ["pEC50", "LN_IC50", "AUC", "EC50", "IC50"]
-                },
-                "cross_study_datasets": {
-                    "type": "string",
-                    "description": "Datasets for cross-study prediction.",
-                    "help_text": "List of datasets to use to evaluate predictions across studies. Can be a combination like 'CTRPv1,CCLE'. Default is empty string which means no cross-study datasets are used.",
-                    "default": null,
-                    "pattern": "^(?:|(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2)(,(?:GDSC[12]|CCLE|CTRPv[12]|TOYv[12]|PDX_Bruna|BeatAML2))*)$"
-                },
-                "zenodo_link": {
-                    "type": "string",
-                    "description": "Link to the latest Zenodo version of the dataset.",
-                    "default": "https://zenodo.org/records/23916090/files/",
-                    "help_text": "Link to the Zenodo dataset from where pre-supplied datasets like CTRPv2 are downloaded.",
-                    "pattern": "(^https://zenodo.org/records/[0-9]+/files/$)|(https://raw.githubusercontent.com/nf-core/test-datasets/refs/heads/drugresponseeval/test_data/)"
                 }
             }
         },
@@ -171,12 +137,6 @@
             "fa_icon": "fas fa-cogs",
             "description": "Additional options for the pipeline.",
             "properties": {
-                "no_refitting": {
-                    "type": "boolean",
-                    "description": "False by default (=refitting). By default, we use measures calculated with CurveCurator instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data with CurveCurator. Set this flag to disable this option.",
-                    "help_text": "By default, measures calculated by CurveCurator (by re-fitting the response curves, see 'measure' option for details) are used for available datasets, which allows better comparability between datasets. When providing a custom dataset (see 'dataset_name' option), we expect a csv-formatted file at <path_data>/<dataset_name>/<dataset_name>_raw.csv (also see 'path_data' option) containing the raw response data. We fit the curves by default with CurveCurator to provide fair comparison to our other available datasets. The fitted data will then be stored at <path_data>/<dataset_name>/<dataset_name>.csv. If you want to disable this option, set the flag.",
-                    "default": false
-                },
                 "optim_metric": {
                     "type": "string",
                     "description": "Optimization metric for the pipeline.",
@@ -198,12 +158,6 @@
                     "default": "standard",
                     "enum": ["none", "standard", "minmax", "robust", "drug_mean", "drug_tissue_mean"]
                 },
-                "model_checkpoint_dir": {
-                    "type": "string",
-                    "description": "Model checkpoint directory",
-                    "default": "TEMPORARY",
-                    "help_text": "Directory to save model checkpoints."
-                },
                 "no_hyperparameter_tuning": {
                     "type": "boolean",
                     "description": "Disable hyperparameter tuning.",
@@ -216,12 +170,6 @@
                     "default": 16,
                     "help_text": "Number of HPO trials to run per model and fold. Higher values explore more of the hyperparameter space but increase runtime.",
                     "minimum": 1
-                },
-                "final_model_on_full_data": {
-                    "type": "boolean",
-                    "description": "Train final model on full data.",
-                    "default": false,
-                    "help_text": "If True, saves a final model, trained/tuned on the union of all folds after CV. This is useful if you want to use the model for predictions on new data after running the pipeline."
                 }
             }
         },

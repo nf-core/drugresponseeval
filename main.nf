@@ -67,14 +67,10 @@ workflow NFCORE_DRUGRESPONSEEVAL {
 */
 
 params {
-    // False by default (=refitting). By default, we use measures calculated with CurveCurator instead of original measures reported by the authors for the available datasets, or invoke automatic fitting of custom raw viability data with CurveCurator. Set this flag to disable this option.
-    no_refitting: Boolean = false
 
     // Disable hyperparameter tuning.
     no_hyperparameter_tuning: Boolean = false
 
-    // Train final model on full data.
-    final_model_on_full_data: Boolean = false
 
     // Number of repeated trainings for the robustness test.
     n_trials_robustness: Integer = 0
