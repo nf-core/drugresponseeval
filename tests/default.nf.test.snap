@@ -5,10 +5,13 @@
                 "AGGREGATE": {
                     "drevalpy": "2.0.0"
                 },
+                "DESCRIBE": {
+                    "drevalpy": "2.0.0"
+                },
                 "REPORT": {
                     "drevalpy": "2.0.0"
                 },
-                "SINGLE": {
+                "SINGLE_CPU": {
                     "drevalpy": "2.0.0"
                 },
                 "SPLIT": {
@@ -28,6 +31,8 @@
                 "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet",
                 "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold_0.npz",
                 "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold_1.npz",
+                "describe",
+                "describe/models.tsv",
                 "pipeline_info",
                 "pipeline_info/nf_core_drugresponseeval_software_versions.yml",
                 "report",
@@ -54,6 +59,7 @@
                 "split/splits/fold_1.npz"
             ],
             [
+                "models.tsv:md5,3bcc1d7adc2cde0a765ed86f8b14fb3a",
                 "NaiveMeanEffectsPredictor-fold_0.npz:md5,f7ef1ad0232052f71aa7ba234fad0b7d",
                 "NaiveMeanEffectsPredictor-fold_1.npz:md5,e43f260a49eee739fc53f96d7f1547e1",
                 "pca[gene_expression]:fingerprints:elasticNet-fold_0.npz:md5,332030e6da2450edd7375c5df91b6592",
@@ -62,7 +68,7 @@
                 "fold_1.npz:md5,f6cc991ed529fcefdca853f0530232b3"
             ]
         ],
-        "timestamp": "2026-11-15T19:57:11.348935039",
+        "timestamp": "2026-11-15T21:23:58.418705188",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
