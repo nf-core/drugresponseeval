@@ -80,12 +80,6 @@ params {
     // Number of cross-validation splits.
     n_cv_splits: Integer = 10
 
-    // Keep only drugs with at least this many reproducible responder curves.
-    clean_min_responders: Integer?
-
-    // Keep only drugs whose fraction of significant responder curves is at least this value.
-    clean_min_responder_frac: Float?
-
     // Display version and exit.
     version: Boolean
 
