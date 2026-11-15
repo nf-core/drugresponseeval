@@ -35,6 +35,7 @@ workflow NFCORE_DRUGRESPONSEEVAL {
     dataset_name
     test_mode
     n_cv_splits
+    measure
     no_hyperparameter_tuning
     optim_metric
     hpo_num_samples
@@ -52,6 +53,7 @@ workflow NFCORE_DRUGRESPONSEEVAL {
         dataset_name,
         test_mode,
         n_cv_splits,
+        measure,
         no_hyperparameter_tuning,
         optim_metric,
         hpo_num_samples,
@@ -126,6 +128,7 @@ workflow {
         params.dataset_name,
         params.test_mode,
         params.n_cv_splits,
+        params.measure,
         params.no_hyperparameter_tuning,
         params.optim_metric,
         params.hpo_num_samples,

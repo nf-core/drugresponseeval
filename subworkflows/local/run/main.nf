@@ -13,6 +13,7 @@ workflow RUN {
     dataset_name
     test_mode
     n_cv_splits
+    measure
     no_hyperparameter_tuning
     optim_metric
     hpo_num_samples
@@ -33,7 +34,8 @@ workflow RUN {
     SPLIT (
         ch_dataset,
         test_mode,
-        n_cv_splits
+        n_cv_splits,
+        measure
     )
 
     model_splits = models.combine(SPLIT.out.folds.flatten())
@@ -54,8 +56,7 @@ workflow RUN {
     REPORT (
         AGGREGATE.out.experiment,
         'Test',
-        normalization_reference,
-        ch_dataset
+        normalization_reference
     )
 
 }

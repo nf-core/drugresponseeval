@@ -8,6 +8,7 @@ process AGGREGATE {
 
     output:
     path("aggregated/"), emit: experiment
+    tuple val("${task.process}"), val('drevalpy'), eval("drevalpy --version | sed 's/^drevalpy //'"), topic: versions, emit: versions_drevalpy
 
     when:
     task.ext.when == null || task.ext.when
