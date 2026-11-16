@@ -25,12 +25,12 @@
                 "aggregate",
                 "aggregate/aggregated",
                 "aggregate/aggregated/NaiveMeanEffectsPredictor",
-                "aggregate/aggregated/NaiveMeanEffectsPredictor/fold_0.npz",
-                "aggregate/aggregated/NaiveMeanEffectsPredictor/fold_1.npz",
+                "aggregate/aggregated/NaiveMeanEffectsPredictor/fold-0_29a8c52a2b1e96fd.npz",
+                "aggregate/aggregated/NaiveMeanEffectsPredictor/fold-1_b8c9c19706d1f7ee.npz",
                 "aggregate/aggregated/metadata.json",
                 "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet",
-                "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold_0.npz",
-                "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold_1.npz",
+                "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold-0_c6cb44acfad1b566.npz",
+                "aggregate/aggregated/pca[gene_expression]_fingerprints_elasticNet/fold-1_834653e62189c8be.npz",
                 "describe",
                 "describe/models.tsv",
                 "pipeline_info",
@@ -60,15 +60,15 @@
             ],
             [
                 "models.tsv:md5,3bcc1d7adc2cde0a765ed86f8b14fb3a",
-                "NaiveMeanEffectsPredictor-fold_0.npz:md5,f7ef1ad0232052f71aa7ba234fad0b7d",
-                "NaiveMeanEffectsPredictor-fold_1.npz:md5,e43f260a49eee739fc53f96d7f1547e1",
-                "pca[gene_expression]:fingerprints:elasticNet-fold_0.npz:md5,332030e6da2450edd7375c5df91b6592",
-                "pca[gene_expression]:fingerprints:elasticNet-fold_1.npz:md5,0eaabf073a65f38ce86f95c257b5e0a0",
+                "NaiveMeanEffectsPredictor-fold_0.npz:md5,953e8e65fa38a5803fba32caeecc0347",
+                "NaiveMeanEffectsPredictor-fold_1.npz:md5,cfa7c4ba2d45d8eb699971bfdb67a5b4",
+                "pca[gene_expression]:fingerprints:elasticNet-fold_0.npz:md5,5b443b6d9cdbd9ef8c304e194cf1c3b2",
+                "pca[gene_expression]:fingerprints:elasticNet-fold_1.npz:md5,5d7ce6f43204278d3a94d4aa20fe9200",
                 "fold_0.npz:md5,59e50e43f121742e971d40d348339cbe",
                 "fold_1.npz:md5,f6cc991ed529fcefdca853f0530232b3"
             ]
         ],
-        "timestamp": "2026-11-15T21:23:58.418705188",
+        "timestamp": "2026-11-16T13:28:03.818314609",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
